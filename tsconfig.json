@@ -1,0 +1,21 @@
+{
+    "extends": "tsconfig-leonardjouve",
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "references": [{"path": "./tsconfig.node.json"}],
+    "noEmit": true,
+    "compilerOptions": {
+        "types": ["node"],
+        "verbatimModuleSyntax": false,
+        "jsx": "react",
+        "rootDir": "src",
+        "outDir": "dist",
+        "paths": {
+            "@components/*": ["./src/components/*"],
+            "@typing/*": ["./src/types/*"],
+            "@store/*": ["./src/store/*"],
+        },
+    },
+}

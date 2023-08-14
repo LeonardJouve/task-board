@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --header-size: 50px;
+    --right-sidebar-size: 50px;
+    --board-column-size: 200px;
+}
