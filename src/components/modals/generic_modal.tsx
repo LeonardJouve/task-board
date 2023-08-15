@@ -7,11 +7,12 @@ type Props = {
     content: string | React.JSX.Element;
     isCancelable?: boolean;
     showFooter?: boolean;
+    closeOnClickOutside?: boolean;
     onConfirm?: () => void;
     onCancel?: () => void;
 };
 
-const GenericModal: React.FC<Props> = ({open, setOpen, header, content, isCancelable = true, showFooter = true, onConfirm, onCancel}) => {
+const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnClickOutside, isCancelable = true, showFooter = true, onConfirm, onCancel}) => {
     const modalRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
@@ -49,6 +50,13 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, isCancel
         handleClose();
     };
 
+    const handleClickOutside = (e: React.MouseEvent<HTMLDialogElement>): void => {
+        if (e.target !== modalRef.current || !closeOnClickOutside) {
+            return;
+        }
+        handleClose();
+    };
+
     if (!open) {
         return null;
     }
@@ -57,6 +65,7 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, isCancel
         <dialog
             ref={modalRef}
             className="w-1/2 h-1/3 rounded-xl flex flex-col"
+            onClick={handleClickOutside}
         >
             <div className="flex flex-row bg-blue-200 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
                 <h2 className="uppercase font-bold flex flex-1">

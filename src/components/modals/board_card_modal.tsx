@@ -38,6 +38,7 @@ const BoardCardModal: React.FC<Props> = ({open, setOpen, card}) => {
             header={header}
             content={content}
             showFooter={false}
+            closeOnClickOutside={true}
         />
     );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import Column from "@components/board_column";
 import useColumns from "@store/columns";
 
-// TODO: add template column (+)
+// TODO: (+) column
 
 const Columns: React.FC = () => {
     const columns = useColumns((state) => Object.values(state.columns));

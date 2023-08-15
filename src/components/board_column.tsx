@@ -7,6 +7,8 @@ type Props = {
     column: Column;
 };
 
+// TODO: (+) card
+
 const BoardColumn: React.FC<Props> = ({column}) => {
     const cards = Object.values(column.cards);
     return (
