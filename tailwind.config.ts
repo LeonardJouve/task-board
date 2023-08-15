@@ -11,10 +11,6 @@ export default {
                 "right-sidebar": "var(--right-sidebar-size)",
                 "board-column": "var(--board-column-size)",
             },
-            maxHeight: {
-                "2rem": "2rem",
-                "4rem": "4rem",
-            },
         },
     },
     plugins: [],

@@ -6,7 +6,7 @@ type Props = {
 }
 
 const BoardTag: React.FC<Props> = ({tag}) => (
-    <span className={`rounded px-2 py-1 uppercase text-xs bg-${tag.color}`}>
+    <span className={`rounded px-2 py-1 uppercase text-xs border-gray-300 border-[1px] bg-${tag.color}`}>
         {tag.name}
     </span>
 );

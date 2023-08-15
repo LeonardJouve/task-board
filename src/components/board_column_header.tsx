@@ -9,7 +9,9 @@ type Props = {
 
 const BoardColumnHeader: React.FC<Props> = ({name}) => (
     <div className="w-full px-2 py-1 bg-white rounded">
-        {name}
+        <span className="font-bold">
+            {name}
+        </span>
     </div>
 );
 
