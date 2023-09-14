@@ -14,8 +14,8 @@
         "outDir": "dist",
         "paths": {
             "@components/*": ["./src/components/*"],
-            "@typing/*": ["./src/types/*"],
             "@store/*": ["./src/store/*"],
+            "@intl/*": ["./src/intl/*"],
         },
     },
 }
