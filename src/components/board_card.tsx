@@ -1,7 +1,7 @@
 import React, {useState} from "react";
+import type {Card} from "@store/cards";
 import BoardCardModal from "@components/modals/board_card_modal";
-import Tag from "@components/tag";
-import type {Card} from "@store/columns";
+import BoardTag from "@components/tag";
 
 type Props = {
     card: Card;
@@ -11,13 +11,12 @@ type Props = {
 
 const BoardCard: React.FC<Props> = ({card}) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const tags = Object.values(card.tags);
 
     const handleOpen = (): void => setIsModalOpen(true);
 
     return (
         <>
-            <div
+            <button
                 className="w-full bg-slate-50 rounded flex flex-col gap-1 p-2 overflow-hidden hover:bg-slate-100"
                 onClick={handleOpen}
             >
@@ -28,14 +27,14 @@ const BoardCard: React.FC<Props> = ({card}) => {
                     {card.content}
                 </span>
                 <div className="flex flex-row gap-2">
-                    {tags.map((tag) => (
-                        <Tag
-                            key={`tag-${tag.id}`}
-                            tag={tag}
+                    {card.tagIds.map((tagId) => (
+                        <BoardTag
+                            key={`tag-${tagId}`}
+                            id={tagId}
                         />
                     ))}
                 </div>
-            </div>
+            </button>
             <BoardCardModal
                 open={isModalOpen}
                 setOpen={setIsModalOpen}

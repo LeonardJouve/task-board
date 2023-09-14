@@ -1,14 +1,23 @@
 import React from "react";
-import type {Tag} from "@store/columns";
+import type {Tag} from "@store/tags";
+import useTags, {getTagById} from "@store/tags";
 
 type Props = {
-    tag: Tag;
+    id: Tag["id"];
 }
 
-const BoardTag: React.FC<Props> = ({tag}) => (
-    <span className={`rounded px-2 py-1 uppercase text-xs border-gray-300 border-[1px] bg-${tag.color}`}>
-        {tag.name}
-    </span>
-);
+const BoardTag: React.FC<Props> = ({id}) => {
+    const tag = useTags((state) => getTagById(state, id));
+
+    if (!tag) {
+        return null;
+    }
+
+    return (
+        <span className={`rounded px-2 py-1 uppercase text-xs border-gray-300 border-[1px] bg-${tag.color}`}>
+            {tag.name}
+        </span>
+    );
+};
 
 export default BoardTag;

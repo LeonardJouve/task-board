@@ -1,6 +1,6 @@
 import React, {useState} from "react";
+import type {Card} from "@store/cards";
 import GenericModal from "@components/modals/generic_modal";
-import type {Card} from "@store/columns";
 import EditableText from "@components/editable_text";
 
 type Props = {

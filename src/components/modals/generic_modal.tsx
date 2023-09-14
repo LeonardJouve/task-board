@@ -72,10 +72,10 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
                     {header}
                 </h2>
                 <button
-                    className="absolute right-3 top-3 text-[1.25rem] leading-[1.25rem]"
+                    className="absolute right-1 top-1 text-2xl leading-2xl"
                     onClick={handleClose}
                 >
-                    {"\u2715"}
+                    <i className="icon-close"/>
                 </button>
             </div>
             <div className={`px-4 py-2 flex flex-1 ${!showFooter ? "pb-4" : ""}`}>

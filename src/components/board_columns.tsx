@@ -1,8 +1,7 @@
 import React from "react";
-import Column from "@components/board_column";
 import useColumns from "@store/columns";
-
-// TODO: (+) column
+import Column from "@components/board_column";
+import AddItem from "@components/add_item";
 
 const Columns: React.FC = () => {
     const columns = useColumns((state) => Object.values(state.columns));
@@ -14,6 +13,11 @@ const Columns: React.FC = () => {
                     column={column}
                 />
             ))}
+            <AddItem
+                className="w-board-column h-full rounded-lg"
+                description="New column"
+                onAdd={console.log}
+            />
         </div>
     );
 };
