@@ -1,96 +1,29 @@
 import {create} from "zustand";
 
-enum Color {
-    WHITE = "white",
-}
-
-export type Tag = {
-    id: number;
-    name: string;
-    color: Color;
-};
-
-export type Card = {
-    id: number;
-    name: string;
-    content: string;
-    tags: Record<Tag["id"], Tag>;
-};
-
 export type Column = {
     id: number;
+    boardId: number;
     name: string;
-    cards: Record<Card["id"], Card>;
 };
 
 type ColumnState = {
     columns: Record<Column["id"], Column>;
     addColumn: (column: Column) => void;
     removeColumn: (columnId: Column["id"]) => void;
-}
+    removeColumns: (columnIds: Column["id"][]) => void;
+};
 
 const useColumns = create<ColumnState>((set) => ({
     columns: {
         1: {
             id: 1,
+            boardId: 1,
             name: "1",
-            cards: {
-                1: {
-                    id: 1,
-                    name: "1",
-                    content: "content content content content content content content content",
-                    tags: {
-                        1: {
-                            id: 1,
-                            name: "test",
-                            color: Color.WHITE,
-                        },
-                        2: {
-                            id: 2,
-                            name: "test",
-                            color: Color.WHITE,
-                        },
-                        3: {
-                            id: 3,
-                            name: "test",
-                            color: Color.WHITE,
-                        },
-                        4: {
-                            id: 4,
-                            name: "test",
-                            color: Color.WHITE,
-                        },
-                        5: {
-                            id: 5,
-                            name: "test",
-                            color: Color.WHITE,
-                        },
-                        6: {
-                            id: 6,
-                            name: "test",
-                            color: Color.WHITE,
-                        },
-                    },
-                },
-            },
         },
         2: {
             id: 2,
+            boardId: 1,
             name: "2",
-            cards: {
-                1: {
-                    id: 1,
-                    name: "1",
-                    content: "content",
-                    tags: {},
-                },
-                2: {
-                    id: 2,
-                    name: "2",
-                    content: "content",
-                    tags: {},
-                },
-            },
         },
     },
     addColumn: (column: Column): void => set((state: ColumnState) => ({
@@ -99,11 +32,15 @@ const useColumns = create<ColumnState>((set) => ({
             [column.id]: column,
         },
     })),
-    removeColumn: (columnId: Column["id"]): void => set((state) => {
-        const columns: ColumnState["columns"] = {...state.columns};
-        delete columns[columnId];
-        return {columns};
-    }),
+    removeColumn: (columnId: Column["id"]): void => set((state) => removeColumn(state, columnId)),
+    removeColumns: (columnIds: Column["id"][]): void => set((state: ColumnState) => columnIds.reduce((acc, current) => removeColumn(acc, current), state)),
 }));
+
+const removeColumn = (state: ColumnState, columnId: Column["id"]): ColumnState => {
+    delete state.columns[columnId];
+    return state;
+};
+
+export const getColumnById = (state: ColumnState, columnId: Column["id"]): Column|undefined => state.columns[columnId];
 
 export default useColumns;
