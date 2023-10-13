@@ -13,6 +13,7 @@ export default defineConfig({
             "@components": path.resolve(dir, "src/components"),
             "@store": path.resolve(dir, "src/store"),
             "@intl": path.resolve(dir, "src/intl"),
+            "@api": path.resolve(dir, "src/api"),
         },
     },
 });
