@@ -5,9 +5,10 @@ import type {Column} from "./columns";
 export type Card = {
     id: number;
     columnId: number;
+    tagIds: Tag["id"][];
     name: string;
     content: string;
-    tagIds: Tag["id"][];
+    order: number;
 };
 
 type CardState = {
@@ -22,9 +23,10 @@ const useCards = create<CardState>((set) => ({
         1: {
             id: 1,
             columnId: 1,
+            tagIds: [1, 2],
             name: "column",
             content: "content content content content content content content content",
-            tagIds: [1, 2],
+            order: 1,
         },
     },
     addCard: (card: Card): void => set((state: CardState) => ({

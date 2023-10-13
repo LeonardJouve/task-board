@@ -4,6 +4,7 @@ export type Column = {
     id: number;
     boardId: number;
     name: string;
+    order: number;
 };
 
 type ColumnState = {
@@ -19,11 +20,13 @@ const useColumns = create<ColumnState>((set) => ({
             id: 1,
             boardId: 1,
             name: "1",
+            order: 1,
         },
         2: {
             id: 2,
             boardId: 1,
             name: "2",
+            order: 2,
         },
     },
     addColumn: (column: Column): void => set((state: ColumnState) => ({

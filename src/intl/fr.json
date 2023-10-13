@@ -1,4 +1,10 @@
 {
+    "components.login.login": "Se connecter",
+    "components.login.email": "Adresse email",
+    "components.login.password": "Mot de passe",
+    "components.login.passwordConfirm": "Confirmer le mot de passe",
+    "components.login.register": "Créer un compte",
+    "components.register.login": "Se connecter",
     "components.board_column.add_item.description": "Ajouter une carte",
     "components.add_card_modal.header": "Créer une nouvelle carte"
 }
