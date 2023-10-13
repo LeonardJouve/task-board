@@ -5,7 +5,7 @@
   "scripts": {
     "run": "vite",
     "build": "tsc && vite build",
-    "tailwind": "tailwindcss -i ./src/css/root.css -o ./dist/css/root.css --watch"
+    "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -20,7 +20,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
     "eslint": "^8.45.0",
-    "eslint-config-leonardjouve": "^1.0.7",
+    "eslint-config-leonardjouve": "^1.0.10",
     "tailwindcss": "^3.3.3",
     "tsconfig-leonardjouve": "^1.0.0",
     "typescript": "^5.0.2",
