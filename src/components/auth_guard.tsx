@@ -6,9 +6,7 @@ const AuthGuard: React.FC<React.PropsWithChildren> = ({children}) => {
     const {isLoggedIn} = useAuth();
 
     if (!isLoggedIn) {
-        return (
-            <Navigate to={"/login"}/>
-        );
+        return <Navigate to={"/login"}/>;
     }
 
     return children;

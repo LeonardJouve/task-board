@@ -2,6 +2,7 @@ import {create} from "zustand";
 
 type AuthState = {
     isLoggedIn: boolean;
+    setIsLoggedIn: (isLoggedIn: boolean) => void;
 };
 
 const useAuth = create<AuthState>((set) => ({
