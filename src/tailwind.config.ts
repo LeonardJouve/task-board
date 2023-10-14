@@ -8,7 +8,6 @@ export default {
                 "header": "var(--header-size)",
             },
             width: {
-                "right-sidebar": "var(--right-sidebar-size)",
                 "board-column": "var(--board-column-size)",
             },
         },

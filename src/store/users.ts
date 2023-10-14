@@ -11,6 +11,10 @@ export type User = {
 type UserState = {
     me: User;
     users: Record<User["id"], User>;
+    setMe: (me: User) => void;
+    addUser: (user: User) => void;
+    removeUser: (userId: User["id"]) => void;
+    removeUsers: (userIds: User["id"][]) => void;
 };
 
 const DEFAULT_USER = {
@@ -29,7 +33,7 @@ const useUsers = create<UserState>((set) => ({
     })),
     addUser: (user: User): void => set(() => ({users: {[user.id]: user}})),
     removeUser: (userId: User["id"]): void => set((state: UserState) => removeUser(state, userId)),
-    removeTags: (userIds: User["id"][]): void => set((state: UserState) => userIds.reduce((acc, current) => removeUser(acc, current), state)),
+    removeUsers: (userIds: User["id"][]): void => set((state: UserState) => userIds.reduce((acc, current) => removeUser(acc, current), state)),
 }));
 
 const removeUser = (state: UserState, userId: User["id"]): UserState => {
