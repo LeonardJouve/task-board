@@ -1,17 +1,26 @@
 import React from "react";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {RouterProvider, createBrowserRouter} from "react-router-dom";
 import Main from "@components/main";
 import Login from "@components/login";
 import Register from "@components/register";
 
-const Rooter: React.FC = () => (
-    <BrowserRouter>
-        <Routes>
-            <Route path="/login" Component={Login}/>
-            <Route path="/register" Component={Register}/>
-            <Route path="/" Component={Main}/>
-        </Routes>
-    </BrowserRouter>
-);
+const Rooter: React.FC = () => {
+    const router = createBrowserRouter([
+        {
+            path: "/login",
+            element: <Login/>,
+        },
+        {
+            path: "/register",
+            element: <Register/>,
+        },
+        {
+            path: "/",
+            element: <Main/>,
+        },
+    ]);
+
+    return <RouterProvider router={router}/>;
+};
 
 export default Rooter;
