@@ -1,4 +1,9 @@
 import type {MessageDescriptor} from "react-intl";
+import type {Board} from "@store/boards";
+import type {Column} from "@store/columns";
+import type {Card} from "@store/cards";
+import type {Tag} from "@store/tags";
+import type {User} from "@store/users";
 
 type RestResult<T> = {
     error: false;
@@ -162,6 +167,83 @@ class RestClient {
             `${this.getAuthRoute()}/register`,
             {method: "POST", body: JSON.stringify({name, email, username, password, passwordConfirm})},
             false,
+        );
+    }
+
+    async getBoard(boardId: Board["id"]): RestResponse<Board> {
+        return await this.fetch<Board>(
+            `${this.getApiRoute()}/boards/${boardId}`,
+            {method: "GET"},
+        );
+    }
+
+    async getBoards(): RestResponse<Board[]> {
+        return await this.fetch<Board[]>(
+            `${this.getApiRoute()}/boards`,
+            {method: "GET"},
+        );
+    }
+
+    async getColumn(columnId: Column["id"]): RestResponse<Column> {
+        return await this.fetch<Column>(
+            `${this.getApiRoute()}/columns/${columnId}`,
+            {method: "GET"},
+        );
+    }
+
+    async getColumns(boardIds?: Board["id"][]): RestResponse<Column[]> {
+        return await this.fetch<Column[]>(
+            `${this.getApiRoute()}/columns${boardIds?.length ? "?boardsIds=" + boardIds.join(",") : ""}`,
+            {method: "GET"},
+        );
+    }
+
+    async getCard(cardId: Card["id"]): RestResponse<Card> {
+        return await this.fetch<Card>(
+            `${this.getApiRoute()}/cards/${cardId}`,
+            {method: "GET"},
+        );
+    }
+
+    async getCards(columnIds?: Column["id"][]): RestResponse<Card[]> {
+        return await this.fetch<Card[]>(
+            `${this.getApiRoute()}/cards${columnIds?.length ? "?columnIds=" + columnIds.join(",") : ""}`,
+            {method: "GET"},
+        );
+    }
+
+    async getTag(tagId: Tag["id"]): RestResponse<Tag> {
+        return await this.fetch<Tag>(
+            `${this.getApiRoute()}/tags/${tagId}`,
+            {method: "GET"},
+        );
+    }
+
+    async getTags(boardIds?: Board["id"][]): RestResponse<Tag[]> {
+        return await this.fetch<Tag[]>(
+            `${this.getApiRoute()}/tags${boardIds?.length ? "?boardIds=" + boardIds.join(",") : ""}`,
+            {method: "GET"},
+        );
+    }
+
+    async getMe(): RestResponse<User> {
+        return await this.fetch<User>(
+            `${this.getApiRoute()}/users/me`,
+            {method: "GET"},
+        );
+    }
+
+    async getUser(userId: User["id"]): RestResponse<User> {
+        return await this.fetch<User>(
+            `${this.getApiRoute()}/users/${userId}`,
+            {method: "GET"},
+        );
+    }
+
+    async getUsers(boardIds?: Board["id"][]): RestResponse<User[]> {
+        return await this.fetch<User[]>(
+            `${this.getApiRoute()}/users${boardIds?.length ? "?boardIds=" + boardIds.join(",") : ""}`,
+            {method: "GET"},
         );
     }
 }

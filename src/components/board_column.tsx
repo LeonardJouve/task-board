@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FormattedMessage} from "react-intl";
-import useCards, {getCardsInColumn} from "@store/cards";
+import useCards, {getCards} from "@store/cards";
 import type {Column} from "@store/columns";
 import BoardColumnHeader from "@components/board_column_header";
 import BoardCard from "@components/board_card";
@@ -13,7 +13,11 @@ type Props = {
 
 const BoardColumn: React.FC<Props> = ({column}) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const cards = useCards((state) => getCardsInColumn(state, column.id));
+    const {cards, fetchCards} = useCards((state) => getCards(state, column.id));
+
+    useEffect(() => {
+        fetchCards([column.id]);
+    }, [column]);
 
     const handleAddCard = (): void => setIsModalOpen(true);
 

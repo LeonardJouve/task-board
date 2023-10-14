@@ -1,49 +1,69 @@
 import {create} from "zustand";
+import Rest from "@api/rest";
 import type {Tag} from "@store/tags";
 import type {Column} from "./columns";
 
 export type Card = {
     id: number;
     columnId: number;
+    nextId: number;
     tagIds: Tag["id"][];
     name: string;
     content: string;
-    order: number;
 };
 
 type CardState = {
     cards: Record<Card["id"], Card>;
     addCard: (card: Card) => void;
+    addCards: (cards: Card[]) => void;
     removeCard: (cardId: Card["id"]) => void;
     removeCards: (cardIds: Card["id"][]) => void;
+    fetchCard: (cardId: Card["id"]) => Promise<void>;
+    fetchCards: (columnIds?: Column["id"][]) => Promise<void>;
 };
 
 const useCards = create<CardState>((set) => ({
-    cards: {
-        1: {
-            id: 1,
-            columnId: 1,
-            tagIds: [1, 2],
-            name: "column",
-            content: "content content content content content content content content",
-            order: 1,
-        },
+    cards: {},
+    addCard: (card): void => set((state) => addCard(state, card)),
+    addCards: (cards): void => set((state) => cards.reduce(addCard, state)),
+    removeCard: (cardId): void => set((state) => removeCard(state, cardId)),
+    removeCards: (cardIds): void => set((state) => cardIds.reduce(removeCard, state)),
+    fetchCard: async (cardId): Promise<void> => {
+        const {error, data} = await Rest.getCard(cardId);
+
+        if (error) {
+            return;
+        }
+
+        set((state) => addCard(state, data));
     },
-    addCard: (card: Card): void => set((state: CardState) => ({
+    fetchCards: async (columnIds): Promise<void> => {
+        const {error, data} = await Rest.getCards(columnIds);
+
+        if (error) {
+            return;
+        }
+
+        set((state) => data.reduce(addCard, state));
+    },
+}));
+
+const addCard = (state: CardState, card: Card): CardState => ({
+    ...state,
+    cards: {
         ...state.cards,
         [card.id]: card,
-    })),
-    removeCard: (cardId: Card["id"]): void => set((state: CardState) => removeCard(state, cardId)),
-    removeCards: (cardIds: Card["id"][]): void => set((state: CardState) => cardIds.reduce((acc, current) => removeCard(acc, current), state)),
-}));
+    },
+});
 
 const removeCard = (state: CardState, cardId: Card["id"]): CardState => {
     delete state.cards[cardId];
     return state;
 };
 
-export const getCardById = (state: CardState, cardId: Card["id"]): Card|undefined => state.cards[cardId];
-
-export const getCardsInColumn = (state: CardState, columnId: Column["id"]): Card[] => Object.values(state.cards).filter((card) => card.columnId === columnId);
+export const getCards = (state: CardState, columnId?: Column["id"]): CardState & {cards: Card[]} => ({
+    ...state,
+    cards: Object.values(state.cards).filter((card) => !columnId || card.columnId === columnId),
+});
 
 export default useCards;

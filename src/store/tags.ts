@@ -1,4 +1,6 @@
 import {create} from "zustand";
+import Rest from "@api/rest";
+import type {Board} from "@store/boards";
 
 enum Color {
     WHITE = "white",
@@ -14,38 +16,50 @@ export type Tag = {
 type TagState = {
     tags: Record<Tag["id"], Tag>;
     addTag: (tag: Tag) => void;
+    addTags: (tags: Tag[]) => void;
     removeTag: (tagId: Tag["id"]) => void;
     removeTags: (tagIds: Tag["id"][]) => void;
+    fetchTag: (tagId: Tag["id"]) => Promise<void>;
+    fetchTags: (boardIds?: Board["id"][]) => Promise<void>;
 };
 
 const useTags = create<TagState>((set) => ({
-    tags: {
-        1: {
-            id: 1,
-            boardId: 1,
-            name: "tag1",
-            color: Color.WHITE,
-        },
-        2: {
-            id: 2,
-            boardId: 1,
-            name: "tag2",
-            color: Color.WHITE,
-        },
+    tags: {},
+    addTag: (tag): void => set((state) => addTag(state, tag)),
+    addTags: (tags): void => set((state) => tags.reduce(addTag, state)),
+    removeTag: (tagId): void => set((state) => removeTag(state, tagId)),
+    removeTags: (tagIds): void => set((state) => tagIds.reduce(removeTag, state)),
+    fetchTag: async (tagId): Promise<void> => {
+        const {error, data} = await Rest.getTag(tagId);
+
+        if (error) {
+            return;
+        }
+
+        set((state) => addTag(state, data));
     },
-    addTag: (tag: Tag): void => set((state: TagState) => ({
+    fetchTags: async (boardIds): Promise<void> => {
+        const {error, data} = await Rest.getTags(boardIds);
+
+        if (error) {
+            return;
+        }
+
+        set((state) => data.reduce(addTag, state));
+    },
+}));
+
+const addTag = (state: TagState, tag: Tag): TagState => ({
+    ...state,
+    tags: {
         ...state.tags,
         [tag.id]: tag,
-    })),
-    removeTag: (tagId: Tag["id"]): void => set((state: TagState) => removeTag(state, tagId)),
-    removeTags: (tagIds: Tag["id"][]): void => set((state: TagState) => tagIds.reduce((acc, current) => removeTag(acc, current), state)),
-}));
+    },
+});
 
 const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
     delete state.tags[tagId];
     return state;
 };
-
-export const getTagById = (state: TagState, tagId: Tag["id"]): Tag|undefined => state.tags[tagId];
 
 export default useTags;

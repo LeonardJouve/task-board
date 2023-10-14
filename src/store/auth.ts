@@ -7,7 +7,7 @@ type AuthState = {
 
 const useAuth = create<AuthState>((set) => ({
     isLoggedIn: false,
-    setIsLoggedIn: (isLoggedIn: boolean): void => set(() => ({isLoggedIn})),
+    setIsLoggedIn: (isLoggedIn): void => set(() => ({isLoggedIn})),
 }));
 
 export default useAuth;

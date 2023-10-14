@@ -33,9 +33,9 @@ const useLocale = create<LocaleState>((set) => ({
     locale: getLocale(),
     defaultLocale: DEFAULT_LOCALE,
     messages: en,
-    setLocale: async (locale: Locales): Promise<void> => {
+    setLocale: async (locale): Promise<void> => {
         const messages = await getMessages(locale);
-        return set((state: LocaleState) => ({
+        return set((state) => ({
             ...state,
             locale,
             messages,

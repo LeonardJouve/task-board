@@ -1,4 +1,6 @@
 import {create} from "zustand";
+import Rest from "@api/rest";
+import type {Board} from "@store/boards";
 
 export type User = {
     id: number;
@@ -9,32 +11,61 @@ export type User = {
 };
 
 type UserState = {
-    me: User;
+    me?: User;
     users: Record<User["id"], User>;
     setMe: (me: User) => void;
     addUser: (user: User) => void;
+    addUsers: (users: User[]) => void;
     removeUser: (userId: User["id"]) => void;
     removeUsers: (userIds: User["id"][]) => void;
-};
-
-const DEFAULT_USER = {
-    id: -1,
-    name: "",
-    username: "",
-    email: "",
-    picture: "",
+    fetchMe: () => Promise<void>;
+    fetchUser: (userId: User["id"]) => Promise<void>;
+    fetchUsers: (boardIds?: Board["id"][]) => Promise<void>;
 };
 
 const useUsers = create<UserState>((set) => ({
-    me: DEFAULT_USER,
-    users: [],
-    setMe: (me: User): void => set(() => ({
-        me,
-    })),
-    addUser: (user: User): void => set(() => ({users: {[user.id]: user}})),
-    removeUser: (userId: User["id"]): void => set((state: UserState) => removeUser(state, userId)),
-    removeUsers: (userIds: User["id"][]): void => set((state: UserState) => userIds.reduce((acc, current) => removeUser(acc, current), state)),
+    users: {},
+    setMe: (me): void => set(() => ({me})),
+    addUser: (user): void => set((state) => addUser(state, user)),
+    addUsers: (users): void => set((state) => users.reduce(addUser, state)),
+    removeUser: (userId): void => set((state: UserState) => removeUser(state, userId)),
+    removeUsers: (userIds): void => set((state: UserState) => userIds.reduce(removeUser, state)),
+    fetchMe: async (): Promise<void> => {
+        const {error, data} = await Rest.getMe();
+
+        if (error) {
+            return;
+        }
+
+        set(() => ({me: data}));
+    },
+    fetchUser: async (userId): Promise<void> => {
+        const {error, data} = await Rest.getUser(userId);
+
+        if (error) {
+            return;
+        }
+
+        set((state) => addUser(state, data));
+    },
+    fetchUsers: async (boardIds): Promise<void> => {
+        const {error, data} = await Rest.getUsers(boardIds);
+
+        if (error) {
+            return;
+        }
+
+        set((state) => data.reduce(addUser, state));
+    },
 }));
+
+const addUser = (state: UserState, user: User): UserState => ({
+    ...state,
+    users: {
+        ...state.users,
+        [user.id]: user,
+    },
+});
 
 const removeUser = (state: UserState, userId: User["id"]): UserState => {
     delete state.users[userId];
