@@ -32,7 +32,9 @@ type CsrfToken = {
 class RestClient {
     private readonly baseUrl: string;
     private readonly maxRetry: number = 5;
-    private csrfToken: string = "";
+    private csrfToken: string|null = null;
+    private accessToken: string|null = null;
+    private refreshToken: string|null = null;
 
     constructor() {
         this.baseUrl = import.meta.env.VITE_API_URL;
@@ -50,7 +52,7 @@ class RestClient {
             };
         }
 
-        if (apiTokenRequired && !document.cookie.includes("access_token")) {
+        if (apiTokenRequired && !document.cookie.includes("access_token") && !this.accessToken) {
             return {
                 error: true,
                 data: {
@@ -79,7 +81,8 @@ class RestClient {
         const headers: RequestInit["headers"] = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-CSRF-Token": this.csrfToken,
+            ...this.csrfToken && {"X-CSRF-Token": this.csrfToken},
+            ...apiTokenRequired && this.accessToken && {"Authorization": `Bearer ${this.accessToken}`},
             ...options.headers,
         };
 
@@ -109,12 +112,15 @@ class RestClient {
             data = data as MessageDescriptor;
 
             if (status === 403 && data.id === "api.rest.error.invalid_csrf") {
+                this.csrfToken = null;
                 const {error} = await this.getCsrfToken();
 
                 if (!error) {
                     return this.fetch(url, options, apiTokenRequired, retry + 1);
                 }
             }
+
+            // TODO: handle unauthorized
 
             return {
                 error: true,
@@ -155,11 +161,19 @@ class RestClient {
     }
 
     async login(email: string, password: string): RestResponse<Tokens> {
-        return await this.fetch<Tokens>(
+        const result = await this.fetch<Tokens>(
             `${this.getAuthRoute()}/login`,
             {method: "POST", body: JSON.stringify({email, password})},
             false,
         );
+        const {error, data} = result;
+
+        if (!error) {
+            this.accessToken = data.accessToken;
+            this.refreshToken = data.refreshToken;
+        }
+
+        return result;
     }
 
     async register(name: string, email: string, username: string, password: string, passwordConfirm: string): RestResponse<Tokens> {

@@ -9,6 +9,7 @@ export default {
             },
             width: {
                 "board-column": "var(--board-column-size)",
+                "right-sidebar": "var(--right-sidebar-size)",
             },
         },
     },

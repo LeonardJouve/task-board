@@ -1,13 +1,14 @@
 import React from "react";
 import type {Tag} from "@store/tags";
-import useTags, {getTagById} from "@store/tags";
+import useTags from "@store/tags";
 
 type Props = {
     id: Tag["id"];
 }
 
 const BoardTag: React.FC<Props> = ({id}) => {
-    const tag = useTags((state) => getTagById(state, id));
+    const {tags} = useTags();
+    const tag = tags[id];
 
     if (!tag) {
         return null;
