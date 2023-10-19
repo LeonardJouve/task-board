@@ -41,6 +41,41 @@ type UpdateBoard = {
     name?: string;
 };
 
+type CreateColumn = {
+    name: string;
+    boardId: Board["id"];
+};
+
+type UpdateColumn = {
+    name?: string;
+};
+
+type CreateCard = {
+    columnId: string;
+    name: string;
+    content: string;
+};
+
+type UpdateCard = {
+    name?: string;
+    content?: string;
+};
+
+enum Color {
+    WHITE = "#000000",
+}
+
+type CreateTag = {
+    boardId: Board["id"];
+    name: string;
+    color: Color;
+};
+
+type UpdateTag = {
+    name?: string;
+    color?: Color;
+};
+
 class RestClient {
     private readonly baseUrl: string;
     private readonly maxRetry: number = 5;
@@ -208,11 +243,26 @@ class RestClient {
         return result;
     }
 
+    // TODO API: return JWT
     async register(name: string, email: string, username: string, password: string, passwordConfirm: string): RestResponse<Tokens> {
         return await this.fetch<Tokens>(
             `${this.getAuthRoute()}/register`,
             {method: "POST", body: JSON.stringify({name, email, username, password, passwordConfirm})},
             false,
+        );
+    }
+
+    async refresh(): RestResponse<Tokens> {
+        return await this.fetch<Tokens>(
+            `${this.getAuthRoute()}/refresh`,
+            {method: "GET"},
+        );
+    }
+
+    async logout(): RestResponse<Status> {
+        return await this.fetch<Status>(
+            `${this.getAuthRoute()}/logout`,
+            {method: "GET"},
         );
     }
 
@@ -279,6 +329,36 @@ class RestClient {
         );
     }
 
+    async createColumn(column: CreateColumn): RestResponse<Column> {
+        return await this.fetch<Column>(
+            `${this.getColumnsRoute()}`,
+            {method: "POST", body: JSON.stringify(column)},
+        );
+    }
+
+    // TODO API: fix update column endpoint
+    async updateColumn(columnId: Column["id"], column: UpdateColumn): RestResponse<Column> {
+        return await this.fetch<Column>(
+            this.getColumnsRoute(columnId),
+            {method: "PUT", body: JSON.stringify(column)},
+        );
+    }
+
+    // TODO API: return column / move endpoint
+    async moveColumn(columnId: Column["id"], nextId: Column["id"]): RestResponse<Column> {
+        return await this.fetch<Column>(
+            `${this.getColumnsRoute(columnId)}/move?nextId=${nextId}`,
+            {method: "PATCH"},
+        );
+    }
+
+    async deleteColumn(columnId: Column["id"]): RestResponse<Status> {
+        return await this.fetch<Status>(
+            this.getColumnsRoute(columnId),
+            {method: "DELETE"},
+        );
+    }
+
     async getCard(cardId: Card["id"]): RestResponse<Card> {
         return await this.fetch<Card>(
             this.getCardsRoute(cardId),
@@ -293,6 +373,44 @@ class RestClient {
         );
     }
 
+    // TODO API: return card
+    async addCardTag(cardId: Card["id"], tagId: Tag["id"]): RestResponse<Card> {
+        return await this.fetch<Card>(
+            `${this.getCardsRoute(cardId)}/tag?tagId=${tagId}`,
+            {method: "GET"},
+        );
+    }
+
+    async createCard(card: CreateCard): RestResponse<Card> {
+        return await this.fetch<Card>(
+            this.getCardsRoute(),
+            {method: "POST", body: JSON.stringify(card)},
+        );
+    }
+
+    // TODO API: fix update card endpoint
+    async updateCard(cardId: Card["id"], card: UpdateCard): RestResponse<Card> {
+        return await this.fetch<Card>(
+            this.getCardsRoute(cardId),
+            {method: "PUT", body: JSON.stringify(card)},
+        );
+    }
+
+    // TODO API: cards can be moved to different columns but same board / return card / move endpoint
+    async moveCard(cardId: Card["id"], nextId: Card["id"]): RestResponse<Card> {
+        return await this.fetch<Card>(
+            `${this.getCardsRoute(cardId)}/move?nextId=${nextId}`,
+            {method: "GET"},
+        );
+    }
+
+    async deleteCard(cardId: Card["id"]): RestResponse<Status> {
+        return await this.fetch<Status>(
+            this.getCardsRoute(cardId),
+            {method: "DELETE"},
+        );
+    }
+
     async getTag(tagId: Tag["id"]): RestResponse<Tag> {
         return await this.fetch<Tag>(
             this.getTagsRoute(tagId),
@@ -304,6 +422,28 @@ class RestClient {
         return await this.fetch<Tag[]>(
             `${this.getTagsRoute()}${boardIds?.length ? "?boardIds=" + boardIds.join(",") : ""}`,
             {method: "GET"},
+        );
+    }
+
+    async createTag(tag: CreateTag): RestResponse<Tag> {
+        return await this.fetch<Tag>(
+            this.getTagsRoute(),
+            {method: "POST", body: JSON.stringify(tag)},
+        );
+    }
+
+    // TODO API: fix update card endpoint
+    async updateTag(tagId: Tag["id"], tag: UpdateTag): RestResponse<Tag> {
+        return await this.fetch<Tag>(
+            this.getTagsRoute(tagId),
+            {method: "PUT", body: JSON.stringify(tag)},
+        );
+    }
+
+    async deleteTag(tagId: Tag["id"]): RestResponse<Status> {
+        return await this.fetch<Status>(
+            this.getTagsRoute(tagId),
+            {method: "DELETE"},
         );
     }
 
