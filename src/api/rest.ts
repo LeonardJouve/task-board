@@ -33,45 +33,45 @@ type CsrfToken = {
     csrfToken: string;
 };
 
-type CreateBoard = {
+export type CreateBoard = {
     name: string;
 };
 
-type UpdateBoard = {
+export type UpdateBoard = {
     name?: string;
 };
 
-type CreateColumn = {
+export type CreateColumn = {
     name: string;
     boardId: Board["id"];
 };
 
-type UpdateColumn = {
+export type UpdateColumn = {
     name?: string;
 };
 
-type CreateCard = {
+export type CreateCard = {
     columnId: string;
     name: string;
     content: string;
 };
 
-type UpdateCard = {
+export type UpdateCard = {
     name?: string;
     content?: string;
 };
 
-enum Color {
+export enum Color {
     WHITE = "#000000",
 }
 
-type CreateTag = {
+export type CreateTag = {
     boardId: Board["id"];
     name: string;
     color: Color;
 };
 
-type UpdateTag = {
+export type UpdateTag = {
     name?: string;
     color?: Color;
 };
