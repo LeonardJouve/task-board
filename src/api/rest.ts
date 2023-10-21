@@ -336,7 +336,6 @@ class RestClient {
         );
     }
 
-    // TODO API: fix update column endpoint
     async updateColumn(columnId: Column["id"], column: UpdateColumn): RestResponse<Column> {
         return await this.fetch<Column>(
             this.getColumnsRoute(columnId),
@@ -344,8 +343,7 @@ class RestClient {
         );
     }
 
-    // TODO API: return column / move endpoint
-    async moveColumn(columnId: Column["id"], nextId: Column["id"]): RestResponse<Column> {
+    async moveColumn(columnId: Column["id"], nextId: Column["id"]|null): RestResponse<Column> {
         return await this.fetch<Column>(
             `${this.getColumnsRoute(columnId)}/move?nextId=${nextId}`,
             {method: "PATCH"},
@@ -373,7 +371,6 @@ class RestClient {
         );
     }
 
-    // TODO API: return card
     async addCardTag(cardId: Card["id"], tagId: Tag["id"]): RestResponse<Card> {
         return await this.fetch<Card>(
             `${this.getCardsRoute(cardId)}/tag?tagId=${tagId}`,
@@ -388,7 +385,6 @@ class RestClient {
         );
     }
 
-    // TODO API: fix update card endpoint
     async updateCard(cardId: Card["id"], card: UpdateCard): RestResponse<Card> {
         return await this.fetch<Card>(
             this.getCardsRoute(cardId),
@@ -396,10 +392,9 @@ class RestClient {
         );
     }
 
-    // TODO API: cards can be moved to different columns but same board / return card / move endpoint
-    async moveCard(cardId: Card["id"], nextId: Card["id"]): RestResponse<Card> {
+    async moveCard(cardId: Card["id"], columnId: Column["id"], nextId: Card["id"]|null): RestResponse<Card> {
         return await this.fetch<Card>(
-            `${this.getCardsRoute(cardId)}/move?nextId=${nextId}`,
+            `${this.getCardsRoute(cardId)}/move?columnId=${columnId}&nextId=${nextId}`,
             {method: "GET"},
         );
     }
@@ -432,7 +427,6 @@ class RestClient {
         );
     }
 
-    // TODO API: fix update card endpoint
     async updateTag(tagId: Tag["id"], tag: UpdateTag): RestResponse<Tag> {
         return await this.fetch<Tag>(
             this.getTagsRoute(tagId),
