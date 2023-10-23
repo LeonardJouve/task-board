@@ -1,21 +1,29 @@
 import React, {useState} from "react";
+import type {UpdateColumn} from "@api/rest";
 import type {Column} from "@store/columns";
 import EditableText from "@components/editable_text";
 import BoardColumnHeaderActions from "@components/board_column_header_actions";
+import useColumns from "@store/columns";
 
 type Props = {
     column: Column;
+    openModal: () => void;
 }
 
 // TODO: rename / filter / new card
 
-const BoardColumnHeader: React.FC<Props> = ({column}) => {
+const BoardColumnHeader: React.FC<Props> = ({column, openModal}) => {
+    const {updateColumn} = useColumns();
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
     const [hover, setHover] = useState<boolean>(false);
 
     const handleMouseEnter = (): void => setHover(true);
 
     const handleMouseLeave = (): void => setHover(false);
+
+    const handleUpdateColumn = (updatedColumn: UpdateColumn): void => {
+        updateColumn(column.id, updatedColumn);
+    };
 
     return (
         <div
@@ -28,10 +36,15 @@ const BoardColumnHeader: React.FC<Props> = ({column}) => {
                     isEditing={isEditingName}
                     setIsEditing={setIsEditingName}
                     content={column.name}
-                    setContent={console.log}
+                    setContent={(name): void => handleUpdateColumn({name})}
                 />
             </span>
-            {hover && <BoardColumnHeaderActions column={column}/>}
+            {hover && (
+                <BoardColumnHeaderActions
+                    column={column}
+                    openModal={openModal}
+                />
+            )}
         </div>
     );
 };

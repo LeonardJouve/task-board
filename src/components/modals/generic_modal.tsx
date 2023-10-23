@@ -68,7 +68,7 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
             onClick={handleClickOutside}
         >
             <div className="flex flex-row bg-blue-200 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
-                <h2 className="uppercase font-bold flex flex-1">
+                <h2 className="font-bold flex flex-1">
                     {header}
                 </h2>
                 <button

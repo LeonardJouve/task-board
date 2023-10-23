@@ -1,7 +1,9 @@
 import React, {useState} from "react";
+import type {UpdateCard} from "@api/rest";
 import type {Card} from "@store/cards";
 import GenericModal from "@components/modals/generic_modal";
 import EditableText from "@components/editable_text";
+import useCards from "@store/cards";
 
 type Props = {
     open: boolean;
@@ -10,24 +12,29 @@ type Props = {
 };
 
 const BoardCardModal: React.FC<Props> = ({open, setOpen, card}) => {
+    const {updateCard} = useCards();
     const [isEditingContent, setIsEditingContent] = useState<boolean>(false);
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
+
+    const handleUpdateCard = (updatedCard: UpdateCard): void => {
+        updateCard(card.id, updatedCard);
+    };
 
     const content = (
         <EditableText
             isEditing={isEditingContent}
             setIsEditing={setIsEditingContent}
             content={card.content}
-            setContent={console.log}
+            setContent={(updatedContent): void => handleUpdateCard({content: updatedContent})}
         />
     );
 
-    const header = (
+    const name = (
         <EditableText
             isEditing={isEditingName}
             setIsEditing={setIsEditingName}
             content={card.name}
-            setContent={console.log}
+            setContent={(updatedName): void => handleUpdateCard({name: updatedName})}
         />
     );
 
@@ -35,7 +42,7 @@ const BoardCardModal: React.FC<Props> = ({open, setOpen, card}) => {
         <GenericModal
             open={open}
             setOpen={setOpen}
-            header={header}
+            header={name}
             content={content}
             showFooter={false}
             closeOnClickOutside={true}

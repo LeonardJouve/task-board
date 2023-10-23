@@ -1,6 +1,6 @@
 import React from "react";
 import {IntlProvider as ReactIntlProvider} from "react-intl";
-import useLocale from "@store/locale";
+import useLocale, {DEFAULT_LOCALE} from "@store/locale";
 
 
 const IntlProvider: React.FC<React.PropsWithChildren> = ({children}) => {
@@ -10,7 +10,7 @@ const IntlProvider: React.FC<React.PropsWithChildren> = ({children}) => {
         <ReactIntlProvider
             locale={intl.locale}
             messages={intl.messages}
-            defaultLocale={intl.defaultLocale}
+            defaultLocale={DEFAULT_LOCALE}
         >
             {children}
         </ReactIntlProvider>

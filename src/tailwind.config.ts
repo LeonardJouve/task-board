@@ -6,6 +6,7 @@ export default {
         extend: {
             height: {
                 "header": "var(--header-size)",
+                "board-preview": "var(--board-preview-size)",
             },
             width: {
                 "board-column": "var(--board-column-size)",

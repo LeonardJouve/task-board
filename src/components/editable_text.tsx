@@ -8,6 +8,8 @@ type Props = {
     contentClass?: string;
 };
 
+// TODO: ctrl + ENTER => confirm / prop isMultiline
+
 const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, contentClass = ""}) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [editingContent, setEditingContent] = useState<string>(content);
@@ -37,28 +39,28 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
         setContent(editingContent);
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setEditingContent(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setEditingContent(e.target.value);
 
     if (isEditing) {
         return (
             <textarea
                 ref={textareaRef}
-                className="resize-none flex flex-1 rounded"
+                className={`resize-none flex flex-1 rounded ${contentClass}`}
                 value={editingContent}
                 autoFocus={true}
                 onBlur={handleBlur}
-                onChange={handleInputChange}
+                onChange={handleChange}
             />
         );
     }
 
     return (
-        <div
+        <span
             className={`flex flex-1 ${contentClass}`}
             onClick={handleEdit}
         >
             {content}
-        </div>
+        </span>
     );
 };
 

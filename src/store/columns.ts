@@ -99,9 +99,6 @@ const removeColumn = (state: ColumnState, columnId: Column["id"]): ColumnState =
     return state;
 };
 
-export const getColumns = (state: ColumnState): ColumnState & {columns: Column[]} => ({
-    ...state,
-    columns: Object.values(state.columns),
-});
+export const getColumnsInBoard = (columns: ColumnState["columns"], boardId: Board["id"]): Column[] => Object.values(columns).filter((column) => column.boardId === boardId);
 
 export default useColumns;

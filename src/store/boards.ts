@@ -5,7 +5,9 @@ import type {User} from "@store/users";
 export type Board = {
     id: number;
     ownerId: number;
+    userIds: User["id"][];
     name: string;
+    description: string;
 };
 
 type BoardState = {

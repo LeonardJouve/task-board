@@ -13,9 +13,11 @@ const AddCardModal: React.FC<Props> = ({open, setOpen, columnId}) => {
     const [name, setName] = useState<Card["name"]>("");
     const [content, setContent] = useState<Card["content"]>("");
     const [tagIds, setTagIds] = useState<Card["tagIds"]>([]);
-    const addCard = useCards((state) => state.addCard);
+    const {createCard} = useCards();
 
-    const handleConfirm = (): void => setName("");
+    const handleConfirm = (): void => {
+        console.log;
+    };
 
     return (
         <GenericModal

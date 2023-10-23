@@ -19,18 +19,21 @@ const BoardColumn: React.FC<Props> = ({column}) => {
         fetchCards([column.id]);
     }, [column]);
 
-    const handleAddCard = (): void => setIsModalOpen(true);
+    const handleOpenModal = (): void => setIsModalOpen(true);
 
     return (
         <div className="w-board-column bg-blue-100 rounded-lg flex flex-col items-center gap-2 p-3">
-            <BoardColumnHeader column={column}/>
+            <BoardColumnHeader
+                column={column}
+                openModal={handleOpenModal}
+            />
             {cards.map((card) => (
                 <BoardCard
                     key={`card-${card.id}`}
                     card={card}
                 />
             ))}
-            <AddItem
+            {!cards.length && <AddItem
                 className="w-full rounded"
                 description={(
                     <FormattedMessage
@@ -38,8 +41,8 @@ const BoardColumn: React.FC<Props> = ({column}) => {
                         defaultMessage="Add Column"
                     />
                 )}
-                onAdd={handleAddCard}
-            />
+                onAdd={handleOpenModal}
+            />}
             <AddCardModal
                 open={isModalOpen}
                 setOpen={setIsModalOpen}

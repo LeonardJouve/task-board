@@ -13,7 +13,7 @@ const Register: React.FC = () => {
 
     const handlePasswordConfirmChange = (event: React.ChangeEvent<HTMLInputElement>): void => setPasswordConfirm(event.target.value);
 
-    const handleSubmit = (): void => console.log("login");
+    const handleSubmit = (): void => console.log("register");
 
     return (
         <div className="flex flex-1 justify-center items-center">

@@ -4,7 +4,6 @@ import en from "@intl/en.json";
 
 type LocaleState = {
     locale: IntlConfig["locale"];
-    defaultLocale: IntlConfig["locale"];
     messages: IntlConfig["messages"];
     setLocale: (locale: Locales) => Promise<void>;
 }
@@ -15,8 +14,6 @@ export enum Locales {
 }
 
 export const DEFAULT_LOCALE = Locales.EN;
-
-const getLocale = (): LocaleState["locale"] => DEFAULT_LOCALE;
 
 const getMessages = async (locale: LocaleState["locale"]): Promise<LocaleState["messages"]> => {
     switch (locale) {
@@ -30,13 +27,11 @@ const getMessages = async (locale: LocaleState["locale"]): Promise<LocaleState["
 };
 
 const useLocale = create<LocaleState>((set) => ({
-    locale: getLocale(),
-    defaultLocale: DEFAULT_LOCALE,
+    locale: DEFAULT_LOCALE,
     messages: en,
     setLocale: async (locale): Promise<void> => {
         const messages = await getMessages(locale);
-        return set((state) => ({
-            ...state,
+        return set(() => ({
             locale,
             messages,
         }));

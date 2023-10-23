@@ -193,6 +193,10 @@ class RestClient {
         return `${this.baseUrl}/api`;
     }
 
+    getAssetsRoute(asset?: string): string {
+        return `${this.baseUrl}/assets/${asset}`;
+    }
+
     getBoardsRoute(boardId?: Board["id"]): string {
         return `${this.getApiRoute()}/boards/${boardId ?? ""}`;
     }
