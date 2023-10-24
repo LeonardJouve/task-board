@@ -12,7 +12,10 @@ type Props = {
 };
 
 const Avatars: React.FC<Props> = ({userIds, className, size = Size.M, amount = 4}) => (
-    <div className={`flex flex-row ${className ?? ""}`}>
+    <div
+        className={`flex flex-row ${className ?? ""}`}
+        style={{...userIds.length > 1 && {marginRight: -Math.round(size / 2)}}}
+    >
         {userIds.slice(0, amount).map((userId, i) => (
             <Avatar
                 key={`avatar-${userId}`}
@@ -24,7 +27,7 @@ const Avatars: React.FC<Props> = ({userIds, className, size = Size.M, amount = 4
                 }}
             />
         ))}
-        {userIds.length > 0 /* TODO: replace "0" with "amount" */ && (
+        {userIds.length > amount && (
             <Tooltip
                 content={(
                     <FormattedMessage
