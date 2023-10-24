@@ -1,8 +1,10 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import type {Board} from "@store/boards";
+import useColumns from "@store/columns";
 import Avatars from "@components/avatars";
 import {Size} from "@components/avatar";
+import ColumnPreview from "@components/column_preview";
+import type {Board} from "@store/boards";
 
 type Props = {
     board: Board;
@@ -10,6 +12,7 @@ type Props = {
 
 const BoardPreview: React.FC<Props> = ({board}) => {
     const navigate = useNavigate();
+    const {columns} = useColumns();
 
     const handleOpenBoard = (): void => {
         navigate(`/board/${board.id}`);
@@ -29,10 +32,16 @@ const BoardPreview: React.FC<Props> = ({board}) => {
                 </span>
             </div>
             <Avatars
-                className="absolute right-2 top-2"
+                className="absolute self-end"
                 userIds={board.userIds}
                 size={Size.S}
             />
+            {Object.values(columns).map((column) => (
+                <ColumnPreview
+                    key={`column-preview-${column.id}`}
+                    column={column}
+                />
+            ))}
         </button>
     );
 };

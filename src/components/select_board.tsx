@@ -23,7 +23,7 @@ const SelectBoard: React.FC = () => {
                 />
             ))}
             <AddItem
-                className="h-board-preview"
+                className="h-board-preview rounded-lg"
                 onAdd={handleAddBoard}
             />
             <AddBoardModal

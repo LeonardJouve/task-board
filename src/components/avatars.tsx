@@ -1,6 +1,8 @@
 import React from "react";
+import {FormattedMessage} from "react-intl";
 import type {User} from "@store/users";
 import Avatar, {Size} from "@components/avatar";
+import Tooltip from "@components/tooltip";
 
 type Props = {
     userIds: User["id"][];
@@ -10,16 +12,32 @@ type Props = {
 };
 
 const Avatars: React.FC<Props> = ({userIds, className, size = Size.M, amount = 4}) => (
-    <div className={`flex flex-row ${className}`}>
+    <div className={`flex flex-row ${className ?? ""}`}>
         {userIds.slice(0, amount).map((userId, i) => (
             <Avatar
                 key={`avatar-${userId}`}
                 userId={userId}
                 size={size}
-                className={`relative z-[${amount - i}]${i ? ` -left-[${Math.round(size / 2)}px]` : ""}`}
+                style={{
+                    zIndex: amount - i,
+                    ...i && {left: -Math.round(size / 2)},
+                }}
             />
         ))}
-        {userIds.length > 0 && "..."}
+        {userIds.length > 0 /* TODO: replace "0" with "amount" */ && (
+            <Tooltip
+                content={(
+                    <FormattedMessage
+                        id="components.avatars.more"
+                        defaultMessage="{amount} more"
+                        values={{amount: userIds.length - amount}}
+                    />
+                )}
+                style={{left: -Math.round(size / 2)}}
+            >
+                {"..."}
+            </Tooltip>
+        )}
     </div>
 );
 
