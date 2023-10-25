@@ -10,7 +10,31 @@
 }
 
 @layer components {
-    .background-primary {
-        @apply bg-primary-light dark:bg-primary-dark;
+    .background-1 {
+        @apply bg-light-1 dark:bg-dark-1;
+    }
+    .background-2 {
+        @apply bg-light-2 dark:bg-dark-2;
+    }
+    .background-3 {
+        @apply bg-light-3 dark:bg-dark-3;
+    }
+    .background-4 {
+        @apply bg-light-4 dark:bg-dark-4;
+    }
+    .background-5 {
+        @apply bg-light-5 dark:bg-dark-5;
+    }
+    .color-1 {
+        @apply text-light-6 dark:text-dark-6;
+    }
+    .color-2 {
+        @apply text-light-7 dark:text-dark-7;
+    }
+    .border-color-1 {
+        @apply border-light-6 dark:border-dark-6;
+    }
+    .hover {
+        @apply hover:bg-opacity-75 hover:border-opacity-75;
     }
 }

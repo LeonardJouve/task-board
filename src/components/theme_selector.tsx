@@ -9,7 +9,7 @@ const ThemeSelector: React.FC = () => {
     };
 
     return (
-        <button className="hover:bg-slate-100 flex justify-center items-center aspect-square rounded">
+        <button className="background-2 hover flex justify-center items-center aspect-square rounded">
             <i
                 className={`text-2xl ${isDark ? "icon-theme-dark" : "icon-theme-light"}`}
                 onClick={handleChangeTheme}

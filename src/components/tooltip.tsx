@@ -19,7 +19,7 @@ const Tooltip: React.FC<Props> = ({content, children, style}) => {
             style={style}
         >
             {children}
-            <span className={`absolute whitespace-nowrap text-white bottom-[125%] left-[50%] -translate-x-[50%] z-[1] text-center rounded bg-slate-400 px-1 after:content-[""] after:absolute after:top-[100%] after:left-[50%] after:-translate-x-[50%] after:border-solid after:border-4 after:border-t-slate-400 after:border-x-transparent after:border-b-transparent ${isHover ? "visible" : "hidden"}`}>
+            <span className={`background-1 after:border-t-light-1 after:dark:border-t-dark-1 text-1 absolute whitespace-nowrap bottom-[125%] left-[50%] -translate-x-[50%] z-[1] text-center rounded px-1 after:content-[""] after:absolute after:top-[100%] after:left-[50%] after:-translate-x-[50%] after:border-solid after:border-4 after:border-x-transparent after:border-b-transparent ${isHover ? "visible" : "hidden"}`}>
                 {content}
             </span>
         </div>

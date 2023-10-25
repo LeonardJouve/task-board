@@ -45,7 +45,7 @@ const Avatar: React.FC<Props> = ({userId, size = Size.M, style}) => {
             style={style}
         >
             <img
-                className="rounded-[50%] border-slate-300 hover:border-slate-200 border-[1px]"
+                className="rounded-[50%] border-color-1 hover border-[1px]"
                 src={hasError ? "src/public/assets/default_profile_picture.png" : Rest.getAssetsRoute(user.picture)}
                 width={size}
                 height={size}

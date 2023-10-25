@@ -29,17 +29,17 @@ const BoardPreview: React.FC<Props> = ({board}) => {
 
     return (
         <button
-            className="border-gray-300 border-[1px] rounded-lg h-board-preview flex flex-col relative p-4 background-primary"
+            className="rounded-lg h-board-preview flex flex-col relative p-4 background-2"
             onClick={handleOpenBoard}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <div className="flex flex-row flex-1 gap-2 max-w-full max-h-full">
-                <div className="flex flex-col flex-1 gap-2 text-left max-w-[20%]">
-                    <h2 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap">
+                <div className="flex flex-col flex-1 gap-2 text-left max-w-[20%] color-1">
+                    <h2 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap font-extrabold">
                         {board.name}
                     </h2>
-                    <span className="text-lg overflow-hidden text-ellipsis whitespace-nowrap">
+                    <span className="text-lg overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
                         {board.description}
                     </span>
                     {isHover && (
@@ -49,7 +49,7 @@ const BoardPreview: React.FC<Props> = ({board}) => {
                         />
                     )}
                 </div>
-                <div className="flex flex-row gap-4 flex-[4_4_0%] overflow-hidden">
+                <div className="flex flex-row gap-4 flex-[4_4_0%] overflow-hidden color-2">
                     {getColumnsInBoard(columns, board.id).map((column) => (
                         <ColumnPreview
                             key={`column-preview-${column.id}`}

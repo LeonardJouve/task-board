@@ -15,7 +15,7 @@ const SelectBoard: React.FC = () => {
     const handleAddBoard = (): void => setIsModalOpen(true);
 
     return (
-        <div className="flex flex-1 flex-col p-8 gap-5">
+        <div className="flex flex-1 flex-col p-8 gap-5 background-1">
             {Object.values(boards).map((board) => (
                 <BoardPreview
                     board={board}
@@ -23,7 +23,7 @@ const SelectBoard: React.FC = () => {
                 />
             ))}
             <AddItem
-                className="h-board-preview rounded-lg"
+                className="h-board-preview rounded-lg background-3 color-2 hover"
                 onAdd={handleAddBoard}
             />
             <AddBoardModal
