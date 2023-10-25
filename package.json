@@ -5,7 +5,8 @@
   "scripts": {
     "run": "vite",
     "build": "tsc && vite build",
-    "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch"
+    "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch",
+    "webfont":"webfont-generator --out dist/icons --icons src/icons"
   },
   "dependencies": {
     "react": "^18.2.0",

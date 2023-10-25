@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import useColumns from "@store/columns";
+import useColumns, {getColumnsInBoard} from "@store/columns";
 import Avatars from "@components/avatars";
 import {Size} from "@components/avatar";
 import ColumnPreview from "@components/column_preview";
@@ -12,36 +12,52 @@ type Props = {
 
 const BoardPreview: React.FC<Props> = ({board}) => {
     const navigate = useNavigate();
-    const {columns} = useColumns();
+    const {columns, fetchColumns} = useColumns();
+    const [isHover, setIsHover] = useState<boolean>(false);
+
+    useEffect(() => {
+        fetchColumns([board.id]);
+    }, [board]);
 
     const handleOpenBoard = (): void => {
         navigate(`/board/${board.id}`);
     };
 
+    const handleMouseEnter = (): void => setIsHover(true);
+
+    const handleMouseLeave = (): void => setIsHover(false);
+
     return (
         <button
-            className="border-gray-300 border-[1px] rounded-lg h-board-preview flex flex-col relative p-4"
+            className="border-gray-300 border-[1px] rounded-lg h-board-preview flex flex-col relative p-4 background-primary"
             onClick={handleOpenBoard}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
-            <div className="flex flex-col">
-                <h2 className="flex text-2xl">
-                    {board.name}
-                </h2>
-                <span className="flex text-lg">
-                    {board.description}
-                </span>
+            <div className="flex flex-row flex-1 gap-2 max-w-full max-h-full">
+                <div className="flex flex-col flex-1 gap-2 text-left max-w-[20%]">
+                    <h2 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap">
+                        {board.name}
+                    </h2>
+                    <span className="text-lg overflow-hidden text-ellipsis whitespace-nowrap">
+                        {board.description}
+                    </span>
+                    {isHover && (
+                        <Avatars
+                            userIds={board.userIds}
+                            size={Size.S}
+                        />
+                    )}
+                </div>
+                <div className="flex flex-row gap-4 flex-[4_4_0%] overflow-hidden">
+                    {getColumnsInBoard(columns, board.id).map((column) => (
+                        <ColumnPreview
+                            key={`column-preview-${column.id}`}
+                            column={column}
+                        />
+                    ))}
+                </div>
             </div>
-            <Avatars
-                className="absolute self-end"
-                userIds={board.userIds}
-                size={Size.S}
-            />
-            {Object.values(columns).map((column) => (
-                <ColumnPreview
-                    key={`column-preview-${column.id}`}
-                    column={column}
-                />
-            ))}
         </button>
     );
 };

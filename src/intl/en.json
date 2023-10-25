@@ -4,6 +4,5 @@
     "components.auth.email": "Email",
     "components.auth.password": "Password",
     "components.auth.passwordConfirm": "Confirm password",
-    "components.board_column.add_item.description": "Add card",
     "components.add_card_modal.header": "Create a new card"
 }

@@ -2,6 +2,7 @@ import type {Config} from "tailwindcss";
 
 export default {
     content: ["./src/**/*.{html,tsx,jsx,js,ts}"],
+    darkMode: "class",
     theme: {
         extend: {
             height: {
@@ -11,6 +12,23 @@ export default {
             width: {
                 "board-column": "var(--board-column-size)",
                 "right-sidebar": "var(--right-sidebar-size)",
+            },
+            minWidth: {
+                "board-column": "var(--board-column-size)",
+                "header": "var(--header-size)",
+            },
+            maxWidth: {
+                "board-column": "var(--board-column-size)",
+            },
+            minHeight: {
+                "header": "var(--header-size)",
+            },
+            maxHeight: {
+                "header": "var(--header-size)",
+            },
+            colors: {
+                "primary-light": "#FFFFFF",
+                "primary-dark": "#000000",
             },
         },
     },

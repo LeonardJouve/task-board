@@ -8,3 +8,9 @@
     --board-column-size: 200px;
     --board-preview-size: 170px;
 }
+
+@layer components {
+    .background-primary {
+        @apply bg-primary-light dark:bg-primary-dark;
+    }
+}
