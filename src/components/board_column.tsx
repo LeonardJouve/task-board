@@ -23,7 +23,7 @@ const BoardColumn: React.FC<Props> = ({column}) => {
 
 
     return (
-        <div className="w-board-column bg-blue-100 rounded-lg flex flex-col items-center gap-2 p-3">
+        <div className="min-w-board-column max-w-board-column background-3 rounded-lg flex flex-col items-center gap-2 p-3 color-2">
             <BoardColumnHeader
                 column={column}
                 openModal={handleOpenModal}
@@ -34,10 +34,12 @@ const BoardColumn: React.FC<Props> = ({column}) => {
                     card={card}
                 />
             ))}
-            {!cardsInColumn.length && <AddItem
-                className="w-full rounded"
-                onAdd={handleOpenModal}
-            />}
+            {!cardsInColumn.length && (
+                <AddItem
+                    className="w-full rounded color-1 background-5 hover"
+                    onAdd={handleOpenModal}
+                />
+            )}
             <AddCardModal
                 open={isModalOpen}
                 setOpen={setIsModalOpen}

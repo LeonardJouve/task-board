@@ -8,14 +8,22 @@ type Props = {
 };
 
 const BoardColumnHeaderActions: React.FC<Props> = ({column, openModal}) => (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row gap-2 mr-0 ml-auto">
         <button
-            className="rounded bg-white hover:bg-slate-100"
+            className="rounded background-5 hover"
             onClick={openModal}
         >
             <i className="icon-plus"/>
         </button>
-        <Menu icon="list" items={[{text: "text1"}, {text: "text2"}]}/>
+        <Menu
+            className="background-5"
+            name={`board-column-header-menu-${column.id}`}
+            icon="list"
+            items={[
+                {text: "text1"},
+                {text: "text2"},
+            ]}
+        />
     </div>
 );
 

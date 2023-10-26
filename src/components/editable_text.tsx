@@ -5,12 +5,12 @@ type Props = {
     setIsEditing: (isEditing: boolean) => void;
     content: string;
     setContent: (content: string) => void;
-    contentClass?: string;
+    className?: string;
 };
 
 // TODO: ctrl + ENTER => confirm / prop isMultiline
 
-const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, contentClass = ""}) => {
+const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, className = ""}) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [editingContent, setEditingContent] = useState<string>(content);
 
@@ -45,7 +45,7 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
         return (
             <textarea
                 ref={textareaRef}
-                className={`resize-none flex flex-1 rounded ${contentClass}`}
+                className={`resize-none rounded ${className}`}
                 value={editingContent}
                 autoFocus={true}
                 onBlur={handleBlur}
@@ -56,7 +56,7 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
 
     return (
         <span
-            className={`flex flex-1 ${contentClass}`}
+            className={className}
             onClick={handleEdit}
         >
             {content}

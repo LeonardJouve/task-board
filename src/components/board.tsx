@@ -26,8 +26,8 @@ const Board: React.FC = () => {
     }, [boardId]);
 
     return (
-        <div className="flex flex-1">
-            <div className="flex flex-1 flex-row gap-7 p-5">
+        <div className="flex flex-1 background-1">
+            <div className="flex flex-1 flex-row gap-7 p-5 overflow-x-scroll">
                 {getColumnsInBoard(columns, boardId).map((column) => (
                     <BoardColumn
                         key={`column-${column.id}`}
@@ -35,7 +35,7 @@ const Board: React.FC = () => {
                     />
                 ))}
                 <AddItem
-                    className="w-board-column h-full rounded-lg"
+                    className="min-w-board-column max-w-board-column h-full rounded-lg background-2 color-2"
                     description="New column"
                     onAdd={console.log}
                 />

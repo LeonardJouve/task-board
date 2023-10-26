@@ -17,13 +17,13 @@ const BoardCard: React.FC<Props> = ({card}) => {
     return (
         <>
             <button
-                className="w-full bg-slate-50 rounded flex flex-col gap-1 p-2 overflow-hidden hover:bg-slate-100"
+                className="w-full background-5 rounded flex flex-col gap-1 p-2 overflow-hidden hover"
                 onClick={handleOpen}
             >
-                <span className="overflow-hidden text-ellipsis max-h-[2rem] px-1 py-0.5 bg-white rounded">
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap px-1 py-0.5 background-4 rounded">
                     {card.name}
                 </span>
-                <span className="overflow-hidden text-ellipsis max-h-[4rem]">
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                     {card.content}
                 </span>
                 <div className="flex flex-row gap-2">

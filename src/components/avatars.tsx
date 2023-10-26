@@ -11,9 +11,9 @@ type Props = {
     size?: Size;
 };
 
-const Avatars: React.FC<Props> = ({userIds, className, size = Size.M, amount = 4}) => (
+const Avatars: React.FC<Props> = ({userIds, className = "", size = Size.M, amount = 4}) => (
     <div
-        className={`flex flex-row ${className ?? ""}`}
+        className={`flex flex-row ${className}`}
         style={{...userIds.length > 1 && {marginRight: -Math.round(size / 2)}}}
     >
         {userIds.slice(0, amount).map((userId, i) => (

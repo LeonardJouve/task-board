@@ -27,18 +27,17 @@ const BoardColumnHeader: React.FC<Props> = ({column, openModal}) => {
 
     return (
         <div
-            className="w-full px-2 py-1 bg-white rounded flex flex-row"
+            className="w-full px-2 py-1 bg-white rounded flex flex-row background-4"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <span className="font-bold flex flex-1">
-                <EditableText
-                    isEditing={isEditingName}
-                    setIsEditing={setIsEditingName}
-                    content={column.name}
-                    setContent={(name): void => handleUpdateColumn({name})}
-                />
-            </span>
+            <EditableText
+                isEditing={isEditingName}
+                setIsEditing={setIsEditingName}
+                content={column.name}
+                setContent={(name): void => handleUpdateColumn({name})}
+                className="overflow-hidden whitespace-nowrap text-ellipsis font-bold"
+            />
             {hover && (
                 <BoardColumnHeaderActions
                     column={column}
