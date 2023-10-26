@@ -29,7 +29,7 @@ const BoardPreview: React.FC<Props> = ({board}) => {
 
     return (
         <button
-            className="rounded-lg h-board-preview flex flex-col relative p-4 background-2"
+            className="rounded-lg min-h-board-preview max-h-board-preview flex flex-col relative p-4 background-2"
             onClick={handleOpenBoard}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}

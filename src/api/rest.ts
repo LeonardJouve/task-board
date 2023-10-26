@@ -62,7 +62,7 @@ export type UpdateCard = {
 };
 
 export enum Color {
-    WHITE = "#000000",
+    WHITE = "#FFFFFF",
 }
 
 export type CreateTag = {

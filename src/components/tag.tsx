@@ -15,7 +15,10 @@ const BoardTag: React.FC<Props> = ({id}) => {
     }
 
     return (
-        <span className={`rounded px-2 py-1 uppercase text-xs border-color-1 border-[1px] bg-${tag.color}`}>
+        <span
+            className="rounded px-2 py-1 uppercase text-xs border-color-1 border-[1px]"
+            style={{background: tag.color}}
+        >
             {tag.name}
         </span>
     );

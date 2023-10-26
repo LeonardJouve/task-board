@@ -22,9 +22,11 @@ export default {
             },
             minHeight: {
                 "header": "var(--header-size)",
+                "board-preview": "var(--board-preview-size)",
             },
             maxHeight: {
                 "header": "var(--header-size)",
+                "board-preview": "var(--board-preview-size)",
             },
             colors: {
                 "light-1": "#FFFFFF",
