@@ -4,14 +4,14 @@ import Menu from "@components/menu";
 
 type Props = {
     column: Column;
-    openModal: () => void;
+    onNewCard: () => void;
 };
 
-const BoardColumnHeaderActions: React.FC<Props> = ({column, openModal}) => (
+const BoardColumnHeaderActions: React.FC<Props> = ({column, onNewCard}) => (
     <div className="flex flex-row gap-2 mr-0 ml-auto">
         <button
             className="rounded background-5 hover"
-            onClick={openModal}
+            onClick={onNewCard}
         >
             <i className="icon-plus"/>
         </button>

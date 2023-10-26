@@ -7,12 +7,12 @@ import useColumns from "@store/columns";
 
 type Props = {
     column: Column;
-    openModal: () => void;
+    onNewCard: () => void;
 }
 
 // TODO: rename / filter / new card
 
-const BoardColumnHeader: React.FC<Props> = ({column, openModal}) => {
+const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
     const {updateColumn} = useColumns();
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
     const [hover, setHover] = useState<boolean>(false);
@@ -41,7 +41,7 @@ const BoardColumnHeader: React.FC<Props> = ({column, openModal}) => {
             {hover && (
                 <BoardColumnHeaderActions
                     column={column}
-                    openModal={openModal}
+                    onNewCard={onNewCard}
                 />
             )}
         </div>

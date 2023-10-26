@@ -7,10 +7,6 @@ import Board from "@components/board";
 import SelectBoard from "@components/select_board";
 import Header from "@components/header";
 
-export type BoardParams = {
-    boardId: string;
-};
-
 const Rooter: React.FC = () => (
     <BrowserRouter>
         <Routes>

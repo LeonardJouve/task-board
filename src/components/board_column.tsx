@@ -4,7 +4,7 @@ import type {Column} from "@store/columns";
 import BoardColumnHeader from "@components/board_column_header";
 import BoardCard from "@components/board_card";
 import AddItem from "@components/add_item";
-import AddCardModal from "@components/modals/add_card_modal";
+import NewCardModal from "@components/modals/new_card_modal";
 
 type Props = {
     column: Column;
@@ -19,14 +19,14 @@ const BoardColumn: React.FC<Props> = ({column}) => {
         fetchCards([column.id]);
     }, [column]);
 
-    const handleOpenModal = (): void => setIsModalOpen(true);
+    const handleNewCard = (): void => setIsModalOpen(true);
 
 
     return (
         <div className="min-w-board-column max-w-board-column background-3 rounded-lg flex flex-col items-center gap-2 p-3 color-2">
             <BoardColumnHeader
                 column={column}
-                openModal={handleOpenModal}
+                onNewCard={handleNewCard}
             />
             {cardsInColumn.map((card) => (
                 <BoardCard
@@ -37,10 +37,10 @@ const BoardColumn: React.FC<Props> = ({column}) => {
             {!cardsInColumn.length && (
                 <AddItem
                     className="w-full rounded color-1 background-5 hover"
-                    onAdd={handleOpenModal}
+                    onAdd={handleNewCard}
                 />
             )}
-            <AddCardModal
+            <NewCardModal
                 open={isModalOpen}
                 setOpen={setIsModalOpen}
                 columnId={column.id}

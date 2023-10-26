@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from "react";
+import {FormattedMessage} from "react-intl";
 
 type Props = {
     open: boolean;
@@ -64,10 +65,10 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
     return (
         <dialog
             ref={modalRef}
-            className="w-1/2 h-1/3 rounded-xl flex flex-col"
+            className="w-1/2 h-1/3 rounded-xl flex flex-col background-3 color-2"
             onClick={handleClickOutside}
         >
-            <div className="flex flex-row bg-blue-200 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
+            <div className="flex flex-row background-2 color-1 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
                 <h2 className="font-bold flex flex-1">
                     {header}
                 </h2>
@@ -85,17 +86,23 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
                 <div className="flex flex-row items-end justify-end p-2 pb-4 gap-5">
                     {isCancelable && (
                         <button
-                            className="rounded-lg bg-white border-[1px] border-gray-300 px-2 py-1 flex items-center justify-center"
+                            className="rounded-lg background-4 hover px-2 py-1 flex items-center justify-center"
                             onClick={handleCancel}
                         >
-                            {"cancel"}
+                            <FormattedMessage
+                                id="components.generic_modal.cancel"
+                                defaultMessage="cancel"
+                            />
                         </button>
                     )}
                     <button
-                        className="rounded-lg bg-blue-200 border-[1px] border-transparent px-2 py-1 flex items-center justify-center"
+                        className="rounded-lg background-5 hover px-2 py-1 flex items-center justify-center"
                         onClick={handleConfirm}
                     >
-                        {"confirm"}
+                        <FormattedMessage
+                            id="components.generic_modal.confirm"
+                            defaultMessage="confirm"
+                        />
                     </button>
                 </div>
             )}

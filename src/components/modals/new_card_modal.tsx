@@ -9,15 +9,13 @@ type Props = {
     columnId: Card["columnId"];
 };
 
-const AddCardModal: React.FC<Props> = ({open, setOpen, columnId}) => {
+const NewCardModal: React.FC<Props> = ({open, setOpen, columnId}) => {
     const [name, setName] = useState<Card["name"]>("");
     const [content, setContent] = useState<Card["content"]>("");
     const [tagIds, setTagIds] = useState<Card["tagIds"]>([]);
     const {createCard} = useCards();
 
-    const handleConfirm = (): void => {
-        console.log;
-    };
+    const handleConfirm = console.log;
 
     return (
         <GenericModal
@@ -25,7 +23,7 @@ const AddCardModal: React.FC<Props> = ({open, setOpen, columnId}) => {
             setOpen={setOpen}
             header={(
                 <FormattedMessage
-                    id="components.add_card_modal.header"
+                    id="components.new_card_modal.header"
                     defaultMessage="Create a new card"
                 />
             )}
@@ -35,4 +33,4 @@ const AddCardModal: React.FC<Props> = ({open, setOpen, columnId}) => {
     );
 };
 
-export default AddCardModal;
+export default NewCardModal;
