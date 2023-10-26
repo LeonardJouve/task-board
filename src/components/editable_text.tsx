@@ -5,12 +5,11 @@ type Props = {
     setIsEditing: (isEditing: boolean) => void;
     content: string;
     setContent: (content: string) => void;
+    isSingleLine?: boolean;
     className?: string;
 };
 
-// TODO: ctrl + ENTER => confirm / prop isMultiline
-
-const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, className = ""}) => {
+const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, isSingleLine, className = ""}) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [editingContent, setEditingContent] = useState<string>(content);
 
@@ -20,8 +19,8 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
         if (!textareaRef.current || !isEditing) {
             return;
         }
-        textareaRef.current.selectionStart = content.length;
-        textareaRef.current.selectionEnd = content.length;
+        textareaRef.current.setSelectionRange(content.length, content.length);
+        textareaRef.current.scrollTo(textareaRef.current.scrollWidth, textareaRef.current.scrollHeight);
     }, [isEditing]);
 
     const handleEdit = (e: React.MouseEvent): void => {
@@ -39,17 +38,37 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
         setContent(editingContent);
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setEditingContent(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+        let newContent = e.target.value;
+        if (isSingleLine) {
+            newContent = newContent.replace("\n", "");
+        }
+        setEditingContent(newContent);
+    };
+
+    const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+        if (!isEditing || e.code !== "Enter" || !isSingleLine && !e.ctrlKey) {
+            return;
+        }
+        setIsEditing(false);
+    };
+
+    const singleLineProps: React.TextareaHTMLAttributes<HTMLTextAreaElement> = {
+        rows: 1,
+        wrap: "off",
+    };
 
     if (isEditing) {
         return (
             <textarea
                 ref={textareaRef}
-                className={`resize-none rounded ${className}`}
+                className="resize-none rounded max-w-full overflow-hidden outline-none bg-transparent"
                 value={editingContent}
                 autoFocus={true}
                 onBlur={handleBlur}
                 onChange={handleChange}
+                onKeyUp={handleKeyUp}
+                {...isSingleLine && singleLineProps}
             />
         );
     }

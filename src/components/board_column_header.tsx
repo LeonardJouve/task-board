@@ -27,18 +27,19 @@ const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
 
     return (
         <div
-            className="w-full px-2 py-1 bg-white rounded flex flex-row background-4"
+            className="w-full px-2 py-1 rounded flex flex-row background-4"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <EditableText
+                className="overflow-hidden whitespace-nowrap text-ellipsis font-bold"
                 isEditing={isEditingName}
                 setIsEditing={setIsEditingName}
                 content={column.name}
                 setContent={(name): void => handleUpdateColumn({name})}
-                className="overflow-hidden whitespace-nowrap text-ellipsis font-bold"
+                isSingleLine={true}
             />
-            {hover && (
+            {hover && !isEditingName && (
                 <BoardColumnHeaderActions
                     column={column}
                     onNewCard={onNewCard}
