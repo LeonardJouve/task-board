@@ -17,6 +17,7 @@
             "@store/*": ["./src/store/*"],
             "@intl/*": ["./src/intl/*"],
             "@api/*": ["./src/api/*"],
+            "@typing/*": ["./src/types/*"],
         },
     },
 }

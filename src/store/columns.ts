@@ -1,13 +1,8 @@
 import {create} from "zustand";
-import Rest, {type CreateColumn, type UpdateColumn} from "@api/rest";
-import type {Board} from "@store/boards";
+import Rest from "@api/rest";
+import type {CreateColumn, UpdateColumn} from "@typing/rest";
+import type {Board, Column} from "@typing/store";
 
-export type Column = {
-    id: number;
-    boardId: number;
-    nextId: number;
-    name: string;
-};
 
 type ColumnState = {
     columns: Record<Column["id"], Column>;

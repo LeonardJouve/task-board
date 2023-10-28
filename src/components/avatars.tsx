@@ -1,8 +1,8 @@
 import React from "react";
 import {FormattedMessage} from "react-intl";
-import type {User} from "@store/users";
 import Avatar, {Size} from "@components/avatar";
 import Tooltip from "@components/tooltip";
+import type {User} from "@typing/store";
 
 type Props = {
     userIds: User["id"][];

@@ -13,7 +13,9 @@ type Props = {
     icon: string;
     items: Item[];
     className?: string;
-}
+};
+
+// TODO: handle scroll. Position is wrong after scroll
 
 const Menu: React.FC<Props> = ({name, icon, items, className = ""}) => {
     const [hover, setHover] = useState<boolean>(false);

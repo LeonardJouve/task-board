@@ -1,14 +1,7 @@
 import {create} from "zustand";
-import Rest, {type UpdateBoard, type CreateBoard} from "@api/rest";
-import type {User} from "@store/users";
-
-export type Board = {
-    id: number;
-    ownerId: number;
-    userIds: User["id"][];
-    name: string;
-    description: string;
-};
+import Rest from "@api/rest";
+import type {UpdateBoard, CreateBoard} from "@typing/rest";
+import type {Board, User} from "@typing/store";
 
 type BoardState = {
     boards: Record<Board["id"], Board>;

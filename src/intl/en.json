@@ -3,6 +3,5 @@
     "components.auth.register": "Register",
     "components.auth.email": "Email",
     "components.auth.password": "Password",
-    "components.auth.passwordConfirm": "Confirm password",
-    "components.new_card_modal.header": "Create a new card"
+    "components.auth.passwordConfirm": "Confirm password"
 }

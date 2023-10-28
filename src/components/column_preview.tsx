@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import type {Column} from "@store/columns";
 import useCards, {getCardsInColumn} from "@store/cards";
 import CardPreview from "@components/card_preview";
+import type {Column} from "@typing/store";
 
 type Props = {
     column: Column;

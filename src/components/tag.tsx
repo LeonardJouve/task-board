@@ -1,6 +1,6 @@
 import React from "react";
-import type {Tag} from "@store/tags";
 import useTags from "@store/tags";
+import type {Tag} from "@typing/store";
 
 type Props = {
     id: Tag["id"];

@@ -1,7 +1,9 @@
 import React, {useState} from "react";
-import type {Card} from "@store/cards";
 import BoardCardModal from "@components/modals/board_card_modal";
 import BoardTag from "@components/tag";
+import Avatars from "@components/avatars";
+import {Size} from "@components/avatar";
+import type {Card} from "@typing/store";
 
 type Props = {
     card: Card;
@@ -34,11 +36,15 @@ const BoardCard: React.FC<Props> = ({card}) => {
                         />
                     ))}
                 </div>
+                <Avatars
+                    userIds={card.userIds}
+                    size={Size.S}
+                />
             </button>
             <BoardCardModal
                 open={isModalOpen}
                 setOpen={setIsModalOpen}
-                card={card}
+                cardId={card.id}
             />
         </>
     );

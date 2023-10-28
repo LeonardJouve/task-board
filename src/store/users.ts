@@ -1,14 +1,6 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
-import type {Board} from "@store/boards";
-
-export type User = {
-    id: number;
-    name: string;
-    email: string;
-    username: string;
-    picture: string;
-};
+import type {Board, User} from "@typing/store";
 
 type UserState = {
     me?: User;

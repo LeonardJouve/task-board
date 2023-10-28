@@ -1,17 +1,7 @@
 import {create} from "zustand";
-import Rest, {type CreateTag, type UpdateTag} from "@api/rest";
-import type {Board} from "@store/boards";
-
-enum Color {
-    WHITE = "white",
-}
-
-export type Tag = {
-    id: number;
-    boardId: number;
-    name: string;
-    color: Color;
-};
+import Rest from "@api/rest";
+import type {CreateTag, UpdateTag} from "@typing/rest";
+import type {Board, Tag} from "@typing/store";
 
 type TagState = {
     tags: Record<Tag["id"], Tag>;

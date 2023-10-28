@@ -1,80 +1,6 @@
 import type {MessageDescriptor} from "react-intl";
-import type {Board} from "@store/boards";
-import type {Column} from "@store/columns";
-import type {Card} from "@store/cards";
-import type {Tag} from "@store/tags";
-import type {User} from "@store/users";
-
-type RestResult<T> = {
-    error: false;
-    data: T;
-    url: string;
-    status: number;
-};
-
-type RestError = {
-    error: true;
-    data: MessageDescriptor;
-    url: string;
-};
-
-type RestResponse<T> = Promise<RestResult<T> | RestError>;
-
-type Status = {
-    status: "ok";
-};
-
-type Tokens = {
-    accessToken: string;
-    refreshToken: string;
-};
-
-type CsrfToken = {
-    csrfToken: string;
-};
-
-export type CreateBoard = {
-    name: string;
-};
-
-export type UpdateBoard = {
-    name?: string;
-};
-
-export type CreateColumn = {
-    name: string;
-    boardId: Board["id"];
-};
-
-export type UpdateColumn = {
-    name?: string;
-};
-
-export type CreateCard = {
-    columnId: string;
-    name: string;
-    content: string;
-};
-
-export type UpdateCard = {
-    name?: string;
-    content?: string;
-};
-
-export enum Color {
-    WHITE = "#FFFFFF",
-}
-
-export type CreateTag = {
-    boardId: Board["id"];
-    name: string;
-    color: Color;
-};
-
-export type UpdateTag = {
-    name?: string;
-    color?: Color;
-};
+import type {User, Board, Column, Card, Tag} from "@typing/store";
+import type {RestResponse, Tokens, CsrfToken, CreateBoard, UpdateBoard, CreateColumn, UpdateColumn, CreateCard, UpdateCard, CreateTag, UpdateTag, Status} from "@typing/rest";
 
 class RestClient {
     private readonly baseUrl: string;
@@ -375,10 +301,31 @@ class RestClient {
         );
     }
 
+    async joinCard(cardId: Card["id"]): RestResponse<Card> {
+        return await this.fetch<Card>(
+            `${this.getCardsRoute(cardId)}/join`,
+            {method: "GET"},
+        );
+    }
+
+    async leaveCard(cardId: Card["id"]): RestResponse<Card> {
+        return await this.fetch<Card>(
+            `${this.getCardsRoute(cardId)}/leave`,
+            {method: "GET"},
+        );
+    }
+
     async addCardTag(cardId: Card["id"], tagId: Tag["id"]): RestResponse<Card> {
         return await this.fetch<Card>(
-            `${this.getCardsRoute(cardId)}/tag?tagId=${tagId}`,
+            `${this.getCardsRoute(cardId)}/tags/${tagId}`,
             {method: "GET"},
+        );
+    }
+
+    async removeCardTag(cardId: Card["id"], tagId: Tag["id"]): RestResponse<Card> {
+        return await this.fetch<Card>(
+            `${this.getCardsRoute(cardId)}/tags/${tagId}`,
+            {method: "DELETE"},
         );
     }
 

@@ -5,14 +5,16 @@ import AddItem from "@components/add_item";
 import NewBoardModal from "@components/modals/new_board_modal";
 
 const SelectBoard: React.FC = () => {
-    const {fetchBoards, boards} = useBoards();
+    const {boards, createBoard, fetchBoards} = useBoards();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         fetchBoards();
     }, []);
 
-    const handleNewBoard = (): void => setIsModalOpen(true);
+    const handleNewBoard = (): void => {
+        createBoard({});
+    };
 
     return (
         <div className="flex flex-1 flex-col p-8 gap-5 background-1 overflow-y-scroll">

@@ -1,16 +1,12 @@
 import {create} from "zustand";
 import type {IntlConfig} from "react-intl";
 import en from "@intl/en.json";
+import {Locales} from "@typing/store";
 
 type LocaleState = {
     locale: IntlConfig["locale"];
     messages: IntlConfig["messages"];
     setLocale: (locale: Locales) => Promise<void>;
-}
-
-export enum Locales {
-    EN = "en",
-    FR = "fr",
 }
 
 export const DEFAULT_LOCALE = Locales.EN;

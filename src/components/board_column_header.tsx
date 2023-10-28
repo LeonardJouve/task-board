@@ -1,9 +1,10 @@
 import React, {useState} from "react";
-import type {UpdateColumn} from "@api/rest";
-import type {Column} from "@store/columns";
+import {useIntl} from "react-intl";
 import EditableText from "@components/editable_text";
 import BoardColumnHeaderActions from "@components/board_column_header_actions";
 import useColumns from "@store/columns";
+import type {UpdateColumn} from "@typing/rest";
+import type {Column} from "@typing/store";
 
 type Props = {
     column: Column;
@@ -13,6 +14,7 @@ type Props = {
 // TODO: rename / filter / new card
 
 const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
+    const {formatMessage} = useIntl();
     const {updateColumn} = useColumns();
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
     const [hover, setHover] = useState<boolean>(false);
@@ -36,6 +38,10 @@ const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
                 isEditing={isEditingName}
                 setIsEditing={setIsEditingName}
                 content={column.name}
+                placeholder={formatMessage({
+                    id: "components.default_column.name",
+                    defaultMessage: "Name",
+                })}
                 setContent={(name): void => handleUpdateColumn({name})}
                 isSingleLine={true}
             />

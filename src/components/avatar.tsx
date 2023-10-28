@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Rest from "@api/rest";
-import type {User} from "@store/users";
 import useUsers from "@store/users";
 import Tooltip from "@components/tooltip";
+import type {User} from "@typing/store";
 
 export enum Size {
     S = 25,

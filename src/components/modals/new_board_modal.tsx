@@ -1,5 +1,6 @@
 import React from "react";
 import {FormattedMessage} from "react-intl";
+import useBoards from "@store/boards";
 import GenericModal from "@components/modals/generic_modal";
 
 type Props = {
@@ -8,7 +9,13 @@ type Props = {
 }
 
 const NewBoardModal: React.FC<Props> = ({open, setOpen}) => {
-    const handleConfirm = console.log;
+    const {createBoard} = useBoards();
+
+    const handleConfirm = (): void => {
+        createBoard({});
+    };
+
+    const content = (<></>);
 
     return (
         <GenericModal
@@ -20,7 +27,7 @@ const NewBoardModal: React.FC<Props> = ({open, setOpen}) => {
                     defaultMessage="Create a new board"
                 />
             )}
-            content={<></>}
+            content={content}
             onConfirm={handleConfirm}
         />
     );

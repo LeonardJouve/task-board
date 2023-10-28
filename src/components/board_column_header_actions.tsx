@@ -1,6 +1,6 @@
 import React from "react";
-import type {Column} from "@store/columns";
 import Menu from "@components/menu";
+import type {Column} from "@typing/store";
 
 type Props = {
     column: Column;

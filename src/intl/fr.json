@@ -4,6 +4,5 @@
     "components.login.password": "Mot de passe",
     "components.login.passwordConfirm": "Confirmer le mot de passe",
     "components.login.register": "Créer un compte",
-    "components.register.login": "Se connecter",
-    "components.new_card_modal.header": "Créer une nouvelle carte"
+    "components.register.login": "Se connecter"
 }

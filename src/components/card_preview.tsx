@@ -1,5 +1,5 @@
 import React from "react";
-import type {Card} from "@store/cards";
+import type {Card} from "@typing/store";
 
 type Props = {
     card: Card;

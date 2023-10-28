@@ -11,9 +11,11 @@ type Props = {
     closeOnClickOutside?: boolean;
     onConfirm?: () => void;
     onCancel?: () => void;
+    headerClassName?: string;
+    bodyClassName?: string;
 };
 
-const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnClickOutside, isCancelable = true, showFooter = true, onConfirm, onCancel}) => {
+const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnClickOutside, isCancelable = true, showFooter = true, onConfirm, onCancel, headerClassName = "", bodyClassName = ""}) => {
     const modalRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
@@ -29,7 +31,6 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
             return;
         }
         modalRef.current.showModal();
-        setOpen(true);
     };
 
     const handleClose = (e?: React.MouseEvent): void => {
@@ -69,7 +70,7 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
             onClick={handleClickOutside}
         >
             <div className="flex flex-row background-2 color-1 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
-                <h2 className="font-bold flex flex-1">
+                <h2 className={`font-bold flex flex-1 ${headerClassName}`}>
                     {header}
                 </h2>
                 <button
@@ -79,33 +80,35 @@ const GenericModal: React.FC<Props> = ({open, setOpen, header, content, closeOnC
                     <i className="icon-close"/>
                 </button>
             </div>
-            <div className={`px-4 py-2 flex flex-1 ${!showFooter ? "pb-4" : ""}`}>
-                {content}
-            </div>
-            {showFooter && (
-                <div className="flex flex-row items-end justify-end p-2 pb-4 gap-5">
-                    {isCancelable && (
+            <div className={`flex flex-1 ${bodyClassName}`}>
+                <div className={`px-4 py-2 flex flex-1 ${!showFooter ? "pb-4" : ""}`}>
+                    {content}
+                </div>
+                {showFooter && (
+                    <div className="flex flex-row items-end justify-end p-2 pb-4 gap-5">
+                        {isCancelable && (
+                            <button
+                                className="rounded-lg background-4 hover px-2 py-1 flex items-center justify-center"
+                                onClick={handleCancel}
+                            >
+                                <FormattedMessage
+                                    id="components.generic_modal.cancel"
+                                    defaultMessage="cancel"
+                                />
+                            </button>
+                        )}
                         <button
-                            className="rounded-lg background-4 hover px-2 py-1 flex items-center justify-center"
-                            onClick={handleCancel}
+                            className="rounded-lg background-5 hover px-2 py-1 flex items-center justify-center"
+                            onClick={handleConfirm}
                         >
                             <FormattedMessage
-                                id="components.generic_modal.cancel"
-                                defaultMessage="cancel"
+                                id="components.generic_modal.confirm"
+                                defaultMessage="confirm"
                             />
                         </button>
-                    )}
-                    <button
-                        className="rounded-lg background-5 hover px-2 py-1 flex items-center justify-center"
-                        onClick={handleConfirm}
-                    >
-                        <FormattedMessage
-                            id="components.generic_modal.confirm"
-                            defaultMessage="confirm"
-                        />
-                    </button>
-                </div>
-            )}
+                    </div>
+                )}
+            </div>
         </dialog>
     );
 };

@@ -1,15 +1,18 @@
 import React, {useEffect, useRef, useState} from "react";
+import {FormattedMessage} from "react-intl";
+import Tooltip from "@components/tooltip";
 
 type Props = {
     isEditing: boolean;
     setIsEditing: (isEditing: boolean) => void;
     content: string;
     setContent: (content: string) => void;
+    placeholder?: string;
     isSingleLine?: boolean;
     className?: string;
 };
 
-const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, isSingleLine, className = ""}) => {
+const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, placeholder, isSingleLine, className = ""}) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [editingContent, setEditingContent] = useState<string>(content);
 
@@ -24,6 +27,7 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
     }, [isEditing]);
 
     const handleEdit = (e: React.MouseEvent): void => {
+        e.stopPropagation();
         if (e.detail !== 2) {
             return;
         }
@@ -47,11 +51,13 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
     };
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
-        if (!isEditing || e.code !== "Enter" || !isSingleLine && !e.ctrlKey) {
+        if (!isEditing || !textareaRef.current || e.code !== "Enter" || !isSingleLine && !e.ctrlKey) {
             return;
         }
-        setIsEditing(false);
+        textareaRef.current.blur();
     };
+
+    const handleTextareaClick = (e: React.MouseEvent): void => e.stopPropagation();
 
     const singleLineProps: React.TextareaHTMLAttributes<HTMLTextAreaElement> = {
         rows: 1,
@@ -62,24 +68,33 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
         return (
             <textarea
                 ref={textareaRef}
-                className="resize-none rounded max-w-full overflow-hidden outline-none bg-transparent"
+                className="flex flex-1 resize-none rounded overflow-x-hidden outline-none bg-transparent"
                 value={editingContent}
                 autoFocus={true}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 onKeyUp={handleKeyUp}
+                onClick={handleTextareaClick}
+                placeholder={content || placeholder}
                 {...isSingleLine && singleLineProps}
             />
         );
     }
 
     return (
-        <span
-            className={className}
-            onClick={handleEdit}
-        >
-            {content}
-        </span>
+        <Tooltip content={(
+            <FormattedMessage
+                id="components.editable_text.tooltip"
+                defaultMessage="Double click to edit"
+            />
+        )}>
+            <span
+                className={`cursor-text ${className}`}
+                onClick={handleEdit}
+            >
+                {content || placeholder}
+            </span>
+        </Tooltip>
     );
 };
 
