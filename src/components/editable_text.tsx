@@ -9,10 +9,11 @@ type Props = {
     setContent: (content: string) => void;
     placeholder?: string;
     isSingleLine?: boolean;
+    isEllipsis?: boolean;
     className?: string;
 };
 
-const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, placeholder, isSingleLine, className = ""}) => {
+const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, placeholder, isSingleLine, isEllipsis, className = ""}) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [editingContent, setEditingContent] = useState<string>(content);
 
@@ -82,14 +83,14 @@ const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setCon
     }
 
     return (
-        <Tooltip content={(
+        <Tooltip tip={(
             <FormattedMessage
                 id="components.editable_text.tooltip"
                 defaultMessage="Double click to edit"
             />
         )}>
             <span
-                className={`cursor-text ${className}`}
+                className={`cursor-text ${isEllipsis ? "overflow-hidden whitespace-nowrap text-ellipsis" : ""} ${className}`}
                 onClick={handleEdit}
             >
                 {content || placeholder}

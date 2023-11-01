@@ -22,7 +22,7 @@ const Avatar: React.FC<Props> = ({userId, size = Size.M, style}) => {
     const user = users[userId];
 
     useEffect(() => {
-        if (!userId) {
+        if (!userId || user) {
             return;
         }
 
@@ -41,7 +41,7 @@ const Avatar: React.FC<Props> = ({userId, size = Size.M, style}) => {
 
     return (
         <Tooltip
-            content={user.username}
+            tip={user.username}
             style={style}
         >
             <img

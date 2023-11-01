@@ -1,28 +1,62 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
+import {autoUpdate, useFloating, useHover, useInteractions, arrow, flip, shift, offset, FloatingArrow, useTransitionStyles, type Placement} from "@floating-ui/react";
 
 type Props = {
-    content: React.JSX.Element | string;
+    placement?: Placement;
+    tip: string | React.JSX.Element;
 } & React.PropsWithChildren & Pick<React.HtmlHTMLAttributes<HTMLDivElement>, "style">;
 
-const Tooltip: React.FC<Props> = ({content, children, style}) => {
-    const [isHover, setIsHover] = useState<boolean>(false);
+const Tooltip: React.FC<Props> = ({placement = "top", tip, children, style}) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const arrowRef = useRef(null);
+    const {refs, floatingStyles, context} = useFloating({
+        placement,
+        open: isOpen,
+        middleware: [
+            offset(5),
+            shift(),
+            arrow({element: arrowRef}),
+            flip({fallbackPlacements: ["top", "left", "right", "bottom", placement]}),
+        ],
+        onOpenChange: setIsOpen,
+        whileElementsMounted: autoUpdate,
+    });
 
-    const handleMouseEnter = (): void => setIsHover(true);
+    const {isMounted, styles} = useTransitionStyles(context, {duration: 200});
 
-    const handleMouseLeave = (): void => setIsHover(false);
+    const hover = useHover(context);
+
+    const {getReferenceProps, getFloatingProps} = useInteractions([hover]);
 
     return (
-        <div
-            className="relative"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            style={style}
-        >
-            {children}
-            <span className={`background-1 after:border-t-light-1 after:dark:border-t-dark-1 text-1 absolute whitespace-nowrap bottom-[125%] left-[50%] -translate-x-[50%] z-1 text-center rounded px-1 after:content-[""] after:absolute after:top-[100%] after:left-[50%] after:-translate-x-[50%] after:border-solid after:border-4 after:border-x-transparent after:border-b-transparent ${isHover ? "visible" : "hidden"}`}>
-                {content}
-            </span>
-        </div>
+        <>
+            <div
+                className="flex overflow-hidden"
+                ref={refs.setReference}
+                style={style}
+                {...getReferenceProps()}
+            >
+                {children}
+            </div>
+            {isMounted && (
+                <div
+                    ref={refs.setFloating}
+                    className="background-1 whitespace-nowrap rounded p-1 text-1 text-sm font-normal !z-30"
+                    style={{
+                        ...floatingStyles,
+                        ...styles,
+                    }}
+                    {...getFloatingProps()}
+                >
+                    {tip}
+                    <FloatingArrow
+                        className="fill-light-1 dark:fill-dark-1"
+                        ref={arrowRef}
+                        context={context}
+                    />
+                </div>
+            )}
+        </>
     );
 };
 

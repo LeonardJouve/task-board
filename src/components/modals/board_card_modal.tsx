@@ -29,7 +29,6 @@ const BoardCardModal: React.FC<Props> = ({open, setOpen, cardId}) => {
 
     const name = (
         <EditableText
-            className="overflow-hidden text-ellipsis whitespace-nowrap"
             isEditing={isEditingName}
             setIsEditing={setIsEditingName}
             content={card.name}
@@ -39,11 +38,13 @@ const BoardCardModal: React.FC<Props> = ({open, setOpen, cardId}) => {
             })}
             setContent={(updatedName): void => handleUpdateCard({name: updatedName})}
             isSingleLine={true}
+            isEllipsis={true}
         />
     );
 
     const content = (
         <EditableText
+            className="whitespace-break-spaces flex flex-1 overflow-scroll"
             isEditing={isEditingContent}
             setIsEditing={setIsEditingContent}
             content={card.content}
@@ -52,7 +53,6 @@ const BoardCardModal: React.FC<Props> = ({open, setOpen, cardId}) => {
                 defaultMessage: "Content",
             })}
             setContent={(updatedContent): void => handleUpdateCard({content: updatedContent})}
-            className="whitespace-break-spaces flex flex-1 overflow-scroll"
         />
     );
 

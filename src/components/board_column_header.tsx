@@ -17,39 +17,33 @@ const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
     const {formatMessage} = useIntl();
     const {updateColumn} = useColumns();
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
-    const [hover, setHover] = useState<boolean>(false);
-
-    const handleMouseEnter = (): void => setHover(true);
-
-    const handleMouseLeave = (): void => setHover(false);
 
     const handleUpdateColumn = (updatedColumn: UpdateColumn): void => {
         updateColumn(column.id, updatedColumn);
     };
 
     return (
-        <div
-            className="w-full px-2 py-1 rounded flex flex-row background-4"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+        <div className="group w-full px-2 py-1 rounded flex flex-row background-4 justify-between">
             <EditableText
-                className="overflow-hidden whitespace-nowrap text-ellipsis font-bold"
+                className="font-bold"
                 isEditing={isEditingName}
                 setIsEditing={setIsEditingName}
                 content={column.name}
+                setContent={(name): void => handleUpdateColumn({name})}
                 placeholder={formatMessage({
                     id: "components.default_column.name",
                     defaultMessage: "Name",
                 })}
-                setContent={(name): void => handleUpdateColumn({name})}
                 isSingleLine={true}
+                isEllipsis={true}
             />
-            {hover && !isEditingName && (
-                <BoardColumnHeaderActions
-                    column={column}
-                    onNewCard={onNewCard}
-                />
+            {!isEditingName && (
+                <div className="group-hover:block hidden">
+                    <BoardColumnHeaderActions
+                        column={column}
+                        onNewCard={onNewCard}
+                    />
+                </div>
             )}
         </div>
     );

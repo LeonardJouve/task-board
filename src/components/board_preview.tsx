@@ -47,9 +47,9 @@ const BoardPreview: React.FC<Props> = ({board}) => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="flex flex-row flex-1 gap-2 max-w-full max-h-full">
-                <div className="flex flex-col gap-2 text-left color-1">
-                    <h2 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap font-extrabold">
+            <div className="flex flex-row flex-1 gap-2 max-w-full max-h-full overflow-hidden">
+                <div className={`flex flex-col gap-2 text-left color-1 max-w-full ${boardColumns.length ? "w-[20%]" : ""}`}>
+                    <h2 className="flex text-2xl font-extrabold">
                         <EditableText
                             isEditing={isEditingName}
                             setIsEditing={setIsEditingName}
@@ -60,6 +60,7 @@ const BoardPreview: React.FC<Props> = ({board}) => {
                                 defaultMessage: "Name",
                             })}
                             isSingleLine={true}
+                            isEllipsis={true}
                         />
                     </h2>
                     <span className="flex text-lg overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
@@ -73,6 +74,7 @@ const BoardPreview: React.FC<Props> = ({board}) => {
                                 defaultMessage: "Description",
                             })}
                             isSingleLine={true}
+                            isEllipsis={true}
                         />
                     </span>
                     {isHover && (

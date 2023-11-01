@@ -6,9 +6,10 @@
     "run": "vite",
     "build": "tsc && vite build",
     "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch",
-    "webfont":"webfont-generator --out dist/icons --icons src/icons"
+    "webfont": "webfont-generator --out dist/icons --icons src/icons"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.4.6",
