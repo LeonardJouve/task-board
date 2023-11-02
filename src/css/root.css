@@ -31,6 +31,9 @@
     .color-2 {
         @apply text-light-7 dark:text-dark-7;
     }
+    .color-dangerous {
+        @apply text-light-dangerous dark:text-dark-dangerous;
+    }
     .border-color-1 {
         @apply border-light-6 dark:border-dark-6;
     }

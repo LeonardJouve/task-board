@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React from "react";
 
 type Item = {
     text: string;
     leftDecorator?: string;
     rightDecorator?: string;
-    selected?: boolean;
+    isSelected?: boolean;
+    isDangerous?: boolean;
     onPress?: () => void;
 };
 
@@ -13,34 +14,32 @@ type Props = {
     icon: string;
     items: Item[];
     className?: string;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
 };
 
-// TODO: handle scroll. Position is wrong after scroll
-
-const Menu: React.FC<Props> = ({name, icon, items, className = ""}) => {
-    const [hover, setHover] = useState<boolean>(false);
-
-    const handleMouseEnter = (): void => setHover(true);
-    const handleMouseLeave = (): void => setHover(false);
+const Menu: React.FC<Props> = ({isOpen, setIsOpen, name, icon, items, className = ""}) => {
+    const handleMouseEnter = (): void => setIsOpen(true);
+    const handleMouseLeave = (): void => setIsOpen(false);
 
     return (
         <button
-            className={`rounded ${className}`}
+            className={`rounded relative ${className}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <i className={`icon-${icon}`}/>
-            {hover && (
-                <ul className="absolute rounded py-2 border-[1px] background-4 border-color-1">
-                    {items.map(({text, leftDecorator, rightDecorator, selected, onPress}, i) => (
+            {isOpen && (
+                <ul className="absolute rounded py-2 border-[1px] background-4 border-color-1 whitespace-nowrap">
+                    {items.map(({text, leftDecorator, rightDecorator, isSelected, isDangerous, onPress}, i) => (
                         <li
                             key={`menu-${name}-${i}`}
-                            className="px-2 hover:background-3"
+                            className={`px-2 hover:background-3 ${isDangerous ? "color-dangerous" : ""}`}
                             onClick={onPress}
                         >
-                            {selected ? <i className="icon-check"/> : leftDecorator}
+                            {(isSelected ?? leftDecorator) && <i className={`icon-${isSelected ? "check" : leftDecorator}`}/>}
                             {text}
-                            {rightDecorator}
+                            {rightDecorator && <i className={`icon-${leftDecorator}`}/>}
                         </li>
                     ))}
                 </ul>

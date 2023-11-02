@@ -7,12 +7,12 @@ import type {UpdateCard} from "@typing/rest";
 import type {Card} from "@typing/store";
 
 type Props = {
-    open: boolean;
-    setOpen: (open: boolean) => void;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
     cardId: Card["id"];
 };
 
-const BoardCardModal: React.FC<Props> = ({open, setOpen, cardId}) => {
+const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
     const {formatMessage} = useIntl();
     const {cards, updateCard} = useCards();
     const [isEditingContent, setIsEditingContent] = useState<boolean>(false);
@@ -60,12 +60,11 @@ const BoardCardModal: React.FC<Props> = ({open, setOpen, cardId}) => {
         <GenericModal
             headerClassName="overflow-hidden"
             bodyClassName="overflow-scroll"
-            open={open}
-            setOpen={setOpen}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
             header={name}
             content={content}
             showFooter={false}
-            closeOnClickOutside={true}
         />
     );
 };

@@ -9,12 +9,10 @@ type Props = {
     card: Card;
 };
 
-// TODO: conversation / modal
-
 const BoardCard: React.FC<Props> = ({card}) => {
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const handleOpen = (): void => setIsModalOpen(true);
+    const handleOpen = (): void => setIsOpen(true);
 
     return (
         <>
@@ -42,8 +40,8 @@ const BoardCard: React.FC<Props> = ({card}) => {
                 />
             </button>
             <BoardCardModal
-                open={isModalOpen}
-                setOpen={setIsModalOpen}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
                 cardId={card.id}
             />
         </>

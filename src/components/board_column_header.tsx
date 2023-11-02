@@ -8,12 +8,10 @@ import type {Column} from "@typing/store";
 
 type Props = {
     column: Column;
-    onNewCard: () => void;
-}
+    handleNewCard: () => void;
+};
 
-// TODO: rename / filter / new card
-
-const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
+const BoardColumnHeader: React.FC<Props> = ({column, handleNewCard}) => {
     const {formatMessage} = useIntl();
     const {updateColumn} = useColumns();
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
@@ -41,7 +39,7 @@ const BoardColumnHeader: React.FC<Props> = ({column, onNewCard}) => {
                 <div className="group-hover:block hidden">
                     <BoardColumnHeaderActions
                         column={column}
-                        onNewCard={onNewCard}
+                        handleNewCard={handleNewCard}
                     />
                 </div>
             )}

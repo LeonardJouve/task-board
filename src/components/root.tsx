@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import IntlProvider from "@components/intl_provider";
 import Router from "@components/router";
 
-const root = document.querySelector(".root");
+const root = document.getElementById("root");
 
 if (root) {
     ReactDOM.createRoot(root).render(

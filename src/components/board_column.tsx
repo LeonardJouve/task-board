@@ -3,7 +3,7 @@ import useCards, {getCardsInColumn} from "@store/cards";
 import BoardColumnHeader from "@components/board_column_header";
 import BoardCard from "@components/board_card";
 import AddItem from "@components/add_item";
-import BoardCardModal from "./modals/board_card_modal";
+import BoardCardModal from "@components/modals/board_card_modal";
 import type {Column, Card} from "@typing/store";
 
 type Props = {
@@ -33,7 +33,7 @@ const BoardColumn: React.FC<Props> = ({column}) => {
         <div className="min-w-board-column max-w-board-column background-3 rounded-lg flex flex-col items-center gap-2 p-3 color-2">
             <BoardColumnHeader
                 column={column}
-                onNewCard={handleNewCard}
+                handleNewCard={handleNewCard}
             />
             {cardsInColumn.map((card) => (
                 <BoardCard
@@ -48,8 +48,8 @@ const BoardColumn: React.FC<Props> = ({column}) => {
                 />
             )}
             <BoardCardModal
-                open={Boolean(cardId)}
-                setOpen={handleCloseModal}
+                isOpen={Boolean(cardId)}
+                setIsOpen={handleCloseModal}
                 cardId={cardId}
             />
         </div>

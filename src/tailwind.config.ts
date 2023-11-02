@@ -43,6 +43,8 @@ export default {
                 "dark-6": "#858585",
                 "light-7": "#171717",
                 "dark-7": "#B0B0B0",
+                "light-dangerous": "#A00A00",
+                "dark-dangerous": "#A00A00",
             },
         },
     },

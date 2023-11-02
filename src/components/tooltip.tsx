@@ -15,8 +15,8 @@ const Tooltip: React.FC<Props> = ({placement = "top", tip, children, style}) => 
         middleware: [
             offset(5),
             shift(),
-            arrow({element: arrowRef}),
             flip({fallbackPlacements: ["top", "left", "right", "bottom", placement]}),
+            arrow({element: arrowRef}),
         ],
         onOpenChange: setIsOpen,
         whileElementsMounted: autoUpdate,
@@ -41,7 +41,7 @@ const Tooltip: React.FC<Props> = ({placement = "top", tip, children, style}) => 
             {isMounted && (
                 <div
                     ref={refs.setFloating}
-                    className="background-1 whitespace-nowrap rounded p-1 text-1 text-sm font-normal !z-30"
+                    className="background-1 whitespace-nowrap rounded p-1 color-1 text-sm font-normal !z-30"
                     style={{
                         ...floatingStyles,
                         ...styles,
