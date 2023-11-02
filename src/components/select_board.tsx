@@ -15,7 +15,7 @@ const SelectBoard: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-1 flex-col p-8 gap-5 background-1 overflow-y-scroll">
+        <div className="flex flex-1 flex-col p-5 gap-5 background-1 overflow-y-scroll">
             {Object.values(boards).map((board) => (
                 <BoardPreview
                     board={board}

@@ -6,7 +6,6 @@ export default {
     theme: {
         extend: {
             height: {
-                "header": "var(--header-size)",
                 "board-preview": "var(--board-preview-size)",
             },
             width: {
@@ -15,17 +14,14 @@ export default {
             },
             minWidth: {
                 "board-column": "var(--board-column-size)",
-                "header": "var(--header-size)",
             },
             maxWidth: {
                 "board-column": "var(--board-column-size)",
             },
             minHeight: {
-                "header": "var(--header-size)",
                 "board-preview": "var(--board-preview-size)",
             },
             maxHeight: {
-                "header": "var(--header-size)",
                 "board-preview": "var(--board-preview-size)",
             },
             colors: {

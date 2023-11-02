@@ -4,7 +4,7 @@ import {FormattedMessage} from "react-intl";
 
 type Props = {
     isOpen: boolean;
-    setIsOpen: (open: boolean) => void;
+    setIsOpen: (isOpen: boolean) => void;
     header: string | React.JSX.Element;
     content: string | React.JSX.Element;
     isCancelable?: boolean;

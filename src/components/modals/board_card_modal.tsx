@@ -8,7 +8,7 @@ import type {Card} from "@typing/store";
 
 type Props = {
     isOpen: boolean;
-    setIsOpen: (open: boolean) => void;
+    setIsOpen: (isOpen: boolean) => void;
     cardId: Card["id"];
 };
 

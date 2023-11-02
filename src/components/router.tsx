@@ -16,15 +16,24 @@ const Rooter: React.FC = () => (
                 path="/*"
                 element={
                     <AuthGuard>
-                        <Header/>
                         <Routes>
                             <Route
                                 path="/board/:boardId"
-                                element={<Board/>}
+                                element={(
+                                    <>
+                                        <Header/>
+                                        <Board/>
+                                    </>
+                                )}
                             />
                             <Route
                                 path="/"
-                                element={<SelectBoard/>}
+                                element={(
+                                    <>
+                                        <Header/>
+                                        <SelectBoard/>
+                                    </>
+                                )}
                             />
                         </Routes>
                     </AuthGuard>

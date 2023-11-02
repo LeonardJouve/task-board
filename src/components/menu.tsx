@@ -15,7 +15,7 @@ type Props = {
     items: Item[];
     className?: string;
     isOpen: boolean;
-    setIsOpen: (open: boolean) => void;
+    setIsOpen: (isOpen: boolean) => void;
 };
 
 const Menu: React.FC<Props> = ({isOpen, setIsOpen, name, icon, items, className = ""}) => {
