@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useFloating, useTransitionStyles, useInteractions, autoUpdate, shift, flip, useHover, useClick, useDismiss, safePolygon, type Placement} from "@floating-ui/react";
+import {useFloating, useTransitionStyles, useInteractions, autoUpdate, shift, flip, useHover, useClick, useDismiss, safePolygon, type Placement, offset} from "@floating-ui/react";
 
 type Item = {
     text: string;
@@ -32,6 +32,7 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
         placement,
         open: isOpen,
         middleware: [
+            offset(5),
             shift(),
             flip({fallbackPlacements: ["right-start", "left-start", "bottom-start", "top-start", placement]}),
         ],
@@ -56,19 +57,23 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
         dismiss,
     ]);
 
+    const handlePress = (onPress: Item["onPress"]): void => {
+        setIsOpen(false);
+        onPress?.();
+    };
 
-    const Button = React.cloneElement(button, {
+    const clonedButton = React.cloneElement(button, {
         ref: refs.setReference,
         ...getReferenceProps(),
     });
 
     return (
         <>
-            {Button}
+            {clonedButton}
             {isMounted && (
                 <ul
                     ref={refs.setFloating}
-                    className={`rounded py-2 border-[1px] background-4 border-color-1 whitespace-nowrap z-10 color-1 font-semibold ${className}`}
+                    className={`rounded py-2 border-[1px] background-4 border-color-1 whitespace-nowrap color-1 z-10 font-semibold ${className}`}
                     style={{
                         ...floatingStyles,
                         ...styles,
@@ -80,7 +85,7 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
                             <li
                                 key={`menu-${name}-${i}`}
                                 className={`flex items-center px-2 py-1 hover:background-3 cursor-pointer ${isDangerous ? "color-dangerous" : ""}`}
-                                onClick={onPress}
+                                onClick={(): void => handlePress(onPress)}
                             >
                                 {leftDecorator && <i className={`icon-${leftDecorator}`}/>}
                                 <span className="overflow-hidden text-ellipsis ">

@@ -14,9 +14,10 @@ type Props = {
     userId: User["id"];
     className?: string;
     size?: Size;
+    showTooltip?: boolean;
 } & Pick<React.HtmlHTMLAttributes<HTMLDivElement>, "style">;
 
-const Avatar: React.FC<Props> = ({userId, size = Size.M, style}) => {
+const Avatar: React.FC<Props> = ({userId, style, size = Size.M, showTooltip = true}) => {
     const {users, fetchUser} = useUsers();
     const [hasError, setHasError] = useState<boolean>(false);
     const user = users[userId];
@@ -39,20 +40,24 @@ const Avatar: React.FC<Props> = ({userId, size = Size.M, style}) => {
         return null;
     }
 
-    return (
+    const avatar = (
+        <img
+            className="rounded-[50%] border-color-1 hover border-[1px]"
+            src={hasError ? "src/public/assets/default_profile_picture.png" : Rest.getAssetsRoute(user.picture)}
+            width={size}
+            height={size}
+            onError={handleError}
+        />
+    );
+
+    return showTooltip ? (
         <Tooltip
             tip={user.username}
             style={style}
         >
-            <img
-                className="rounded-[50%] border-color-1 hover border-[1px]"
-                src={hasError ? "src/public/assets/default_profile_picture.png" : Rest.getAssetsRoute(user.picture)}
-                width={size}
-                height={size}
-                onError={handleError}
-            />
+            {avatar}
         </Tooltip>
-    );
+    ) : avatar;
 };
 
 export default Avatar;

@@ -1,5 +1,7 @@
-import useUsers from "@store/users";
 import React from "react";
+import useUsers from "@store/users";
+import Avatar, {Size} from "@components/avatar";
+import Menu, {MenuTrigger} from "@components/menu";
 
 const Profile: React.FC = () => {
     const {me} = useUsers();
@@ -9,10 +11,23 @@ const Profile: React.FC = () => {
     }
 
     return (
-        <div>
-            <img src={me.picture}/>
-            <span>{me.username}</span>
-        </div>
+        <Menu
+            name="profile"
+            placement="bottom-end"
+            triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
+            button={(
+                <button>
+                    <Avatar
+                        userId={me.id}
+                        size={Size.S}
+                        showTooltip={false}
+                    />
+                </button>
+            )}
+            items={[
+                {text: "test"},
+            ]}
+        />
     );
 };
 
