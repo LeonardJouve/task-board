@@ -7,6 +7,7 @@ type Item = {
     rightDecorator?: string;
     isSelected?: boolean;
     isDangerous?: boolean;
+    subItems?: Item[];
     onPress?: () => void;
 };
 
@@ -67,26 +68,37 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
             {isMounted && (
                 <ul
                     ref={refs.setFloating}
-                    className={`rounded py-2 border-[1px] background-4 border-color-1 whitespace-nowrap z-10 ${className}`}
+                    className={`rounded py-2 border-[1px] background-4 border-color-1 whitespace-nowrap z-10 color-1 font-semibold ${className}`}
                     style={{
                         ...floatingStyles,
                         ...styles,
                     }}
                     {...getFloatingProps()}
                 >
-                    {items.map(({text, leftDecorator, rightDecorator, isSelected, isDangerous, onPress}, i) => (
-                        <li
-                            key={`menu-${name}-${i}`}
-                            className={`flex items-center px-2 py-1 hover:background-3 cursor-pointer ${isDangerous ? "color-dangerous" : ""}`}
-                            onClick={onPress}
-                        >
-                            {leftDecorator && <i className={`icon-${leftDecorator}`}/>}
-                            <span className="overflow-hidden text-ellipsis ">
-                                {text}
-                            </span>
-                            <i className={`flex mr-0 ml-auto icon-${isSelected ? "check" : rightDecorator ?? "empty"}`}/>
-                        </li>
-                    ))}
+                    {items.map(({text, leftDecorator, rightDecorator, isSelected, isDangerous, subItems, onPress}, i) => {
+                        const item = (
+                            <li
+                                key={`menu-${name}-${i}`}
+                                className={`flex items-center px-2 py-1 hover:background-3 cursor-pointer ${isDangerous ? "color-dangerous" : ""}`}
+                                onClick={onPress}
+                            >
+                                {leftDecorator && <i className={`icon-${leftDecorator}`}/>}
+                                <span className="overflow-hidden text-ellipsis ">
+                                    {text}
+                                </span>
+                                <i className={`flex mr-0 ml-auto icon-${isSelected ? "check" : rightDecorator ?? "empty"}`}/>
+                            </li>
+                        );
+
+                        return subItems ? (
+                            <Menu
+                                className={className}
+                                button={item}
+                                name={`submenu-${name}`}
+                                items={subItems}
+                            />
+                        ) : item;
+                    })}
                 </ul>
             )}
         </>
