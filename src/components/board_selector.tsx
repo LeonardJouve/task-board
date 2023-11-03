@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {FormattedMessage} from "react-intl";
 import useBoards from "@store/boards";
+import Menu, {MenuTrigger} from "@components/menu";
 
 const BoardSelector: React.FC = () => {
     const {boards, fetchBoards} = useBoards();
-    const [isOpen, setIsOpen] = useState<boolean>(false);
     const params = useParams();
     const board = boards[Number(params["boardId"])];
 
@@ -13,23 +13,30 @@ const BoardSelector: React.FC = () => {
         fetchBoards();
     }, []);
 
-    const handleOpen = (): void => setIsOpen(!isOpen);
+    // ${isOpen ? "before:-rotate-180" : "before:rotate-0"}
 
     return (
-        <>
-            <button
-                className="background-2 hover px-2 py-1 rounded"
-                onClick={handleOpen}
-            >
-                {board?.name ?? (
-                    <FormattedMessage
-                        id="components.board_selector.select_board"
-                        defaultMessage="Select board"
-                    />
-                )}
-                <i className={`icon-chevron-up before:duration-300 before:transition-transform ${isOpen ? "before:rotate-180" : "before:rotate-0"}`}/>
-            </button>
-        </>
+        <Menu
+            name="board-selector"
+            className="max-w-[30%]"
+            placement="bottom-start"
+            triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
+            button={(
+                <button className="background-2 hover px-2 py-1 rounded">
+                    {board?.name ?? (
+                        <FormattedMessage
+                            id="components.board_selector.select_board"
+                            defaultMessage="Select board"
+                        />
+                    )}
+                    <i className="icon-chevron-up before:duration-300 before:transition-transform"/>
+                </button>
+            )}
+            items={Object.values(boards).map((b) => ({
+                text: b.name,
+                isSelected: b.id === board?.id,
+            }))}
+        />
     );
 };
 

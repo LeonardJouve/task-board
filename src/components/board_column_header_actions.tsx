@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {FormattedMessage, useIntl} from "react-intl";
 import useColumns from "@store/columns";
-import Menu from "@components/menu";
 import GenericModal from "@components/modals/generic_modal";
 import type {Column} from "@typing/store";
+import Menu from "@components/menu";
 
 type Props = {
     column: Column;
@@ -13,11 +13,9 @@ type Props = {
 const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard}) => {
     const {formatMessage} = useIntl();
     const {deleteColumn} = useColumns();
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
     const handleAskDelete = (): void => {
-        setIsMenuOpen(false);
         setIsDeleteModalOpen(true);
     };
 
@@ -34,11 +32,13 @@ const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard}) => {
                 <i className="icon-plus"/>
             </button>
             <Menu
-                className="background-5"
-                isOpen={isMenuOpen}
-                setIsOpen={setIsMenuOpen}
                 name={`board-column-header-menu-${column.id}`}
-                icon="list"
+                placement="bottom-end"
+                button={(
+                    <button className="rounded background-5">
+                        <i className="icon-list"/>
+                    </button>
+                )}
                 items={[
                     {
                         leftDecorator: "delete",
