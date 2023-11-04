@@ -81,17 +81,17 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
             <div className="flex flex-col gap-2">
                 <button
                     className="rounded background-5 hover px-2 py-1 w-full"
-                    onClick={isMeMember ? handleJoinCard : handleLeaveCard}
+                    onClick={isMeMember ? handleLeaveCard : handleJoinCard}
                 >
                     {isMeMember ? (
                         <FormattedMessage
-                            id="components.board_card_modal.join"
-                            defaultMessage="Join"
+                            id="components.board_card_modal.leave"
+                            defaultMessage="Leave"
                         />
                     ) : (
                         <FormattedMessage
-                            id="components.board_card_modal.leave"
-                            defaultMessage="Leave"
+                            id="components.board_card_modal.join"
+                            defaultMessage="Join"
                         />
                     )}
                 </button>
