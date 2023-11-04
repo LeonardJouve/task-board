@@ -15,9 +15,7 @@ const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard}) => {
     const {deleteColumn} = useColumns();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-    const handleAskDelete = (): void => {
-        setIsDeleteModalOpen(true);
-    };
+    const handleAskDelete = (): void => setIsDeleteModalOpen(true);
 
     const handleDelete = (): void => {
         deleteColumn(column.id);

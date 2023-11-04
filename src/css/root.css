@@ -24,6 +24,12 @@
     .background-5 {
         @apply bg-light-5 dark:bg-dark-5;
     }
+    .background-dangerous-1 {
+        @apply bg-light-dangerous-1 dark:bg-dark-dangerous-1;
+    }
+    .background-dangerous-2 {
+        @apply bg-light-dangerous-2 dark:bg-dark-dangerous-2;
+    }
     .color-1 {
         @apply text-light-6 dark:text-dark-6;
     }
@@ -31,7 +37,7 @@
         @apply text-light-7 dark:text-dark-7;
     }
     .color-dangerous {
-        @apply text-light-dangerous dark:text-dark-dangerous;
+        @apply text-light-dangerous-3 dark:text-dark-dangerous-3;
     }
     .border-color-1 {
         @apply border-light-6 dark:border-dark-6;

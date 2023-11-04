@@ -1,12 +1,8 @@
 # task-board
 
 TODO:
-- delete card / board
-- popover
-- card tags
+- card tags (popover)
 - tooltip / modal / menu animation
-- column sort filters
-- api delete
 - fetch loop
 - handle move store updates
 - host

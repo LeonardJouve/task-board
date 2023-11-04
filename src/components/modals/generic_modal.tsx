@@ -103,7 +103,7 @@ const GenericModal: React.FC<Props> = ({isOpen, setIsOpen, header, content, clos
                                 </button>
                             )}
                             <button
-                                className={`rounded-lg hover px-2 py-1 flex items-center justify-center ${isDangerous ? "color-dangerous background-4" : "background-5"}`}
+                                className={`rounded-lg px-2 py-1 flex items-center justify-center ${isDangerous ? "color-dangerous background-dangerous-1 hover:background-dangerous-2" : "background-5 hover"}`}
                                 onClick={handleConfirm}
                             >
                                 <FormattedMessage
