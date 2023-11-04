@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {FormattedMessage, useIntl} from "react-intl";
 import useBoards from "@store/boards";
+import useUsers from "@store/users";
 import Menu, {MenuTrigger, type Item} from "@components/menu";
 import SplitButton from "@components/split_button";
 import GenericModal from "@components/modals/generic_modal";
@@ -10,9 +11,11 @@ import type {Board} from "@typing/store";
 const BoardSelector: React.FC = () => {
     const {formatMessage} = useIntl();
     const navigate = useNavigate();
-    const {boards, fetchBoards, deleteBoard} = useBoards();
-    const params = useParams();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+    const {boards, fetchBoards, deleteBoard, leaveBoard} = useBoards();
+    const {me} = useUsers();
+    const params = useParams();
+    const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false);
     const board = boards[Number(params["boardId"])];
 
     useEffect(() => {
@@ -40,8 +43,36 @@ const BoardSelector: React.FC = () => {
         deleteBoard(board.id);
     };
 
+    const handleAskLeaveBoard = (): void => {
+        if (!board) {
+            return;
+        }
+
+        setIsLeaveModalOpen(true);
+    };
+
+    const handleLeaveBoard = (): void => {
+        if (!board) {
+            return;
+        }
+
+        leaveBoard(board.id);
+    };
+
     const actionItems: Item[] = [
         {
+            leftDecorator: "leave",
+            text: formatMessage({
+                id: "components.board_action_menu.leave_board",
+                defaultMessage: "Leave board",
+            }),
+            isDangerous: true,
+            onPress: handleAskLeaveBoard,
+        },
+    ];
+
+    if (board?.ownerId !== me?.id) {
+        actionItems.unshift({
             leftDecorator: "delete",
             text: formatMessage({
                 id: "components.board_action_menu.delete_board",
@@ -49,8 +80,8 @@ const BoardSelector: React.FC = () => {
             }),
             isDangerous: true,
             onPress: handleAskDeleteBoard,
-        },
-    ];
+        });
+    }
 
     const selectItems: Item[] = Object.values(boards).map((b) => ({
         text: b.name || formatMessage({
@@ -98,7 +129,7 @@ const BoardSelector: React.FC = () => {
                         items={selectItems}
                     />
                 )}
-                right={(
+                right={board && (
                     <Menu
                         name="board-actions"
                         className="max-w-[30%]"
@@ -108,6 +139,24 @@ const BoardSelector: React.FC = () => {
                         items={actionItems}
                     />
                 )}
+            />
+            <GenericModal
+                isDangerous={true}
+                isOpen={isLeaveModalOpen}
+                setIsOpen={setIsLeaveModalOpen}
+                header={(
+                    <FormattedMessage
+                        id="components.leave_board_modal.header"
+                        defaultMessage="Leave board"
+                    />
+                )}
+                content={(
+                    <FormattedMessage
+                        id="components.leave_board_modal.content"
+                        defaultMessage="Do you really want to leave this board ? You wont be able to join it afterwards."
+                    />
+                )}
+                onConfirm={handleLeaveBoard}
             />
             <GenericModal
                 isDangerous={true}
