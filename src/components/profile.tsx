@@ -1,14 +1,25 @@
 import React from "react";
+import {useIntl} from "react-intl";
+import {useNavigate} from "react-router-dom";
 import useUsers from "@store/users";
 import Avatar, {Size} from "@components/avatar";
 import Menu, {MenuTrigger} from "@components/menu";
+import useAuth from "@store/auth";
 
 const Profile: React.FC = () => {
+    const {formatMessage} = useIntl();
+    const navigate = useNavigate();
     const {me} = useUsers();
+    const {setIsLoggedIn} = useAuth();
 
     if (!me) {
         return null;
     }
+
+    const handleDisconnect = (): void => {
+        setIsLoggedIn(false);
+        navigate("/");
+    };
 
     return (
         <Menu
@@ -25,7 +36,15 @@ const Profile: React.FC = () => {
                 </button>
             )}
             items={[
-                {text: "test"},
+                {
+                    isDangerous: true,
+                    leftDecorator: "leave",
+                    text: formatMessage({
+                        id: "components.profile_menu.disconnect",
+                        defaultMessage: "Disconnect",
+                    }),
+                    onPress: handleDisconnect,
+                },
             ]}
         />
     );
