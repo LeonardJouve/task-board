@@ -69,3 +69,5 @@ export type UpdateTag = {
     name?: string;
     color?: Color;
 };
+
+export type ActionResult<T> = Promise<T|null>;

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import BoardCardModal from "@components/modals/board_card_modal";
-import BoardTag from "@components/tag";
+import BoardTag from "@components/board_tag";
 import Avatars from "@components/avatars";
 import {Size} from "@components/avatar";
 import type {Card} from "@typing/store";
@@ -30,7 +30,7 @@ const BoardCard: React.FC<Props> = ({card}) => {
                     {card.tagIds.map((tagId) => (
                         <BoardTag
                             key={`tag-${tagId}`}
-                            id={tagId}
+                            tagId={tagId}
                         />
                     ))}
                 </div>

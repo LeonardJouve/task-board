@@ -19,14 +19,14 @@ export type Board = {
 export type Column = {
     id: number;
     boardId: number;
-    nextId: number;
+    nextId: number|null;
     name: string;
 };
 
 export type Card = {
     id: number;
     columnId: number;
-    nextId: number;
+    nextId: number|null;
     userIds: User["id"][];
     tagIds: Tag["id"][];
     name: string;

@@ -1,9 +1,11 @@
 import React, {useState} from "react";
 import {FormattedMessage, useIntl} from "react-intl";
-import GenericModal from "@components/modals/generic_modal";
-import EditableText from "@components/editable_text";
 import useCards from "@store/cards";
 import useUsers from "@store/users";
+import GenericModal from "@components/modals/generic_modal";
+import EditableText from "@components/editable_text";
+import BoardTag from "@components/board_tag";
+import AddTagPopover from "@components/add_tag_popover";
 import type {UpdateCard} from "@typing/rest";
 import type {Card} from "@typing/store";
 
@@ -78,7 +80,7 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
                     setContent={(updatedContent): void => handleUpdateCard({content: updatedContent})}
                 />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 max-w-[30%]">
                 <button
                     className="rounded background-5 hover px-2 py-1 w-full"
                     onClick={isMeMember ? handleLeaveCard : handleJoinCard}
@@ -95,6 +97,7 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
                         />
                     )}
                 </button>
+                <AddTagPopover cardId={cardId}/>
                 <button
                     className="rounded background-dangerous-1 color-dangerous hover:background-dangerous-2 px-2 py-1 w-full"
                     onClick={handleAskDeleteCard}
@@ -104,6 +107,17 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
                         defaultMessage="Delete card"
                     />
                 </button>
+                {card.tagIds.length ? (
+                    <div className="w-full gap-2 flex flex-row flex-wrap">
+                        {card.tagIds.map((tagId) => (
+                            <BoardTag
+                                key={`board-card-modal-tag-${tagId}`}
+                                tagId={tagId}
+                                isRemovable={true}
+                                cardId={cardId}
+                            />))}
+                    </div>
+                ) : null}
             </div>
         </div>
     );

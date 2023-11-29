@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
 import type {CreateTag, UpdateTag} from "@typing/rest";
-import type {Board, Tag} from "@typing/store";
+import type {ActionResult, Board, Card, Tag} from "@typing/store";
 
 type TagState = {
     tags: Record<Tag["id"], Tag>;
@@ -11,7 +11,7 @@ type TagState = {
     removeTags: (tagIds: Tag["id"][]) => void;
     fetchTag: (tagId: Tag["id"]) => Promise<void>;
     fetchTags: (boardIds?: Board["id"][]) => Promise<void>;
-    createTag: (tag: CreateTag) => Promise<void>;
+    createTag: (tag: CreateTag) => ActionResult<Tag>;
     updateTag: (tagId: Tag["id"], tag: UpdateTag) => Promise<void>;
     deleteTag: (tagId: Tag["id"]) => Promise<void>;
 };
@@ -40,14 +40,16 @@ const useTags = create<TagState>((set) => ({
 
         set((state) => data.reduce(setTag, state));
     },
-    createTag: async (tag): Promise<void> => {
+    createTag: async (tag): ActionResult<Tag> => {
         const {error, data} = await Rest.createTag(tag);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setTag(state, data));
+
+        return data;
     },
     updateTag: async (tagId, tag): Promise<void> => {
         const {error, data} = await Rest.updateTag(tagId, tag);
@@ -81,5 +83,9 @@ const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
     delete state.tags[tagId];
     return state;
 };
+
+export const getTagsInBoard = (tags: TagState["tags"], boardId: Board["id"]): Tag[] => Object.values(tags).filter((tag) => tag.boardId === boardId);
+
+export const getTagsInCard = (tags: TagState["tags"], card: Card): Tag[] => Object.values(tags).filter((tag) => card.tagIds.includes(tag.id));
 
 export default useTags;
