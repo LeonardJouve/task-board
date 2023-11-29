@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {FormattedMessage} from "react-intl";
 import {useParams} from "react-router-dom";
 import Creatable from "react-select/creatable";
-import type {ActionMeta, GroupBase, MultiValue, MultiValueProps, StylesConfig} from "react-select";
+import type {ActionMeta, ClassNamesConfig, GroupBase, MultiValue, MultiValueProps, StylesConfig} from "react-select";
 import useCards from "@store/cards";
 import useTags, {getTagsInBoard, getTagsInCard} from "@store/tags";
 import Popover from "@components/popover";
@@ -28,10 +28,21 @@ const RenderSelectMultiValue: React.FC<MultiValueProps<SelectOption, true, Group
 
 const RenderSelectDropdownIndicator: React.FC = () => null;
 
+const RenderSelectIndicatorSeparator: React.FC = () => null;
+
+const classNames: ClassNamesConfig<SelectOption, true, GroupBase<SelectOption>> = {
+    input: () => "color-2",
+    menu: () => "background-3",
+    option: (state) => state.isFocused ? "background-4" : "",
+};
+
 const styles: StylesConfig<SelectOption, true> = {
     control: (style) => ({
         ...style,
         width: "200px",
+        border: 0,
+        backgroundColor: "transparent",
+        boxShadow: "0 0 0 transparent",
     }),
     menu: (style) => ({
         ...style,
@@ -133,36 +144,36 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
             )}
             placement="bottom-end"
         >
-            <div className="p-2">
-                <Creatable
-                    className="rounded outline-none px-2 py-1"
-                    autoFocus={true}
-                    styles={styles}
-                    options={options}
-                    isMulti={true}
-                    isClearable={false}
-                    menuIsOpen={true}
-                    value={values}
-                    placeholder={(
-                        <FormattedMessage
-                            id="components.add_tag_popover.enter_tag"
-                            defaultMessage="Enter a tag name"
+            <Creatable
+                className="p-1 rounded outline-none"
+                autoFocus={true}
+                styles={styles}
+                classNames={classNames}
+                options={options}
+                isMulti={true}
+                isClearable={false}
+                menuIsOpen={true}
+                value={values}
+                placeholder={(
+                    <FormattedMessage
+                        id="components.add_tag_popover.enter_tag"
+                        defaultMessage="Enter a tag name"
+                    />
+                )}
+                isValidNewOption={isValidNewOption}
+                onChange={handleChange}
+                onCreateOption={handleCreateTag}
+                components={{
+                    MultiValue: (props) => (
+                        <RenderSelectMultiValue
+                            {...props}
+                            cardId={cardId}
                         />
-                    )}
-                    isValidNewOption={isValidNewOption}
-                    onChange={handleChange}
-                    onCreateOption={handleCreateTag}
-                    components={{
-                        MultiValue: (props) => (
-                            <RenderSelectMultiValue
-                                {...props}
-                                cardId={cardId}
-                            />
-                        ),
-                        DropdownIndicator: RenderSelectDropdownIndicator,
-                    }}
-                />
-            </div>
+                    ),
+                    DropdownIndicator: RenderSelectDropdownIndicator,
+                    IndicatorSeparator: RenderSelectIndicatorSeparator,
+                }}
+            />
         </Popover>
     );
 };

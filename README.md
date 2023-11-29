@@ -2,11 +2,11 @@
 
 TODO:
 - error banner
-- card tags (popover)
-- tooltip / modal / menu / popover animation
+- create card tags with color
 - filter by tag
-- floating ui modal
 - fetch loop
 - handle move store updates
 - host
 - auth
+- tooltip / modal / menu / popover animation
+- floating ui modal
