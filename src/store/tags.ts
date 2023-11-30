@@ -84,8 +84,14 @@ const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
     return state;
 };
 
-export const getTagsInBoard = (tags: TagState["tags"], boardId: Board["id"]): Tag[] => Object.values(tags).filter((tag) => tag.boardId === boardId);
+export const getTagsInBoard = (tags: TagState["tags"], boardId: Board["id"]): Tag[] => Object.values(tags)
+    .filter((tag) => tag.boardId === boardId);
 
-export const getTagsInCards = (tags: TagState["tags"], cards: Card[]): Tag[] => Object.values(tags).filter((tag) => cards.some((card) => card.tagIds.includes(tag.id)));
+export const getTagsInCards = (tags: TagState["tags"], cards: Card[]): Tag[] => Object.values(tags)
+    .filter((tag) => cards.some((card) => card.tagIds.includes(tag.id)));
+
+export const getTagsColors = (tags: TagState["tags"]): string[] => Object.values(tags)
+    .map(({color}) => color)
+    .filter((hex, i, self) => self.indexOf(hex) === i);
 
 export default useTags;

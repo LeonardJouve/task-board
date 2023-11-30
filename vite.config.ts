@@ -19,6 +19,7 @@ export default defineConfig({
             "@intl": path.resolve(dir, "src/intl"),
             "@api": path.resolve(dir, "src/api"),
             "@typing": path.resolve(dir, "src/types"),
+            "@utils": path.resolve(dir, "src/utils"),
         },
     },
 });
