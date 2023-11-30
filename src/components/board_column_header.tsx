@@ -4,14 +4,16 @@ import EditableText from "@components/editable_text";
 import BoardColumnHeaderActions from "@components/board_column_header_actions";
 import useColumns from "@store/columns";
 import type {UpdateColumn} from "@typing/rest";
-import type {Column} from "@typing/store";
+import type {Column, Tag} from "@typing/store";
 
 type Props = {
     column: Column;
+    filterTagId: Tag["id"]|null;
+    setFilterTagId: (tagId: Tag["id"]|null) => void;
     handleNewCard: () => void;
 };
 
-const BoardColumnHeader: React.FC<Props> = ({column, handleNewCard}) => {
+const BoardColumnHeader: React.FC<Props> = ({column, filterTagId, setFilterTagId, handleNewCard}) => {
     const {formatMessage} = useIntl();
     const {updateColumn} = useColumns();
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
@@ -39,6 +41,8 @@ const BoardColumnHeader: React.FC<Props> = ({column, handleNewCard}) => {
                 <div className="group-hover:block hidden">
                     <BoardColumnHeaderActions
                         column={column}
+                        filterTagId={filterTagId}
+                        setFilterTagId={setFilterTagId}
                         handleNewCard={handleNewCard}
                     />
                 </div>

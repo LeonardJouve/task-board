@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 import Creatable from "react-select/creatable";
 import type {ActionMeta, ClassNamesConfig, GroupBase, MultiValue, MultiValueProps, StylesConfig} from "react-select";
 import useCards from "@store/cards";
-import useTags, {getTagsInBoard, getTagsInCard} from "@store/tags";
+import useTags, {getTagsInBoard, getTagsInCards} from "@store/tags";
 import Popover from "@components/popover";
 import type {Card, Tag} from "@typing/store";
 import BoardTag from "./board_tag";
@@ -59,6 +59,16 @@ const formatTag = ({name, id}: Tag): SelectOption => ({
     value: id,
 });
 
+const formatCreateLabel = (tag: string): React.ReactNode => (
+    <FormattedMessage
+        id="components.add_tag_popover.create_tag"
+        defaultMessage='Create new tag "{tag}"'
+        values={{
+            tag,
+        }}
+    />
+);
+
 const AddTagPopover: React.FC<Props> = ({cardId}) => {
     const {cards, addCardTag, removeCardTag} = useCards();
     const {tags, fetchTags, createTag} = useTags();
@@ -75,7 +85,7 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
         if (!card) {
             return;
         }
-        setValues(getTagsInCard(tags, card).map(formatTag));
+        setValues(getTagsInCards(tags, [card]).map(formatTag));
     }, [card]);
 
     if (!card) {
@@ -163,6 +173,7 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
                 isValidNewOption={isValidNewOption}
                 onChange={handleChange}
                 onCreateOption={handleCreateTag}
+                formatCreateLabel={formatCreateLabel}
                 components={{
                     MultiValue: (props) => (
                         <RenderSelectMultiValue

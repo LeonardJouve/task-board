@@ -86,6 +86,6 @@ const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
 
 export const getTagsInBoard = (tags: TagState["tags"], boardId: Board["id"]): Tag[] => Object.values(tags).filter((tag) => tag.boardId === boardId);
 
-export const getTagsInCard = (tags: TagState["tags"], card: Card): Tag[] => Object.values(tags).filter((tag) => card.tagIds.includes(tag.id));
+export const getTagsInCards = (tags: TagState["tags"], cards: Card[]): Tag[] => Object.values(tags).filter((tag) => cards.some((card) => card.tagIds.includes(tag.id)));
 
 export default useTags;

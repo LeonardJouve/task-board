@@ -4,7 +4,7 @@ import BoardColumnHeader from "@components/board_column_header";
 import BoardCard from "@components/board_card";
 import AddItem from "@components/add_item";
 import BoardCardModal from "@components/modals/board_card_modal";
-import type {Column, Card} from "@typing/store";
+import type {Column, Card, Tag} from "@typing/store";
 
 type Props = {
     column: Column;
@@ -12,8 +12,8 @@ type Props = {
 
 const BoardColumn: React.FC<Props> = ({column}) => {
     const {cards, fetchCards, createCard} = useCards();
-    const cardsInColumn = getCardsInColumn(cards, column.id);
     const [cardId, setCardId] = useState<Card["id"]>(0);
+    const [filterTagId, setFilterTagId] = useState<Tag["id"]|null>(null);
 
     useEffect(() => {
         fetchCards([column.id]);
@@ -29,10 +29,15 @@ const BoardColumn: React.FC<Props> = ({column}) => {
 
     const handleCloseModal = (): void => setCardId(0);
 
+    const cardsInColumn = getCardsInColumn(cards, column.id)
+        .filter((card) => filterTagId === null || card.tagIds.includes(filterTagId));
+
     return (
         <div className="min-w-board-column max-w-board-column background-3 rounded-lg flex flex-col items-center gap-2 p-3 color-2">
             <BoardColumnHeader
                 column={column}
+                filterTagId={filterTagId}
+                setFilterTagId={setFilterTagId}
                 handleNewCard={handleNewCard}
             />
             {cardsInColumn.map((card) => (
