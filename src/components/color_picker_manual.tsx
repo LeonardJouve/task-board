@@ -1,5 +1,5 @@
-import React from "react";
-import {hexToRgb, isValidHex, rgbToHex, type Color} from "@utils/color";
+import React, {useEffect, useState} from "react";
+import {hexToRgb, isValidHex, rgbToHex, isValidRgb, getTempColor, getColor, isValidTempColor, type Color, type TempColor} from "@utils/color";
 
 type Props = {
     color: Color;
@@ -7,6 +7,28 @@ type Props = {
 };
 
 const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
+    const [tempColor, setTempColor] = useState<TempColor>(getTempColor(color));
+
+    useEffect(() => setTempColor(getTempColor(color)), [color]);
+
+    const handleTempColorChange = (newTempColor: TempColor): void => {
+        if (!isValidTempColor(newTempColor)) {
+            return;
+        }
+
+        setTempColor(newTempColor);
+    };
+
+    const handleColorChange = (newTempColor: TempColor): void => {
+        const newColor = getColor(newTempColor);
+        if (!isValidRgb(newColor)) {
+            handleTempColorChange(newTempColor);
+            return;
+        }
+
+        setColor(newColor);
+    };
+
     const hex = rgbToHex(color);
 
     const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -19,12 +41,12 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
         setColor(hexToRgb(value));
     };
 
-    const handleRgbChange = (event: React.ChangeEvent<HTMLInputElement>, element: keyof Color): void => {
-        setColor({
-            ...color,
-            [element]: parseInt(event.target.value),
-        });
-    };
+    const handleRgbChange = (event: React.ChangeEvent<HTMLInputElement>, element: keyof Color): void => handleColorChange({
+        ...tempColor,
+        [element]: event.target.value,
+    });
+
+    const handleFocus = (event: React.FocusEvent<HTMLInputElement>): void => event.target.select();
 
     return (
         <div className="flex flex-row gap-5 color-1">
@@ -44,7 +66,7 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
                 </div>
             </div>
             <div className="flex flex-row gap-3">
-                {Object.keys(color).map((element) => (
+                {Object.keys(tempColor).map((element) => (
                     <div
                         className="flex flex-col gap-1"
                         key={`color-custom-element-${element}`}
@@ -53,12 +75,9 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
                         <input
                             className="rounded w-[40px] p-1 background-1"
                             placeholder={element.toUpperCase()}
-                            value={color[element as keyof Color]}
+                            onFocus={handleFocus}
+                            value={tempColor[element as keyof Color]}
                             onChange={(event): void => handleRgbChange(event, element as keyof Color)}
-                            inputMode="numeric" // TODO: following attributes not working
-                            pattern="[0-9]*"
-                            min={0}
-                            max={0xFF}
                         />
                     </div>
                 ))}
