@@ -8,8 +8,13 @@ type Props = {
 
 const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
     const [tempColor, setTempColor] = useState<TempColor>(getTempColor(color));
+    const [tempHex, setTempHex] = useState<string>(rgbToHex(color));
 
-    useEffect(() => setTempColor(getTempColor(color)), [color]);
+    useEffect(() => {
+        console.log(color);
+        setTempColor(getTempColor(color));
+        setTempHex(rgbToHex(color));
+    }, [color]);
 
     const handleTempColorChange = (newTempColor: TempColor): void => {
         if (!isValidTempColor(newTempColor)) {
@@ -31,10 +36,11 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
 
     const hex = rgbToHex(color);
 
-    const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>): void => { // TODO: improve
         const {value} = event.target;
 
         if (!isValidHex(value)) {
+            setTempHex(value);
             return;
         }
 
@@ -48,6 +54,10 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>): void => event.target.select();
 
+    const handleBlurColor = (): void => setTempColor(getTempColor(color));
+
+    const handleBlurHex = (): void => setTempHex(rgbToHex(color));
+
     return (
         <div className="flex flex-row gap-5 color-1">
             <div className="flex flex-row gap-3">
@@ -60,8 +70,10 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
                     <input
                         className="rounded w-[80px] p-1 background-1"
                         placeholder="Hex"
-                        value={hex}
+                        value={tempHex}
                         onChange={handleHexChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlurHex}
                     />
                 </div>
             </div>
@@ -75,9 +87,10 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
                         <input
                             className="rounded w-[40px] p-1 background-1"
                             placeholder={element.toUpperCase()}
-                            onFocus={handleFocus}
                             value={tempColor[element as keyof Color]}
                             onChange={(event): void => handleRgbChange(event, element as keyof Color)}
+                            onFocus={handleFocus}
+                            onBlur={handleBlurColor}
                         />
                     </div>
                 ))}

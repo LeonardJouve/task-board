@@ -11,11 +11,12 @@ const ColorPickerPreset: React.FC<Props> = ({color, setColor}) => {
     const {tags} = useTags();
 
     const handleSelect = (hex: string): void => {
-        if (!isValidHex(hex)) {
+        const sanitizedHex = hex.replace("#", "");
+        if (!isValidHex(sanitizedHex)) {
             return;
         }
 
-        setColor(hexToRgb(hex));
+        setColor(hexToRgb(sanitizedHex));
     };
 
     const hex = rgbToHex(color);

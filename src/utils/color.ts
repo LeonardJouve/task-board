@@ -6,9 +6,9 @@ export type Color = {
 
 export type TempColor = Record<keyof Color, string>;
 
-export const rgbToHex = (color: Color): string => Object.keys(color).reduce((hex, element) => hex + (color[element as keyof Color] <= 0xF ? "0" : "") + color[element as keyof Color].toString(16).toUpperCase(), "#");
+export const rgbToHex = (color: Color): string => Object.keys(color).reduce((hex, element) => hex + (color[element as keyof Color] <= 0xF ? "0" : "") + color[element as keyof Color].toString(16).toUpperCase(), "");
 
-export const isValidHex = (hex: string): boolean => /^#[0-9A-F]{6}$/.test(hex);
+export const isValidHex = (hex: string): boolean => /^[0-9A-F]{6}$/.test(hex);
 
 export const isValidRgb = (color: Color): boolean => Object.values(color).every((value) => value >= 0 && value <= 255);
 
@@ -45,7 +45,7 @@ export const hexToRgb = (hex: string): Color => {
         };
     }
 
-    const value = parseInt(hex.replace("#", ""), 16);
+    const value = parseInt(hex, 16);
 
     return {
         r: value >> 16 & 0xFF,
