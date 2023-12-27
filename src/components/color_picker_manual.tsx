@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {hexToRgb, isValidHex, rgbToHex, isValidRgb, getTempColor, getColor, isValidTempColor, type Color, type TempColor} from "@utils/color";
+import {hexToRgb, isValidHex, rgbToHex, isValidRgb, getTempColor, getColor, isValidTempColor, type Color, type TempColor, isValidTempHex} from "@utils/color";
 
 type Props = {
     color: Color;
@@ -11,7 +11,6 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
     const [tempHex, setTempHex] = useState<string>(rgbToHex(color));
 
     useEffect(() => {
-        console.log(color);
         setTempColor(getTempColor(color));
         setTempHex(rgbToHex(color));
     }, [color]);
@@ -24,6 +23,14 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
         setTempColor(newTempColor);
     };
 
+    const handleTempHexChange = (newTempHex: string): void => {
+        if (!isValidTempHex(newTempHex)) {
+            return;
+        }
+
+        setTempHex(newTempHex);
+    };
+
     const handleColorChange = (newTempColor: TempColor): void => {
         const newColor = getColor(newTempColor);
         if (!isValidRgb(newColor)) {
@@ -34,13 +41,11 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
         setColor(newColor);
     };
 
-    const hex = rgbToHex(color);
-
     const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>): void => { // TODO: improve
-        const {value} = event.target;
+        const value = event.target.value.toUpperCase();
 
         if (!isValidHex(value)) {
-            setTempHex(value);
+            handleTempHexChange(value);
             return;
         }
 
@@ -63,7 +68,7 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
             <div className="flex flex-row gap-3">
                 <div
                     className="self-end w-[30px] h-[30px] rounded-[50%]"
-                    style={{backgroundColor: hex}}
+                    style={{backgroundColor: "#" + rgbToHex(color)}}
                 />
                 <div className="flex flex-col gap-1">
                     <label>{"Hex"}</label>

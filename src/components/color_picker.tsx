@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import ColorPickerManual from "@components/color_picker_manual";
 import ColorPickerPreset from "@components/color_picker_preset";
+import ColorPickerCustom from "@components/color_picker_custom";
 import type {Color} from "@utils/color";
-import ColorPickerCustom from "./color_picker_custom";
 
 type Props = {
 
@@ -16,7 +16,7 @@ const ColorPicker: React.FC<Props> = () => {
     });
 
     return (
-        <div>
+        <div className="p-4">
             <ColorPickerPreset
                 color={color}
                 setColor={setColor}
