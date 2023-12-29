@@ -64,7 +64,7 @@ const ColorPickerCustomSlider: React.FC<Props> = ({sliderBackground, thumbBackgr
     return (
         <div
             ref={sliderRef}
-            className="relative w-full h-[8px] rounded"
+            className="relative w-full h-[8px] rounded px-[2px]"
             style={{background: sliderBackground}}
             onMouseDown={handleMouseDown}
         >

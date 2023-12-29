@@ -62,7 +62,7 @@ export const rgbToHsl = (color: Color): Hsl => {
     let hue = 0;
     switch (max) {
     case r:
-        hue = (g - b) / delta % 6;
+        hue = ((g - b) / delta % 6 + 6) % 6;
         break;
     case g:
         hue = (b - r) / delta + 2;

@@ -20,7 +20,6 @@ const ColorPickerCustom: React.FC<Props> = ({color, setColor}) => {
             return;
         }
 
-        console.log("update", rgbToHsl(color));
         setHsl(rgbToHsl(color));
     }, [color]);
 
@@ -29,8 +28,6 @@ const ColorPickerCustom: React.FC<Props> = ({color, setColor}) => {
             ...hsl,
             ...partialHsl,
         };
-
-        console.log(partialHsl, newHsl, hslToRgb(newHsl), hsl);
 
         setHsl(newHsl);
         setColor(hslToRgb(newHsl));
