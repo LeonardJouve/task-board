@@ -41,7 +41,7 @@ const Tooltip: React.FC<Props> = ({placement = "top", tip, children, style}) => 
             {isMounted && (
                 <div
                     ref={refs.setFloating}
-                    className="background-1 whitespace-nowrap rounded p-1 color-1 text-sm font-normal !z-30"
+                    className="shadow-lg background-1 whitespace-nowrap rounded p-1 color-1 text-sm font-normal !z-30"
                     style={{
                         ...floatingStyles,
                         ...styles,

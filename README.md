@@ -8,4 +8,4 @@ TODO:
 - host
 - auth
 - tooltip / modal / menu / popover animation
-- floating ui modal
+- menu item toggle modal

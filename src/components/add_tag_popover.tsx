@@ -6,8 +6,10 @@ import type {ActionMeta, ClassNamesConfig, GroupBase, MultiValue, MultiValueProp
 import useCards from "@store/cards";
 import useTags, {getTagsInBoard, getTagsInCards} from "@store/tags";
 import Popover from "@components/popover";
+import BoardTag from "@components/board_tag";
+import ColorPicker from "@components/color_picker";
 import type {Card, Tag} from "@typing/store";
-import BoardTag from "./board_tag";
+import {hexToRgb, type Color, rgbToHex} from "@utils/color";
 
 type Props = {
     cardId: Card["id"];
@@ -18,7 +20,9 @@ type SelectOption = {
     value: Tag["id"];
 };
 
-const RenderSelectMultiValue: React.FC<MultiValueProps<SelectOption, true, GroupBase<SelectOption>> & {cardId: Card["id"]}> = ({data, cardId}) => (
+type SelectMultiValueProps = Pick<MultiValueProps<SelectOption, true, GroupBase<SelectOption>>, "data"> & {cardId: Card["id"]};
+
+const RenderSelectMultiValue: React.FC<SelectMultiValueProps> = ({data, cardId}) => (
     <BoardTag
         tagId={data.value}
         isRemovable={true}
@@ -26,11 +30,8 @@ const RenderSelectMultiValue: React.FC<MultiValueProps<SelectOption, true, Group
     />
 );
 
-const RenderSelectDropdownIndicator: React.FC = () => null;
-
-const RenderSelectIndicatorSeparator: React.FC = () => null;
-
 const classNames: ClassNamesConfig<SelectOption, true, GroupBase<SelectOption>> = {
+    container: () => "color-2",
     input: () => "color-2",
     menu: () => "background-3",
     option: (state) => state.isFocused ? "background-4" : "",
@@ -52,6 +53,12 @@ const styles: StylesConfig<SelectOption, true> = {
         ...style,
         gap: 4,
     }),
+    indicatorSeparator: () => ({
+        display: "none",
+    }),
+    dropdownIndicator: () => ({
+        display: "none",
+    }),
 };
 
 const formatTag = ({name, id}: Tag): SelectOption => ({
@@ -59,21 +66,12 @@ const formatTag = ({name, id}: Tag): SelectOption => ({
     value: id,
 });
 
-const formatCreateLabel = (tag: string): React.ReactNode => (
-    <FormattedMessage
-        id="components.add_tag_popover.create_tag"
-        defaultMessage='Create new tag "{tag}"'
-        values={{
-            tag,
-        }}
-    />
-);
-
 const AddTagPopover: React.FC<Props> = ({cardId}) => {
     const {cards, addCardTag, removeCardTag} = useCards();
-    const {tags, fetchTags, createTag} = useTags();
+    const {defaultColor, tags, fetchTags, createTag} = useTags();
     const params = useParams();
     const [values, setValues] = useState<SelectOption[]>([]);
+    const [color, setColor] = useState<Color>(hexToRgb(defaultColor));
     const boardId = Number(params["boardId"]);
     const card = cards[cardId];
 
@@ -122,6 +120,7 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
         const tag = await createTag({
             boardId,
             name,
+            color: "#" + rgbToHex(color),
         });
 
         if (!tag) {
@@ -135,6 +134,37 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
             formatTag(tag),
         ]);
     };
+
+    const formatCreateLabel = (name: string): React.ReactNode => (
+        <div className="flex flex-row gap-1 flex-wrap">
+            <FormattedMessage
+                id="components.add_tag_popover.create_tag"
+                defaultMessage="Create new tag {tag}"
+                values={{
+                    tag: <BoardTag tag={{
+                        name,
+                        color: "#" + rgbToHex(color),
+                    }}/>,
+                }}
+            />
+            <div onClick={(event: React.MouseEvent): void => event.stopPropagation()}>
+                <Popover
+                    anchor={(
+                        <button className="background-5 rounded hover flex">
+                            <i className="icon-palette"/>
+                        </button>
+                    )}
+                    placement="left-start"
+                    isClosable={true}
+                >
+                    <ColorPicker
+                        color={color}
+                        setColor={setColor}
+                    />
+                </Popover>
+            </div>
+        </div>
+    );
 
     const options: SelectOption[] = getTagsInBoard(tags, boardId)
         .filter(({id}) => !card.tagIds.includes(id))
@@ -175,14 +205,12 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
                 onCreateOption={handleCreateTag}
                 formatCreateLabel={formatCreateLabel}
                 components={{
-                    MultiValue: (props) => (
+                    MultiValue: ({data}) => (
                         <RenderSelectMultiValue
-                            {...props}
+                            data={data}
                             cardId={cardId}
                         />
                     ),
-                    DropdownIndicator: RenderSelectDropdownIndicator,
-                    IndicatorSeparator: RenderSelectIndicatorSeparator,
                 }}
             />
         </Popover>

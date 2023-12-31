@@ -1,5 +1,5 @@
 import type {MessageDescriptor} from "react-intl";
-import type {Color, Board, Column} from "@typing/store";
+import type {Board, Column} from "@typing/store";
 
 type RestResult<T> = {
     error: false;
@@ -62,12 +62,12 @@ export type UpdateCard = {
 export type CreateTag = {
     boardId: Board["id"];
     name?: string;
-    color?: Color;
+    color?: string;
 };
 
 export type UpdateTag = {
     name?: string;
-    color?: Color;
+    color?: string;
 };
 
 export type ActionResult<T> = Promise<T|null>;

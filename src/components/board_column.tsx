@@ -12,7 +12,7 @@ type Props = {
 
 const BoardColumn: React.FC<Props> = ({column}) => {
     const {cards, fetchCards, createCard} = useCards();
-    const [cardId, setCardId] = useState<Card["id"]>(0);
+    const [openedCard, setOpenedCard] = useState<Card|null>(null);
     const [filterTagId, setFilterTagId] = useState<Tag["id"]|null>(null);
 
     useEffect(() => {
@@ -20,14 +20,12 @@ const BoardColumn: React.FC<Props> = ({column}) => {
     }, [column]);
 
     const handleNewCard = async (): Promise<void> => {
-        const card = await createCard({
+        setOpenedCard(await createCard({
             columnId: column.id,
-        });
-
-        setCardId(card?.id ?? 0);
+        }));
     };
 
-    const handleCloseModal = (): void => setCardId(0);
+    const handleCloseModal = (): void => setOpenedCard(null);
 
     const cardsInColumn = getCardsInColumn(cards, column.id)
         .filter((card) => filterTagId === null || card.tagIds.includes(filterTagId));
@@ -52,11 +50,13 @@ const BoardColumn: React.FC<Props> = ({column}) => {
                     onAdd={handleNewCard}
                 />
             )}
-            <BoardCardModal
-                isOpen={Boolean(cardId)}
-                setIsOpen={handleCloseModal}
-                cardId={cardId}
-            />
+            {openedCard && (
+                <BoardCardModal
+                    card={openedCard}
+                    isOpen={Boolean(openedCard)}
+                    setIsOpen={handleCloseModal}
+                />
+            )}
         </div>
     );
 };

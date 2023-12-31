@@ -37,12 +37,8 @@ export type Tag = {
     id: number;
     boardId: number;
     name: string;
-    color: Color;
+    color: string;
 };
-
-export enum Color {
-    WHITE = "white",
-}
 
 export enum Locales {
     EN = "en",

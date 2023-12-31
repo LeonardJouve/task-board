@@ -1,24 +1,22 @@
-import React, {useEffect, useState} from "react";
-import {useFloating, shift, flip, autoUpdate, useTransitionStyles, useClick, useDismiss, useInteractions, type Placement, offset} from "@floating-ui/react";
+import React, {useState} from "react";
+import {useFloating, shift, flip, autoUpdate, useTransitionStyles, useClick, useDismiss, useInteractions, offset, FloatingPortal, type Placement} from "@floating-ui/react";
 
-type Props = {
+type Props = React.PropsWithChildren<{
     anchor: React.JSX.Element;
+    isClosable?: boolean;
     placement?: Placement;
-} & React.PropsWithChildren & ({
+} & ({
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 } | {
     isOpen?: undefined;
     setIsOpen?: undefined;
-});
+})>;
 
-const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProps, anchor, children, placement = "bottom-start"}) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-
-    const handleOpen = (newIsOpen: boolean): void => {
-        setIsOpen(newIsOpen);
-        setIsOpenProps?.(newIsOpen);
-    };
+const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProps, isClosable, anchor, children, placement = "bottom-start"}) => {
+    const [isOpenState, setIsOpenState] = useState<boolean>(false);
+    const isOpen = isOpenProps ?? isOpenState;
+    const setIsOpen = setIsOpenProps ?? setIsOpenState;
 
     const {refs, floatingStyles, context} = useFloating({
         placement,
@@ -28,7 +26,7 @@ const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProp
             shift(),
             flip({fallbackPlacements: ["right-start", "left-start", "bottom-start", "top-start", placement]}),
         ],
-        onOpenChange: handleOpen,
+        onOpenChange: setIsOpen,
         whileElementsMounted: autoUpdate,
     });
 
@@ -43,12 +41,9 @@ const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProp
         dismiss,
     ]);
 
-    useEffect(() => {
-        if (isOpenProps === undefined) {
-            return;
-        }
-        setIsOpen(isOpenProps);
-    }, [isOpenProps]);
+    const handleClose = (): void => setIsOpen(false);
+
+    console.log(getReferenceProps());
 
     const anchorClone = React.cloneElement(anchor, {ref: refs.setReference, ...getReferenceProps()});
 
@@ -56,17 +51,27 @@ const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProp
         <>
             {anchorClone}
             {isMounted && (
-                <div
-                    ref={refs.setFloating}
-                    className="background-4 rounded z-10"
-                    style={{
-                        ...floatingStyles,
-                        ...styles,
-                    }}
-                    {...getFloatingProps()}
-                >
-                    {children}
-                </div>
+                <FloatingPortal>
+                    <div
+                        ref={refs.setFloating}
+                        className="background-4 rounded shadow-lg z-10 relative"
+                        style={{
+                            ...floatingStyles,
+                            ...styles,
+                        }}
+                        {...getFloatingProps()}
+                    >
+                        {isClosable && (
+                            <button
+                                className="absolute right-1 top-1 text-2xl leading-2xl color-1"
+                                onClick={handleClose}
+                            >
+                                <i className="icon-close"/>
+                            </button>
+                        )}
+                        {children}
+                    </div>
+                </FloatingPortal>
             )}
         </>
     );

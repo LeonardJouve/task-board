@@ -1,8 +1,9 @@
-import React, {useEffect, useRef} from "react";
-import {createPortal} from "react-dom";
+import {FloatingOverlay, FloatingPortal, autoUpdate, useClick, useDismiss, useFloating, useInteractions, useTransitionStyles} from "@floating-ui/react";
+import React from "react";
 import {FormattedMessage} from "react-intl";
 
 type Props = {
+    button?: React.JSX.Element;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     header: string | React.JSX.Element;
@@ -17,106 +18,99 @@ type Props = {
     isDangerous?: boolean;
 };
 
-const GenericModal: React.FC<Props> = ({isOpen, setIsOpen, header, content, closeOnClickOutside = true, isCancelable = true, showFooter = true, onConfirm, onCancel, headerClassName = "", bodyClassName = "", isDangerous}) => {
-    const modalRef = useRef<HTMLDialogElement>(null);
+const GenericModal: React.FC<Props> = ({button, isOpen, setIsOpen, header, content, closeOnClickOutside = true, isCancelable = true, showFooter = true, onConfirm, onCancel, headerClassName = "", bodyClassName = "", isDangerous}) => {
+    const {refs, context} = useFloating({
+        open: isOpen,
+        onOpenChange: setIsOpen,
+        whileElementsMounted: autoUpdate,
+    });
 
-    useEffect(() => {
-        if (isOpen) {
-            handleOpen();
-        } else {
-            handleClose();
-        }
-    }, [isOpen]);
+    const {isMounted, styles} = useTransitionStyles(context, {duration: 200});
 
-    const handleOpen = (): void => {
-        if (!modalRef.current) {
-            return;
-        }
-        modalRef.current.showModal();
-    };
+    const click = useClick(context, {enabled: Boolean(button)});
 
-    const handleClose = (e?: React.MouseEvent): void => {
-        if (!modalRef.current) {
-            return;
-        }
-        e?.stopPropagation();
-        modalRef.current.close();
-        setIsOpen(false);
-    };
+    const dismiss = useDismiss(context, {enabled: closeOnClickOutside});
+
+    const {getReferenceProps, getFloatingProps} = useInteractions([
+        click,
+        dismiss,
+    ]);
+
+    const handleClose = (): void => setIsOpen(false);
 
     const handleCancel = (): void => {
         onCancel?.();
-        handleClose();
+        setIsOpen(false);
     };
 
     const handleConfirm = (): void => {
         onConfirm?.();
-        handleClose();
+        setIsOpen(false);
     };
 
-    const handleClickOutside = (e: React.MouseEvent<HTMLDialogElement>): void => {
-        if (e.target !== modalRef.current || !closeOnClickOutside) {
-            return;
-        }
-        handleClose();
-    };
-
-    const root = document.getElementById("root");
-
-    if (!isOpen || !root) {
-        return null;
-    }
-
-    return createPortal(
-        (
-            <dialog
-                ref={modalRef}
-                className="w-1/2 h-1/3 rounded-xl flex flex-col background-3 color-2"
-                onClick={handleClickOutside}
-            >
-                <div className="flex flex-row background-2 color-1 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
-                    <h2 className={`font-bold flex flex-1 ${headerClassName}`}>
-                        {header}
-                    </h2>
-                    <button
-                        className="absolute right-1 top-1 text-2xl leading-2xl"
-                        onClick={handleClose}
+    return (
+        <>
+            {button && React.cloneElement(button, {
+                ref: refs.setReference,
+                ...getReferenceProps(),
+            })}
+            <FloatingPortal>
+                {isMounted && (
+                    <FloatingOverlay
+                        className="flex justify-center items-center"
+                        lockScroll={true}
                     >
-                        <i className="icon-close"/>
-                    </button>
-                </div>
-                <div className={`flex flex-1 flex-col ${bodyClassName}`}>
-                    <div className={`px-4 py-2 flex flex-1 ${!showFooter ? "pb-4" : ""}`}>
-                        {content}
-                    </div>
-                    {showFooter && (
-                        <div className="flex flex-row items-end justify-end p-2 pb-4 gap-5">
-                            {isCancelable && (
+                        <div
+                            ref={refs.setFloating}
+                            className="w-1/2 h-1/3 rounded-xl shadow-lg flex flex-col background-3 color-2"
+                            style={styles}
+                            {...getFloatingProps()}
+                        >
+                            <div className="flex flex-row background-2  rounded-t-xl color-1 relative p-4 pb-2 max-h-[50px] min-h-[50px]">
+                                <h2 className={`font-bold flex flex-1 ${headerClassName}`}>
+                                    {header}
+                                </h2>
                                 <button
-                                    className="rounded-lg hover px-2 py-1 flex items-center justify-center background-4"
-                                    onClick={handleCancel}
+                                    className="absolute right-1 top-1 text-2xl leading-2xl"
+                                    onClick={handleClose}
                                 >
-                                    <FormattedMessage
-                                        id="components.generic_modal.cancel"
-                                        defaultMessage="cancel"
-                                    />
+                                    <i className="icon-close"/>
                                 </button>
-                            )}
-                            <button
-                                className={`rounded-lg px-2 py-1 flex items-center justify-center ${isDangerous ? "color-dangerous background-dangerous-1 hover:background-dangerous-2" : "background-5 hover"}`}
-                                onClick={handleConfirm}
-                            >
-                                <FormattedMessage
-                                    id="components.generic_modal.confirm"
-                                    defaultMessage="confirm"
-                                />
-                            </button>
+                            </div>
+                            <div className={`flex flex-1 flex-col ${bodyClassName}`}>
+                                <div className={`px-4 py-2 flex flex-1 ${!showFooter ? "pb-4" : ""}`}>
+                                    {content}
+                                </div>
+                                {showFooter && (
+                                    <div className="flex flex-row items-end justify-end p-2 pb-4 gap-5">
+                                        {isCancelable && (
+                                            <button
+                                                className="rounded-lg hover px-2 py-1 flex items-center justify-center background-4"
+                                                onClick={handleCancel}
+                                            >
+                                                <FormattedMessage
+                                                    id="components.generic_modal.cancel"
+                                                    defaultMessage="cancel"
+                                                />
+                                            </button>
+                                        )}
+                                        <button
+                                            className={`rounded-lg px-2 py-1 flex items-center justify-center ${isDangerous ? "color-dangerous background-dangerous-1 hover:background-dangerous-2" : "background-5 hover"}`}
+                                            onClick={handleConfirm}
+                                        >
+                                            <FormattedMessage
+                                                id="components.generic_modal.confirm"
+                                                defaultMessage="confirm"
+                                            />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
-            </dialog>
-        ),
-        root,
+                    </FloatingOverlay>
+                )}
+            </FloatingPortal>
+        </>
     );
 };
 

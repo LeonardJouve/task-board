@@ -3,9 +3,13 @@ import useTags from "@store/tags";
 import type {Card, Tag} from "@typing/store";
 import useCards from "@store/cards";
 
-type Props = {
+type Props = ({
+    tag: Pick<Tag, "color" | "name">;
+    tagId?: undefined;
+} | {
+    tag?: undefined;
     tagId: Tag["id"];
-} & ({
+}) & ({
     isRemovable: true;
     cardId: Card["id"];
 } | {
@@ -13,13 +17,13 @@ type Props = {
     cardId?: undefined;
 });
 
-const BoardTag: React.FC<Props> = ({tagId, isRemovable, cardId}) => {
+const BoardTag: React.FC<Props> = ({tag: partialTag, tagId, isRemovable, cardId}) => {
     const {tags} = useTags();
     const {removeCardTag} = useCards();
-    const tag = tags[tagId];
+    const tag = partialTag ?? tags[tagId];
 
     const handleRemoveCardTag = (): void => {
-        if (!cardId) {
+        if (!cardId || !tagId) {
             return;
         }
 

@@ -4,6 +4,7 @@ import type {CreateTag, UpdateTag} from "@typing/rest";
 import type {ActionResult, Board, Card, Tag} from "@typing/store";
 
 type TagState = {
+    defaultColor: string;
     tags: Record<Tag["id"], Tag>;
     addTag: (tag: Tag) => void;
     addTags: (tags: Tag[]) => void;
@@ -17,6 +18,7 @@ type TagState = {
 };
 
 const useTags = create<TagState>((set) => ({
+    defaultColor: "FFFFFF",
     tags: {},
     addTag: (tag): void => set((state) => setTag(state, tag)),
     addTags: (tags): void => set((state) => tags.reduce(setTag, state)),

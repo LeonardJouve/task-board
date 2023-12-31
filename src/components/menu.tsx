@@ -72,7 +72,7 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
             {isMounted && (
                 <ul
                     ref={refs.setFloating}
-                    className={`whitespace-nowrap color-1 z-10 font-semibold ${className}`}
+                    className={`shadow-lg whitespace-nowrap color-1 z-10 font-semibold ${className}`}
                     style={{
                         ...floatingStyles,
                         ...styles,
@@ -83,7 +83,7 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
                         const item = (
                             <li
                                 key={`menu-${name}-${i}`}
-                                className={`first:rounded-t-md first:border-t-[1px] last:rounded-b-md last:border-b-[1px] background-4 border-x-[1px] border-b- border-color-1 flex items-center px-2 py-1 cursor-pointer ${isDangerous ? "background-dangerous-1 color-dangerous hover:background-dangerous-2" : "hover:background-3"}`}
+                                className={`first:rounded-t-md first:border-t-[1px] last:rounded-b-md last:border-b-[1px] background-4 border-x-[1px] border-color-1 flex items-center px-2 py-1 cursor-pointer ${isDangerous ? "background-dangerous-1 color-dangerous hover:background-dangerous-2" : "hover:background-3"}`}
                                 onClick={(): void => handlePress(onPress)}
                             >
                                 {leftDecorator && <i className={`icon-${leftDecorator}`}/>}
@@ -96,6 +96,7 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
 
                         return subItems ? (
                             <Menu
+                                key="menu-name"
                                 className={className}
                                 button={item}
                                 name={`submenu-${name}`}

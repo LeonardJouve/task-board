@@ -10,22 +10,21 @@ import type {UpdateCard} from "@typing/rest";
 import type {Card} from "@typing/store";
 
 type Props = {
+    card: Card;
+    button?: React.JSX.Element;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    cardId: Card["id"];
 };
 
-const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
+const BoardCardModal: React.FC<Props> = ({card, button, isOpen, setIsOpen}) => {
     const {formatMessage} = useIntl();
-    const {cards, updateCard, joinCard, leaveCard, deleteCard} = useCards();
+    const {updateCard, joinCard, leaveCard, deleteCard} = useCards();
     const {me} = useUsers();
     const [isEditingContent, setIsEditingContent] = useState<boolean>(false);
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-    const card = cards[cardId];
-
-    if (!card || !me) {
+    if (!me) {
         return null;
     }
 
@@ -41,7 +40,6 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
         leaveCard(card.id);
     };
 
-    const handleAskDeleteCard = (): void => setIsDeleteModalOpen(true);
 
     const handleDeleteCard = (): void => {
         deleteCard(card.id);
@@ -97,16 +95,33 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
                         />
                     )}
                 </button>
-                <AddTagPopover cardId={cardId}/>
-                <button
-                    className="rounded background-dangerous-1 color-dangerous hover:background-dangerous-2 px-2 py-1 w-full"
-                    onClick={handleAskDeleteCard}
-                >
-                    <FormattedMessage
-                        id="components.board_card_modal.delete_card w-full"
-                        defaultMessage="Delete card"
-                    />
-                </button>
+                <AddTagPopover cardId={card.id}/>
+                <GenericModal
+                    button={(
+                        <button className="rounded background-dangerous-1 color-dangerous hover:background-dangerous-2 px-2 py-1 w-full">
+                            <FormattedMessage
+                                id="components.board_card_modal.delete_card w-full"
+                                defaultMessage="Delete card"
+                            />
+                        </button>
+                    )}
+                    isDangerous={true}
+                    isOpen={isDeleteModalOpen}
+                    setIsOpen={setIsDeleteModalOpen}
+                    header={(
+                        <FormattedMessage
+                            id="components.delete_card_modal.header"
+                            defaultMessage="Delete card"
+                        />
+                    )}
+                    content={(
+                        <FormattedMessage
+                            id="components.delete_card_modal.content"
+                            defaultMessage="Do you really want to delete this card ? This will also remove all members."
+                        />
+                    )}
+                    onConfirm={handleDeleteCard}
+                />
                 {card.tagIds.length ? (
                     <div className="w-full gap-2 flex flex-row flex-wrap">
                         {card.tagIds.map((tagId) => (
@@ -114,7 +129,7 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
                                 key={`board-card-modal-tag-${tagId}`}
                                 tagId={tagId}
                                 isRemovable={true}
-                                cardId={cardId}
+                                cardId={card.id}
                             />))}
                     </div>
                 ) : null}
@@ -123,35 +138,16 @@ const BoardCardModal: React.FC<Props> = ({isOpen, setIsOpen, cardId}) => {
     );
 
     return (
-        <>
-            <GenericModal
-                headerClassName="overflow-hidden"
-                bodyClassName="overflow-scroll"
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                header={name}
-                content={content}
-                showFooter={false}
-            />
-            <GenericModal
-                isDangerous={true}
-                isOpen={isDeleteModalOpen}
-                setIsOpen={setIsDeleteModalOpen}
-                header={(
-                    <FormattedMessage
-                        id="components.delete_card_modal.header"
-                        defaultMessage="Delete card"
-                    />
-                )}
-                content={(
-                    <FormattedMessage
-                        id="components.delete_card_modal.content"
-                        defaultMessage="Do you really want to delete this card ? This will also remove all members."
-                    />
-                )}
-                onConfirm={handleDeleteCard}
-            />
-        </>
+        <GenericModal
+            button={button}
+            headerClassName="overflow-hidden"
+            bodyClassName="overflow-scroll"
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            header={name}
+            content={content}
+            showFooter={false}
+        />
     );
 };
 

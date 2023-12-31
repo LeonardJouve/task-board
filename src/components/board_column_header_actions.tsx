@@ -33,17 +33,19 @@ const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard, filte
 
     const filterMenuSubItems = getTagsInCards(tags, getCardsInColumn(cards, column.id))
         .filter((tag) => tag.id !== filterTagId)
-        .map(({name, id}) => ({
+        .map<Item>(({name, id}) => ({
             text: name,
             onPress: () => handleFilterByTag(id),
         }));
 
     if (filterTagId) {
         filterMenuSubItems.unshift({
+            leftDecorator: "delete",
             text: formatMessage({
                 id: "components.board_column_menu.remove_filter",
                 defaultMessage: "Remove filter",
             }),
+            isDangerous: true,
             onPress: () => handleFilterByTag(null),
         });
     }
