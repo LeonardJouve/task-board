@@ -2,10 +2,11 @@
 
 TODO:
 - error banner
-- create card tags with color
 - fetch loop
 - handle move store updates
 - host
 - auth
 - tooltip / modal / menu / popover animation
-- menu item toggle modal
+- EditableText -> optional isEditing / setIsEditing props
+- avoid card / column / board props -> prefer cardId, etc to better handle state update
+- avoid using delete keyword with zustand -> see store/modals

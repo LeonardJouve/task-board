@@ -1,11 +1,10 @@
-import React, {useState} from "react";
-import {FormattedMessage, useIntl} from "react-intl";
-import useColumns from "@store/columns";
+import React from "react";
+import {useIntl} from "react-intl";
+import useModals from "@store/modals";
 import useTags, {getTagsInCards} from "@store/tags";
 import useCards, {getCardsInColumn} from "@store/cards";
-import GenericModal from "@components/modals/generic_modal";
-import type {Column, Tag} from "@typing/store";
 import Menu, {type Item} from "@components/menu";
+import {ModalId, type Column, type Tag} from "@typing/store";
 
 type Props = {
     column: Column;
@@ -16,16 +15,14 @@ type Props = {
 
 const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard, filterTagId, setFilterTagId}) => {
     const {formatMessage} = useIntl();
-    const {deleteColumn} = useColumns();
+    const {openModal} = useModals();
     const {cards} = useCards();
     const {tags} = useTags();
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-    const handleAskDelete = (): void => setIsDeleteModalOpen(true);
-
-    const handleDelete = (): void => {
-        deleteColumn(column.id);
-    };
+    const handleAskDelete = (): void => openModal({
+        id: ModalId.DELETE_BOARD_COLUMN,
+        props: {columnId: column.id},
+    });
 
     const handleFilterByTag = (tagId: Tag["id"]|null): void => {
         setFilterTagId(tagId);
@@ -90,24 +87,6 @@ const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard, filte
                     </button>
                 )}
                 items={items}
-            />
-            <GenericModal
-                isDangerous={true}
-                isOpen={isDeleteModalOpen}
-                setIsOpen={setIsDeleteModalOpen}
-                header={(
-                    <FormattedMessage
-                        id="components.delete_column_modal.header"
-                        defaultMessage="Delete column"
-                    />
-                )}
-                content={(
-                    <FormattedMessage
-                        id="components.delete_column_modal.content"
-                        defaultMessage="Do you really want to delete this column ? This will also delete all cards contained inside."
-                    />
-                )}
-                onConfirm={handleDelete}
             />
         </div>
     );

@@ -1,21 +1,19 @@
 import {create} from "zustand";
 import type {IntlConfig} from "react-intl";
 import en from "@intl/en.json";
-import {Locales} from "@typing/store";
+import {Locale} from "@typing/store";
 
 type LocaleState = {
     locale: IntlConfig["locale"];
     messages: IntlConfig["messages"];
-    setLocale: (locale: Locales) => Promise<void>;
-}
-
-export const DEFAULT_LOCALE = Locales.EN;
+    setLocale: (locale: Locale) => Promise<void>;
+};
 
 const getMessages = async (locale: LocaleState["locale"]): Promise<LocaleState["messages"]> => {
     switch (locale) {
-    case Locales.EN:
+    case Locale.EN:
         return en;
-    case Locales.FR:
+    case Locale.FR:
         return (await import("@intl/fr.json")).default;
     default:
         return en;
@@ -23,7 +21,7 @@ const getMessages = async (locale: LocaleState["locale"]): Promise<LocaleState["
 };
 
 const useLocale = create<LocaleState>((set) => ({
-    locale: DEFAULT_LOCALE,
+    locale: Locale.EN,
     messages: en,
     setLocale: async (locale): Promise<void> => {
         const messages = await getMessages(locale);

@@ -1,16 +1,15 @@
 import React from "react";
 import {IntlProvider as ReactIntlProvider} from "react-intl";
-import useLocale, {DEFAULT_LOCALE} from "@store/locale";
+import useLocale from "@store/locale";
 
 
 const IntlProvider: React.FC<React.PropsWithChildren> = ({children}) => {
-    const intl = useLocale();
+    const {locale, messages} = useLocale();
 
     return (
         <ReactIntlProvider
-            locale={intl.locale}
-            messages={intl.messages}
-            defaultLocale={DEFAULT_LOCALE}
+            locale={locale}
+            messages={messages}
         >
             {children}
         </ReactIntlProvider>

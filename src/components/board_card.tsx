@@ -1,45 +1,46 @@
-import React, {useState} from "react";
+import React from "react";
 import BoardTag from "@components/board_tag";
 import Avatars from "@components/avatars";
 import {Size} from "@components/avatar";
-import BoardCardModal from "@components/modals/board_card_modal";
-import type {Card} from "@typing/store";
+import {ModalId, type Card} from "@typing/store";
+import useModals from "@store/modals";
 
 type Props = {
     card: Card;
 };
 
 const BoardCard: React.FC<Props> = ({card}) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const {openModal} = useModals();
+
+    const handleBoardCardModal = (): void => openModal({
+        id: ModalId.BOARD_CARD,
+        props: {card},
+    });
 
     return (
-        <BoardCardModal
-            button={(
-                <button className="w-full background-5 rounded flex flex-col gap-1 p-2 overflow-hidden hover">
-                    <span className="overflow-hidden text-ellipsis whitespace-nowrap px-1 py-0.5 background-4 rounded">
-                        {card.name}
-                    </span>
-                    <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-                        {card.content}
-                    </span>
-                    <div className="flex flex-row gap-2">
-                        {card.tagIds.map((tagId) => (
-                            <BoardTag
-                                key={`tag-${tagId}`}
-                                tagId={tagId}
-                            />
-                        ))}
-                    </div>
-                    <Avatars
-                        userIds={card.userIds}
-                        size={Size.S}
+        <button
+            className="w-full background-5 rounded flex flex-col gap-1 p-2 overflow-hidden hover"
+            onClick={handleBoardCardModal}
+        >
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap px-1 py-0.5 background-4 rounded">
+                {card.name}
+            </span>
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                {card.content}
+            </span>
+            <div className="flex flex-row gap-2 overflow-hidden">
+                {card.tagIds.map((tagId) => (
+                    <BoardTag
+                        key={`tag-${tagId}`}
+                        tagId={tagId}
                     />
-                </button>
-            )}
-            card={card}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-        />
+                ))}
+            </div>
+            <Avatars
+                userIds={card.userIds}
+                size={Size.S}
+            />
+        </button>
     );
 };
 

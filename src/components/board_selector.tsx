@@ -1,21 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {FormattedMessage, useIntl} from "react-intl";
 import useBoards from "@store/boards";
 import useUsers from "@store/users";
+import useModals from "@store/modals";
 import Menu, {MenuTrigger, type Item} from "@components/menu";
 import SplitButton from "@components/split_button";
-import GenericModal from "@components/modals/generic_modal";
-import type {Board} from "@typing/store";
+import {ModalId, type Board} from "@typing/store";
 
 const BoardSelector: React.FC = () => {
     const {formatMessage} = useIntl();
     const navigate = useNavigate();
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-    const {boards, fetchBoards, deleteBoard, leaveBoard} = useBoards();
+    const {boards, fetchBoards} = useBoards();
     const {me} = useUsers();
+    const {openModal} = useModals();
     const params = useParams();
-    const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false);
     const board = boards[Number(params["boardId"])];
 
     useEffect(() => {
@@ -32,15 +31,10 @@ const BoardSelector: React.FC = () => {
             return;
         }
 
-        setIsDeleteModalOpen(true);
-    };
-
-    const handleDeleteBoard = (): void => {
-        if (!board) {
-            return;
-        }
-
-        deleteBoard(board.id);
+        openModal({
+            id: ModalId.DELETE_BOARD,
+            props: {boardId: board.id},
+        });
     };
 
     const handleAskLeaveBoard = (): void => {
@@ -48,15 +42,10 @@ const BoardSelector: React.FC = () => {
             return;
         }
 
-        setIsLeaveModalOpen(true);
-    };
-
-    const handleLeaveBoard = (): void => {
-        if (!board) {
-            return;
-        }
-
-        leaveBoard(board.id);
+        openModal({
+            id: ModalId.LEAVE_BOARD,
+            props: {boardId: board.id},
+        });
     };
 
     const actionItems: Item[] = [
@@ -104,79 +93,41 @@ const BoardSelector: React.FC = () => {
     }
 
     return (
-        <>
-            <SplitButton
-                className="w-[30%] background-2 rounded flex flex-nowrap"
-                left={(
-                    <Menu
-                        name="board-selector"
-                        className="max-w-[30%]"
-                        placement="bottom-start"
-                        triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
-                        button={(
-                            <span className="w-full text-start whitespace-nowrap overflow-hidden text-ellipsis">
-                                {board ? board.name || formatMessage({
-                                    id: "components.default_board.name",
-                                    defaultMessage: "Name",
-                                }) : (
-                                    <FormattedMessage
-                                        id="components.board_selector.select_board"
-                                        defaultMessage="Select board"
-                                    />
-                                )}
-                            </span>
-                        )}
-                        items={selectItems}
-                    />
-                )}
-                right={board && (
-                    <Menu
-                        name="board-actions"
-                        className="max-w-[30%]"
-                        placement="bottom-start"
-                        triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
-                        button={<i className="icon-dot-menu before:duration-300 before:transition-transform"/>}
-                        items={actionItems}
-                    />
-                )}
-            />
-            <GenericModal
-                isDangerous={true}
-                isOpen={isLeaveModalOpen}
-                setIsOpen={setIsLeaveModalOpen}
-                header={(
-                    <FormattedMessage
-                        id="components.leave_board_modal.header"
-                        defaultMessage="Leave board"
-                    />
-                )}
-                content={(
-                    <FormattedMessage
-                        id="components.leave_board_modal.content"
-                        defaultMessage="Do you really want to leave this board ? You wont be able to join it afterwards."
-                    />
-                )}
-                onConfirm={handleLeaveBoard}
-            />
-            <GenericModal
-                isDangerous={true}
-                isOpen={isDeleteModalOpen}
-                setIsOpen={setIsDeleteModalOpen}
-                header={(
-                    <FormattedMessage
-                        id="components.delete_board_modal.header"
-                        defaultMessage="Delete board"
-                    />
-                )}
-                content={(
-                    <FormattedMessage
-                        id="components.delete_board_modal.content"
-                        defaultMessage="Do you really want to delete this board ? This will also delete all columns contained inside."
-                    />
-                )}
-                onConfirm={handleDeleteBoard}
-            />
-        </>
+        <SplitButton
+            className="w-[30%] background-2 rounded flex flex-nowrap"
+            left={(
+                <Menu
+                    name="board-selector"
+                    className="max-w-[30%]"
+                    placement="bottom-start"
+                    triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
+                    button={(
+                        <span className="px-2 py-1 w-full text-start whitespace-nowrap overflow-hidden text-ellipsis">
+                            {board ? board.name || formatMessage({
+                                id: "components.default_board.name",
+                                defaultMessage: "Name",
+                            }) : (
+                                <FormattedMessage
+                                    id="components.board_selector.select_board"
+                                    defaultMessage="Select board"
+                                />
+                            )}
+                        </span>
+                    )}
+                    items={selectItems}
+                />
+            )}
+            right={board && (
+                <Menu
+                    name="board-actions"
+                    className="max-w-[30%]"
+                    placement="bottom-start"
+                    triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
+                    button={<i className="px-1 py-1 icon-dot-menu before:duration-300 before:transition-transform"/>}
+                    items={actionItems}
+                />
+            )}
+        />
     );
 };
 

@@ -48,7 +48,7 @@ const ColorPickerCustom: React.FC<Props> = ({color, setColor}) => {
                 setPercent={(newSaturation): void => updateColor({saturation: newSaturation})}
             />
             <ColorPickerCustomSlider
-                sliderBackground={`linear-gradient(to right,hsl(${hue},100%,0%),hsl(${hue},100%,50%),hsl(${hue},100%,100%))`} // TODO: fix gradient issue
+                sliderBackground={`linear-gradient(to right,hsl(${hue},100%,0%),hsl(${hue},100%,50%),hsl(${hue},100%,100%))`}
                 thumbBackground={`hsl(${hue}, 100%, ${lightness}%)`}
                 percent={lightness}
                 setPercent={(newLightness): void => updateColor({lightness: newLightness})}

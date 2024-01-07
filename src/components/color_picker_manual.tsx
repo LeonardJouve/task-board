@@ -41,7 +41,7 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
         setColor(newColor);
     };
 
-    const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>): void => { // TODO: improve
+    const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value.toUpperCase();
 
         if (!isValidHex(value)) {

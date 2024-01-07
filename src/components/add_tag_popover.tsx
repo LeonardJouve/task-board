@@ -136,7 +136,7 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
     };
 
     const formatCreateLabel = (name: string): React.ReactNode => (
-        <div className="flex flex-row gap-1 flex-wrap">
+        <div className="flex flex-row gap-2 flex-wrap">
             <FormattedMessage
                 id="components.add_tag_popover.create_tag"
                 defaultMessage="Create new tag {tag}"

@@ -43,8 +43,6 @@ const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProp
 
     const handleClose = (): void => setIsOpen(false);
 
-    console.log(getReferenceProps());
-
     const anchorClone = React.cloneElement(anchor, {ref: refs.setReference, ...getReferenceProps()});
 
     return (

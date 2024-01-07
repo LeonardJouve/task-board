@@ -22,7 +22,7 @@ const ColorPickerPreset: React.FC<Props> = ({color, setColor}) => {
     const hex = rgbToHex(color);
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-row flex-wrap gap-1">
             {getTagsColors(tags).map((colorPreset) => (
                 <button
                     key={`color-preset-${colorPreset}`}
