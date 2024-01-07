@@ -13,10 +13,10 @@ type Props = React.PropsWithChildren<{
     setIsOpen?: undefined;
 })>;
 
-const Popover: React.FC<Props> = ({isOpen: isOpenProps, setIsOpen: setIsOpenProps, isClosable, anchor, children, placement = "bottom-start"}) => {
+const Popover: React.FC<Props> = ({isOpen: isOpenProp, setIsOpen: setIsOpenProp, isClosable, anchor, children, placement = "bottom-start"}) => {
     const [isOpenState, setIsOpenState] = useState<boolean>(false);
-    const isOpen = isOpenProps ?? isOpenState;
-    const setIsOpen = setIsOpenProps ?? setIsOpenState;
+    const isOpen = isOpenProp ?? isOpenState;
+    const setIsOpen = setIsOpenProp ?? setIsOpenState;
 
     const {refs, floatingStyles, context} = useFloating({
         placement,

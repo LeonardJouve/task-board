@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {FormattedMessage, useIntl} from "react-intl";
 import useCards from "@store/cards";
 import useUsers from "@store/users";
@@ -19,8 +19,6 @@ const BoardCardModal: React.FC<Props> = ({card}) => {
     const {updateCard, joinCard, leaveCard} = useCards();
     const {me} = useUsers();
     const {openModal} = useModals();
-    const [isEditingContent, setIsEditingContent] = useState<boolean>(false);
-    const [isEditingName, setIsEditingName] = useState<boolean>(false);
 
     if (!me) {
         return null;
@@ -48,8 +46,6 @@ const BoardCardModal: React.FC<Props> = ({card}) => {
 
     const name = (
         <EditableText
-            isEditing={isEditingName}
-            setIsEditing={setIsEditingName}
             content={card.name}
             placeholder={formatMessage({
                 id: "components.default_card.name",
@@ -66,8 +62,6 @@ const BoardCardModal: React.FC<Props> = ({card}) => {
             <div className="flex flex-1">
                 <EditableText
                     className="whitespace-break-spaces flex flex-1 overflow-scroll"
-                    isEditing={isEditingContent}
-                    setIsEditing={setIsEditingContent}
                     content={card.content}
                     placeholder={formatMessage({
                         id: "components.default_card.content",

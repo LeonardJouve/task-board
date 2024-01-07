@@ -3,8 +3,8 @@ import {FormattedMessage} from "react-intl";
 import Tooltip from "@components/tooltip";
 
 type Props = {
-    isEditing: boolean;
-    setIsEditing: (isEditing: boolean) => void;
+    isEditing?: boolean;
+    setIsEditing?: (isEditing: boolean) => void;
     content: string;
     setContent: (content: string) => void;
     placeholder?: string;
@@ -13,9 +13,12 @@ type Props = {
     className?: string;
 };
 
-const EditableText: React.FC<Props> = ({isEditing, setIsEditing, content, setContent, placeholder, isSingleLine, isEllipsis, className = ""}) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+const EditableText: React.FC<Props> = ({isEditing: isEditingProp, setIsEditing: setIsEditingProp, content, setContent, placeholder, isSingleLine, isEllipsis, className = ""}) => {
+    const [isEditingState, setIsEditingState] = useState<boolean>(false);
     const [editingContent, setEditingContent] = useState<string>(content);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const isEditing = isEditingProp ?? isEditingState;
+    const setIsEditing = setIsEditingProp ?? setIsEditingState;
 
     useEffect(() => setEditingContent(content), [isEditing, content]);
 

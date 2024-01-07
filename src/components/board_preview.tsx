@@ -20,8 +20,6 @@ const BoardPreview: React.FC<Props> = ({board}) => {
     const {updateBoard} = useBoards();
     const {columns, fetchColumns} = useColumns();
     const [isHover, setIsHover] = useState<boolean>(false);
-    const [isEditingName, setIsEditingName] = useState<boolean>(false);
-    const [isEditingDescription, setIsEditingDescription] = useState<boolean>(false);
     const boardColumns = getColumnsInBoard(columns, board.id);
 
     useEffect(() => {
@@ -51,8 +49,6 @@ const BoardPreview: React.FC<Props> = ({board}) => {
                 <div className={`flex flex-col gap-2 text-left color-1 max-w-full ${boardColumns.length ? "w-[20%]" : ""}`}>
                     <h2 className="flex text-2xl font-extrabold">
                         <EditableText
-                            isEditing={isEditingName}
-                            setIsEditing={setIsEditingName}
                             content={board.name}
                             setContent={(updatedName): void => handleUpdateBoard({name: updatedName})}
                             placeholder={formatMessage({
@@ -65,8 +61,6 @@ const BoardPreview: React.FC<Props> = ({board}) => {
                     </h2>
                     <span className="flex text-lg overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
                         <EditableText
-                            isEditing={isEditingDescription}
-                            setIsEditing={setIsEditingDescription}
                             content={board.description}
                             setContent={(updatedDescription): void => handleUpdateBoard({description: updatedDescription})}
                             placeholder={formatMessage({
