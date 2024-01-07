@@ -70,11 +70,11 @@ const Login: React.FC = () => {
                             defaultMessage="Login"
                         />
                     </button>
-                    {error.hasError && (
+                    {error.hasError ? (
                         <span className="text-red-500">
                             <FormattedMessage {...error}/>
                         </span>
-                    )}
+                    ) : null}
                 </form>
                 <Link to="/register">
                     <FormattedMessage

@@ -2,21 +2,26 @@ import React, {useState} from "react";
 import {useIntl} from "react-intl";
 import EditableText from "@components/editable_text";
 import BoardColumnHeaderActions from "@components/board_column_header_actions";
-import useColumns from "@store/columns";
+import useColumns, {getColumn} from "@store/columns";
 import type {UpdateColumn} from "@typing/rest";
 import type {Column, Tag} from "@typing/store";
 
 type Props = {
-    column: Column;
+    columnId: Column["id"];
     filterTagId: Tag["id"]|null;
     setFilterTagId: (tagId: Tag["id"]|null) => void;
     handleNewCard: () => void;
 };
 
-const BoardColumnHeader: React.FC<Props> = ({column, filterTagId, setFilterTagId, handleNewCard}) => {
+const BoardColumnHeader: React.FC<Props> = ({columnId, filterTagId, setFilterTagId, handleNewCard}) => {
     const {formatMessage} = useIntl();
     const {updateColumn} = useColumns();
+    const column = useColumns(getColumn(columnId));
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
+
+    if (!column) {
+        return null;
+    }
 
     const handleUpdateColumn = (updatedColumn: UpdateColumn): void => {
         updateColumn(column.id, updatedColumn);
@@ -40,7 +45,7 @@ const BoardColumnHeader: React.FC<Props> = ({column, filterTagId, setFilterTagId
             {!isEditingName && (
                 <div className="group-hover:block hidden">
                     <BoardColumnHeaderActions
-                        column={column}
+                        columnId={column.id}
                         filterTagId={filterTagId}
                         setFilterTagId={setFilterTagId}
                         handleNewCard={handleNewCard}

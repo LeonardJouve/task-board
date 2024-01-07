@@ -7,29 +7,28 @@ import Menu, {type Item} from "@components/menu";
 import {ModalId, type Column, type Tag} from "@typing/store";
 
 type Props = {
-    column: Column;
+    columnId: Column["id"];
     filterTagId: Tag["id"]|null;
     setFilterTagId: (tagId: Tag["id"]|null) => void;
     handleNewCard: () => void;
 };
 
-const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard, filterTagId, setFilterTagId}) => {
+const BoardColumnHeaderActions: React.FC<Props> = ({columnId, handleNewCard, filterTagId, setFilterTagId}) => {
     const {formatMessage} = useIntl();
     const {openModal} = useModals();
-    const {cards} = useCards();
-    const {tags} = useTags();
+    const cardsInColumn = useCards(getCardsInColumn(columnId));
+    const tagsInCards = useTags(getTagsInCards(cardsInColumn));
 
     const handleAskDelete = (): void => openModal({
         id: ModalId.DELETE_BOARD_COLUMN,
-        props: {columnId: column.id},
+        props: {columnId},
     });
 
     const handleFilterByTag = (tagId: Tag["id"]|null): void => {
         setFilterTagId(tagId);
     };
 
-    const filterMenuSubItems = getTagsInCards(tags, getCardsInColumn(cards, column.id))
-        .filter((tag) => tag.id !== filterTagId)
+    const filterMenuSubItems = tagsInCards.filter((tag) => tag.id !== filterTagId)
         .map<Item>(({name, id}) => ({
             text: name,
             onPress: () => handleFilterByTag(id),
@@ -79,7 +78,7 @@ const BoardColumnHeaderActions: React.FC<Props> = ({column, handleNewCard, filte
                 <i className="icon-plus"/>
             </button>
             <Menu
-                name={`board-column-header-menu-${column.id}`}
+                name={`board-column-header-menu-${columnId}`}
                 placement="bottom-end"
                 button={(
                     <button className="rounded background-5">

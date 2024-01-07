@@ -6,8 +6,9 @@ import AuthGuard from "@components/auth_guard";
 import Board from "@components/board";
 import SelectBoard from "@components/select_board";
 import Header from "@components/header";
+import BoardProvider from "@components/board_provider";
 
-const Rooter: React.FC = () => (
+const Router: React.FC = () => (
     <BrowserRouter>
         <Routes>
             <Route path="/login" element={<Login/>} />
@@ -16,23 +17,22 @@ const Rooter: React.FC = () => (
                 path="/*"
                 element={
                     <AuthGuard>
+                        <Header/>
                         <Routes>
                             <Route
                                 path="/board/:boardId"
                                 element={(
-                                    <>
-                                        <Header/>
+                                    <BoardProvider>
                                         <Board/>
-                                    </>
+                                    </BoardProvider>
                                 )}
                             />
                             <Route
                                 path="/"
                                 element={(
-                                    <>
-                                        <Header/>
+                                    <BoardProvider>
                                         <SelectBoard/>
-                                    </>
+                                    </BoardProvider>
                                 )}
                             />
                         </Routes>
@@ -43,4 +43,4 @@ const Rooter: React.FC = () => (
     </BrowserRouter>
 );
 
-export default Rooter;
+export default Router;

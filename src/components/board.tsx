@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import {useParams} from "react-router-dom";
 import {DragDropContext, Draggable, Droppable, type DropResult, type ResponderProvided} from "@hello-pangea/dnd";
-import useColumns, {getColumnsInBoard} from "@store/columns";
+import useColumns, {getColumnsInCurrentBoard} from "@store/columns";
+import useBoards from "@store/boards";
 import useTags from "@store/tags";
 import BoardColumn from "@components/board_column";
 import AddItem from "@components/add_item";
@@ -13,32 +13,31 @@ export enum DroppableType {
 }
 
 const Board: React.FC = () => {
-    const {columns, fetchColumns, createColumn} = useColumns();
+    const {currentBoardId} = useBoards();
+    const {fetchColumns, createColumn} = useColumns();
+    const boardColumns = useColumns(getColumnsInCurrentBoard());
     const {fetchTags} = useTags();
-    const params = useParams();
-    const boardId = Number(params["boardId"]);
-    const boardColumns = getColumnsInBoard(columns, boardId);
 
     useEffect(() => {
-        if (!boardId) {
+        if (!currentBoardId) {
             return;
         }
 
-        fetchColumns([boardId]);
-        fetchTags([boardId]);
-    }, [boardId]);
+        fetchColumns([currentBoardId]);
+        fetchTags([currentBoardId]);
+    }, [currentBoardId]);
+
+    if (!currentBoardId) {
+        return null;
+    }
 
     const handleNewColumn = (): void => {
-        createColumn({boardId});
+        createColumn({boardId: currentBoardId});
     };
 
     const handleDragEnd = (result: DropResult, provided: ResponderProvided): void => {
         console.log(result, provided);
     };
-
-    if (!boardId) {
-        return null;
-    }
 
     return (
         <div className="flex flex-1 background-1">
@@ -46,7 +45,7 @@ const Board: React.FC = () => {
                 <div className="flex flex-1 flex-row gap-7 p-5 overflow-x-scroll">
                     {boardColumns.length ? (
                         <Droppable
-                            droppableId={`board-${boardId}`}
+                            droppableId={`board-${currentBoardId}`}
                             direction="horizontal"
                             type={DroppableType.BOARD_COLUMNS}
                         >
@@ -56,10 +55,10 @@ const Board: React.FC = () => {
                                     ref={droppableProvided.innerRef}
                                     {...droppableProvided.droppableProps}
                                 >
-                                    {boardColumns.map((column, index) => (
+                                    {boardColumns.map(({id}, index) => (
                                         <Draggable
-                                            key={`board-column-${column.id}`}
-                                            draggableId={`board-column-${column.id}`}
+                                            key={`board-column-${id}`}
+                                            draggableId={`board-column-${id}`}
                                             index={index}
                                         >
                                             {(draggableProvided): React.JSX.Element => (
@@ -68,7 +67,7 @@ const Board: React.FC = () => {
                                                     {...draggableProvided.draggableProps}
                                                     {...draggableProvided.dragHandleProps}
                                                 >
-                                                    <BoardColumn column={column}/>
+                                                    <BoardColumn columnId={id}/>
                                                 </div>
                                             )}
                                         </Draggable>

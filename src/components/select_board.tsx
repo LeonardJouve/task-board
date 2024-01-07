@@ -16,10 +16,10 @@ const SelectBoard: React.FC = () => {
 
     return (
         <div className="flex flex-1 flex-col p-5 gap-5 background-1 overflow-y-scroll">
-            {Object.values(boards).map((board) => (
+            {Object.values(boards).map(({id}) => (
                 <BoardPreview
-                    board={board}
-                    key={`board-preview-${board.id}`}
+                    boardId={id}
+                    key={`board-preview-${id}`}
                 />
             ))}
             <AddItem

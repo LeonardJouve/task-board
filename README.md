@@ -7,4 +7,4 @@ TODO:
 - host
 - auth
 - tooltip / modal / menu / popover animation
-- avoid card / column / board props -> prefer cardId, etc to better handle state update
+- favicon

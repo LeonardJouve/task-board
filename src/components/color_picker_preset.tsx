@@ -8,7 +8,7 @@ type Props = {
 };
 
 const ColorPickerPreset: React.FC<Props> = ({color, setColor}) => {
-    const {tags} = useTags();
+    const tagsColors = useTags(getTagsColors());
 
     const handleSelect = (hex: string): void => {
         const sanitizedHex = hex.replace("#", "");
@@ -23,7 +23,7 @@ const ColorPickerPreset: React.FC<Props> = ({color, setColor}) => {
 
     return (
         <div className="flex flex-row flex-wrap gap-1">
-            {getTagsColors(tags).map((colorPreset) => (
+            {tagsColors.map((colorPreset) => (
                 <button
                     key={`color-preset-${colorPreset}`}
                     className={`w-[25px] h-[25px] rounded-[50%] border-[1px] ${colorPreset === hex ? "border-color-1" : "border-transparent"}`}

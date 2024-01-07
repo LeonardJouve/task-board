@@ -4,7 +4,9 @@ import type {UpdateBoard, CreateBoard} from "@typing/rest";
 import type {Board, User} from "@typing/store";
 
 type BoardState = {
+    currentBoardId: Board["id"]|null;
     boards: Record<Board["id"], Board>;
+    setCurrentBoardId: (boardId: BoardState["currentBoardId"]) => void;
     addBoard: (board: Board) => void;
     addBoards: (boards: Board[]) => void;
     removeBoard: (boardId: Board["id"]) => void;
@@ -19,7 +21,9 @@ type BoardState = {
 }
 
 const useBoards = create<BoardState>((set) => ({
+    currentBoardId: null,
     boards: {},
+    setCurrentBoardId: (currentBoardId): void => set(() => ({currentBoardId})),
     addBoard: (board): void => set((state) => setBoard(state, board)),
     addBoards: (boards): void => set((state) => boards.reduce(setBoard, state)),
     removeBoard: (boardId): void => set((state) => removeBoard(state, boardId)),
@@ -92,5 +96,9 @@ const removeBoard = (state: BoardState, boardId: Board["id"]): BoardState => {
         boards,
     };
 };
+
+export const getBoard = (boardId: Board["id"]) => (state: BoardState): Board|undefined => state.boards[boardId];
+
+export const getCurrentBoard = () => (state: BoardState): Board|undefined => state.boards[state.currentBoardId ?? -1];
 
 export default useBoards;

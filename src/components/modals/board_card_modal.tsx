@@ -1,26 +1,29 @@
 import React from "react";
 import {FormattedMessage, useIntl} from "react-intl";
-import useCards from "@store/cards";
+import useCards, {getCard} from "@store/cards";
 import useUsers from "@store/users";
 import useModals from "@store/modals";
 import GenericModal from "@components/modals/generic_modal";
 import EditableText from "@components/editable_text";
 import BoardTag from "@components/board_tag";
 import AddTagPopover from "@components/add_tag_popover";
+import Avatars from "@components/avatars";
+import {Size} from "@components/avatar";
 import type {UpdateCard} from "@typing/rest";
 import {ModalId, type Card} from "@typing/store";
 
 type Props = {
-    card: Card;
+    cardId: Card["id"];
 };
 
-const BoardCardModal: React.FC<Props> = ({card}) => {
+const BoardCardModal: React.FC<Props> = ({cardId}) => {
     const {formatMessage} = useIntl();
     const {updateCard, joinCard, leaveCard} = useCards();
+    const card = useCards(getCard(cardId));
     const {me} = useUsers();
     const {openModal} = useModals();
 
-    if (!me) {
+    if (!card || !me) {
         return null;
     }
 
@@ -107,6 +110,12 @@ const BoardCardModal: React.FC<Props> = ({card}) => {
                                 cardId={card.id}
                             />))}
                     </div>
+                ) : null}
+                {card.userIds.length ? (
+                    <Avatars
+                        userIds={card.userIds}
+                        size={Size.S}
+                    />
                 ) : null}
             </div>
         </div>

@@ -1,5 +1,6 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
+import useBoards from "@store/boards";
 import type {CreateColumn, UpdateColumn} from "@typing/rest";
 import type {Board, Column} from "@typing/store";
 
@@ -97,6 +98,15 @@ const removeColumn = (state: ColumnState, columnId: Column["id"]): ColumnState =
     };
 };
 
-export const getColumnsInBoard = (columns: ColumnState["columns"], boardId: Board["id"]): Column[] => Object.values(columns).filter((column) => column.boardId === boardId);
+export const getColumnsInBoard = (boardId: Board["id"]) => (state: ColumnState): Column[] => Object.values(state.columns).filter((column) => column.boardId === boardId);
+
+export const getColumnsInCurrentBoard = () => (state: ColumnState): Column[] => {
+    const {currentBoardId} = useBoards();
+
+    return Object.values(state.columns)
+        .filter((column) => column.boardId === currentBoardId);
+};
+
+export const getColumn = (columnId: Column["id"]) => (state: ColumnState): Column|undefined => state.columns[columnId];
 
 export default useColumns;

@@ -1,5 +1,5 @@
 import React from "react";
-import useTags from "@store/tags";
+import useTags, {getTag} from "@store/tags";
 import type {Card, Tag} from "@typing/store";
 import useCards from "@store/cards";
 
@@ -18,9 +18,13 @@ type Props = ({
 });
 
 const BoardTag: React.FC<Props> = ({tag: partialTag, tagId, isRemovable, cardId}) => {
-    const {tags} = useTags();
+    const storeTag = useTags(getTag(tagId ?? 0));
     const {removeCardTag} = useCards();
-    const tag = partialTag ?? tags[tagId];
+    const tag = partialTag ?? storeTag;
+
+    if (!tag) {
+        return null;
+    }
 
     const handleRemoveCardTag = (): void => {
         if (!cardId || !tagId) {
@@ -29,10 +33,6 @@ const BoardTag: React.FC<Props> = ({tag: partialTag, tagId, isRemovable, cardId}
 
         removeCardTag(cardId, tagId);
     };
-
-    if (!tag) {
-        return null;
-    }
 
     return (
         <span

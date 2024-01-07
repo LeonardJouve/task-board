@@ -137,6 +137,8 @@ const removeCard = (state: CardState, cardId: Card["id"]): CardState => {
     };
 };
 
-export const getCardsInColumn = (cards: CardState["cards"], columnId: Column["id"]): Card[] => Object.values(cards).filter((card) => card.columnId === columnId);
+export const getCardsInColumn = (columnId: Column["id"]) => (state: CardState): Card[] => Object.values(state.cards).filter((card) => card.columnId === columnId);
+
+export const getCard = (cardId: Card["id"]) => (state: CardState): Card|undefined => state.cards[cardId];
 
 export default useCards;

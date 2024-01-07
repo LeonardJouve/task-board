@@ -9,21 +9,22 @@ import {ModalId, type Column, type Tag} from "@typing/store";
 import useModals from "@store/modals";
 
 type Props = {
-    column: Column;
+    columnId: Column["id"];
 };
 
-const BoardColumn: React.FC<Props> = ({column}) => {
-    const {cards, fetchCards, createCard} = useCards();
+const BoardColumn: React.FC<Props> = ({columnId}) => {
+    const {fetchCards, createCard} = useCards();
+    const cardsInColumn = useCards(getCardsInColumn(columnId));
     const {openModal} = useModals();
     const [filterTagId, setFilterTagId] = useState<Tag["id"]|null>(null);
 
     useEffect(() => {
-        fetchCards([column.id]);
-    }, [column]);
+        fetchCards([columnId]);
+    }, [columnId]);
 
     const handleCreateCard = async (): Promise<void> => {
         const card = await createCard({
-            columnId: column.id,
+            columnId,
         });
 
         if (!card) {
@@ -32,24 +33,23 @@ const BoardColumn: React.FC<Props> = ({column}) => {
 
         openModal({
             id: ModalId.BOARD_CARD,
-            props: {card},
+            props: {cardId: card.id},
         });
     };
 
-    const columnCards = getCardsInColumn(cards, column.id)
-        .filter((card) => filterTagId === null || card.tagIds.includes(filterTagId));
+    const columnCards = cardsInColumn.filter((card) => filterTagId === null || card.tagIds.includes(filterTagId));
 
     return (
         <div className="min-w-board-column max-w-board-column background-3 rounded-lg flex flex-col items-center gap-2 p-3 color-2">
             <BoardColumnHeader
-                column={column}
+                columnId={columnId}
                 filterTagId={filterTagId}
                 setFilterTagId={setFilterTagId}
                 handleNewCard={handleCreateCard}
             />
             {columnCards.length ? (
                 <Droppable
-                    droppableId={`column-${column.id}`}
+                    droppableId={`column-${columnId}`}
                     direction="vertical"
                     type={DroppableType.BOARD_CARDS}
                 >
@@ -59,10 +59,10 @@ const BoardColumn: React.FC<Props> = ({column}) => {
                             ref={droppableProvided.innerRef}
                             {...droppableProvided.droppableProps}
                         >
-                            {columnCards.map((card, index) => (
+                            {columnCards.map(({id}, index) => (
                                 <Draggable
-                                    key={`board-card-${card.id}`}
-                                    draggableId={`board-card-${card.id}`}
+                                    key={`board-card-${id}`}
+                                    draggableId={`board-card-${id}`}
                                     index={index}
                                 >
                                     {(draggableProvided): React.JSX.Element => (
@@ -72,8 +72,8 @@ const BoardColumn: React.FC<Props> = ({column}) => {
                                             {...draggableProvided.dragHandleProps}
                                         >
                                             <BoardCard
-                                                key={`card-${card.id}`}
-                                                card={card}
+                                                key={`card-${id}`}
+                                                cardId={id}
                                             />
                                         </div>
                                     )}

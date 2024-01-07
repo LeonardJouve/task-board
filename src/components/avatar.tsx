@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Rest from "@api/rest";
-import useUsers from "@store/users";
+import useUsers, {getUser} from "@store/users";
 import Tooltip from "@components/tooltip";
 import type {User} from "@typing/store";
 
@@ -18,12 +18,12 @@ type Props = {
 } & Pick<React.HtmlHTMLAttributes<HTMLDivElement>, "style">;
 
 const Avatar: React.FC<Props> = ({userId, style, size = Size.M, showTooltip = true}) => {
-    const {users, fetchUser} = useUsers();
+    const {fetchUser} = useUsers();
+    const user = useUsers(getUser(userId));
     const [hasError, setHasError] = useState<boolean>(false);
-    const user = users[userId];
 
     useEffect(() => {
-        if (!userId || user) {
+        if (user) {
             return;
         }
 

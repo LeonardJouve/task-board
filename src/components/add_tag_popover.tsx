@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {FormattedMessage} from "react-intl";
-import {useParams} from "react-router-dom";
 import Creatable from "react-select/creatable";
 import type {ActionMeta, ClassNamesConfig, GroupBase, MultiValue, MultiValueProps, StylesConfig} from "react-select";
-import useCards from "@store/cards";
-import useTags, {getTagsInBoard, getTagsInCards} from "@store/tags";
+import useCards, {getCard} from "@store/cards";
+import useBoards from "@store/boards";
+import useTags, {getTagsInCards, getTagsInCurrentBoard} from "@store/tags";
 import Popover from "@components/popover";
 import BoardTag from "@components/board_tag";
 import ColorPicker from "@components/color_picker";
-import type {Card, Tag} from "@typing/store";
 import {hexToRgb, type Color, rgbToHex} from "@utils/color";
+import type {Card, Tag} from "@typing/store";
 
 type Props = {
     cardId: Card["id"];
@@ -67,26 +67,23 @@ const formatTag = ({name, id}: Tag): SelectOption => ({
 });
 
 const AddTagPopover: React.FC<Props> = ({cardId}) => {
-    const {cards, addCardTag, removeCardTag} = useCards();
-    const {defaultColor, tags, fetchTags, createTag} = useTags();
-    const params = useParams();
-    const [values, setValues] = useState<SelectOption[]>([]);
+    const {currentBoardId} = useBoards();
+    const {addCardTag, removeCardTag} = useCards();
+    const card = useCards(getCard(cardId));
+    const {defaultColor, fetchTags, createTag} = useTags();
+    const tagsInCard = useTags(getTagsInCards(card ? [card] : []));
+    const tagsInBoard = useTags(getTagsInCurrentBoard());
     const [color, setColor] = useState<Color>(hexToRgb(defaultColor));
-    const boardId = Number(params["boardId"]);
-    const card = cards[cardId];
 
     useEffect(() => {
-        fetchTags([boardId]);
-    }, []);
-
-    useEffect(() => {
-        if (!card) {
+        if (!currentBoardId) {
             return;
         }
-        setValues(getTagsInCards(tags, [card]).map(formatTag));
-    }, [card]);
 
-    if (!card) {
+        fetchTags([currentBoardId]);
+    }, []);
+
+    if (!currentBoardId || !card) {
         return null;
     }
 
@@ -97,20 +94,9 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
                 break;
             }
             addCardTag(cardId, actionMeta.option.value);
-            setValues([
-                ...values,
-                actionMeta.option,
-            ]);
             break;
         case "remove-value": {
             removeCardTag(cardId, actionMeta.removedValue.value);
-            const newValues = [...values];
-            const index = newValues.findIndex((value) => value.value === actionMeta.removedValue.value);
-            if (index === -1) {
-                break;
-            }
-            newValues.splice(index, 1);
-            setValues(newValues);
             break;
         }
         }
@@ -118,7 +104,7 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
 
     const handleCreateTag = async (name: string): Promise<void> => {
         const tag = await createTag({
-            boardId,
+            boardId: currentBoardId,
             name,
             color: "#" + rgbToHex(color),
         });
@@ -128,11 +114,6 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
         }
 
         addCardTag(cardId, tag.id);
-
-        setValues([
-            ...values,
-            formatTag(tag),
-        ]);
     };
 
     const formatCreateLabel = (name: string): React.ReactNode => (
@@ -166,11 +147,12 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
         </div>
     );
 
-    const options: SelectOption[] = getTagsInBoard(tags, boardId)
-        .filter(({id}) => !card.tagIds.includes(id))
+    const isValidNewOption = (input: string): boolean => input.length !== 0 && !options.some((option) => option.label === input);
+
+    const options: SelectOption[] = tagsInBoard.filter(({id}) => !card.tagIds.includes(id))
         .map(formatTag);
 
-    const isValidNewOption = (input: string): boolean => input.length !== 0 && !options.some((option) => option.label === input);
+    const values = tagsInCard.map(formatTag);
 
     return (
         <Popover

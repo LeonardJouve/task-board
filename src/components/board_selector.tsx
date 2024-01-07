@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {FormattedMessage, useIntl} from "react-intl";
-import useBoards from "@store/boards";
+import useBoards, {getCurrentBoard} from "@store/boards";
 import useUsers from "@store/users";
 import useModals from "@store/modals";
 import Menu, {MenuTrigger, type Item} from "@components/menu";
@@ -12,10 +12,9 @@ const BoardSelector: React.FC = () => {
     const {formatMessage} = useIntl();
     const navigate = useNavigate();
     const {boards, fetchBoards} = useBoards();
+    const board = useBoards(getCurrentBoard());
     const {me} = useUsers();
     const {openModal} = useModals();
-    const params = useParams();
-    const board = boards[Number(params["boardId"])];
 
     useEffect(() => {
         fetchBoards();
@@ -24,7 +23,6 @@ const BoardSelector: React.FC = () => {
     const handleSelectBoard = (boardId: Board["id"]): void => navigate(`/board/${boardId}`);
 
     const handleGoToBoardSelection = (): void => navigate("/");
-
 
     const handleAskDeleteBoard = (): void => {
         if (!board) {

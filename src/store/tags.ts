@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
 import type {CreateTag, UpdateTag} from "@typing/rest";
+import useBoards from "@store/boards";
 import type {ActionResult, Board, Card, Tag} from "@typing/store";
 
 type TagState = {
@@ -89,14 +90,20 @@ const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
     };
 };
 
-export const getTagsInBoard = (tags: TagState["tags"], boardId: Board["id"]): Tag[] => Object.values(tags)
-    .filter((tag) => tag.boardId === boardId);
+export const getTagsInCurrentBoard = () => (state: TagState): Tag[] => {
+    const {currentBoardId} = useBoards();
 
-export const getTagsInCards = (tags: TagState["tags"], cards: Card[]): Tag[] => Object.values(tags)
+    return Object.values(state.tags)
+        .filter((tag) => tag.boardId === currentBoardId);
+};
+
+export const getTagsInCards = (cards: Card[]) => (state: TagState): Tag[] => Object.values(state.tags)
     .filter((tag) => cards.some((card) => card.tagIds.includes(tag.id)));
 
-export const getTagsColors = (tags: TagState["tags"]): string[] => Object.values(tags)
+export const getTagsColors = () => (state: TagState): string[] => Object.values(state.tags)
     .map(({color}) => color)
     .filter((hex, i, self) => self.indexOf(hex) === i);
+
+export const getTag = (tagId: Tag["id"]) => (state: TagState): Tag|undefined => state.tags[tagId];
 
 export default useTags;

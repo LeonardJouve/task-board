@@ -67,4 +67,6 @@ const removeUser = (state: UserState, userId: User["id"]): UserState => {
     };
 };
 
+export const getUser = (userId: User["id"]) => (state: UserState): User|undefined => state.users[userId];
+
 export default useUsers;
