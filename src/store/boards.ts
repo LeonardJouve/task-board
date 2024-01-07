@@ -86,8 +86,11 @@ const setBoard = (state: BoardState, board: Board): BoardState => ({
 });
 
 const removeBoard = (state: BoardState, boardId: Board["id"]): BoardState => {
-    delete state.boards[boardId];
-    return state;
+    const {[boardId]: _, ...boards} = state.boards;
+    return {
+        ...state,
+        boards,
+    };
 };
 
 export default useBoards;

@@ -6,7 +6,7 @@ type Modals<Id extends ModalId> = Partial<Record<Modal<Id>["id"], Modal<Id>["pro
 type ModalState = {
     modals: Modals<ModalId>;
     openModal: <Id extends ModalId>(modal: Modal<Id>) => void;
-    closeModal: <Id extends ModalId>(id: Modal<Id>["id"]) => void;
+    closeModal: <Id extends ModalId>(modalId: Modal<Id>["id"]) => void;
 };
 
 const useModals = create<ModalState>((set) => ({
@@ -18,8 +18,8 @@ const useModals = create<ModalState>((set) => ({
             [id]: props,
         },
     })),
-    closeModal: (id): void => set((state) => {
-        const {[id]: _, ...modals} = state.modals;
+    closeModal: (modalId): void => set((state) => {
+        const {[modalId]: _, ...modals} = state.modals;
         return {modals};
     }),
 }));

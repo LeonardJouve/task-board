@@ -60,8 +60,11 @@ const addUser = (state: UserState, user: User): UserState => ({
 });
 
 const removeUser = (state: UserState, userId: User["id"]): UserState => {
-    delete state.users[userId];
-    return state;
+    const {[userId]: _, ...users} = state.users;
+    return {
+        ...state,
+        users,
+    };
 };
 
 export default useUsers;

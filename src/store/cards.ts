@@ -130,8 +130,11 @@ const setCard = (state: CardState, card: Card): CardState => ({
 });
 
 const removeCard = (state: CardState, cardId: Card["id"]): CardState => {
-    delete state.cards[cardId];
-    return state;
+    const {[cardId]: _, ...cards} = state.cards;
+    return {
+        ...state,
+        cards,
+    };
 };
 
 export const getCardsInColumn = (cards: CardState["cards"], columnId: Column["id"]): Card[] => Object.values(cards).filter((card) => card.columnId === columnId);

@@ -82,8 +82,11 @@ const setTag = (state: TagState, tag: Tag): TagState => ({
 });
 
 const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
-    delete state.tags[tagId];
-    return state;
+    const {[tagId]: _, ...tags} = state.tags;
+    return {
+        ...state,
+        tags,
+    };
 };
 
 export const getTagsInBoard = (tags: TagState["tags"], boardId: Board["id"]): Tag[] => Object.values(tags)

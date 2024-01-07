@@ -90,8 +90,11 @@ const setColumn = (state: ColumnState, column: Column): ColumnState => ({
 });
 
 const removeColumn = (state: ColumnState, columnId: Column["id"]): ColumnState => {
-    delete state.columns[columnId];
-    return state;
+    const {[columnId]: _, ...columns} = state.columns;
+    return {
+        ...state,
+        columns,
+    };
 };
 
 export const getColumnsInBoard = (columns: ColumnState["columns"], boardId: Board["id"]): Column[] => Object.values(columns).filter((column) => column.boardId === boardId);
