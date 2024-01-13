@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
 import type {Board, User} from "@typing/store";
+import type {ActionResult} from "@typing/rest";
 
 type UserState = {
     me?: User;
@@ -10,9 +11,9 @@ type UserState = {
     addUsers: (users: User[]) => void;
     removeUser: (userId: User["id"]) => void;
     removeUsers: (userIds: User["id"][]) => void;
-    fetchMe: () => Promise<void>;
-    fetchUser: (userId: User["id"]) => Promise<void>;
-    fetchUsers: (boardIds?: Board["id"][]) => Promise<void>;
+    fetchMe: () => ActionResult<User>;
+    fetchUser: (userId: User["id"]) => ActionResult<User>;
+    fetchUsers: (boardIds?: Board["id"][]) => ActionResult<User[]>;
 };
 
 const useUsers = create<UserState>((set) => ({
@@ -22,32 +23,35 @@ const useUsers = create<UserState>((set) => ({
     addUsers: (users): void => set((state) => users.reduce(addUser, state)),
     removeUser: (userId): void => set((state: UserState) => removeUser(state, userId)),
     removeUsers: (userIds): void => set((state: UserState) => userIds.reduce(removeUser, state)),
-    fetchMe: async (): Promise<void> => {
+    fetchMe: async (): ActionResult<User> => {
         const {error, data} = await Rest.getMe();
 
         if (error) {
-            return;
+            return null;
         }
 
         set(() => ({me: data}));
+        return data;
     },
-    fetchUser: async (userId): Promise<void> => {
+    fetchUser: async (userId): ActionResult<User> => {
         const {error, data} = await Rest.getUser(userId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => addUser(state, data));
+        return data;
     },
-    fetchUsers: async (boardIds): Promise<void> => {
+    fetchUsers: async (boardIds): ActionResult<User[]> => {
         const {error, data} = await Rest.getUsers(boardIds);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => data.reduce(addUser, state));
+        return data;
     },
 }));
 

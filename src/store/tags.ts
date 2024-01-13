@@ -1,8 +1,8 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
-import type {CreateTag, UpdateTag} from "@typing/rest";
 import useBoards from "@store/boards";
 import type {ActionResult, Board, Card, Tag} from "@typing/store";
+import type {CreateTag, Status, UpdateTag} from "@typing/rest";
 
 type TagState = {
     defaultColor: string;
@@ -11,11 +11,11 @@ type TagState = {
     addTags: (tags: Tag[]) => void;
     removeTag: (tagId: Tag["id"]) => void;
     removeTags: (tagIds: Tag["id"][]) => void;
-    fetchTag: (tagId: Tag["id"]) => Promise<void>;
-    fetchTags: (boardIds?: Board["id"][]) => Promise<void>;
+    fetchTag: (tagId: Tag["id"]) => ActionResult<Tag>;
+    fetchTags: (boardIds?: Board["id"][]) => ActionResult<Tag[]>;
     createTag: (tag: CreateTag) => ActionResult<Tag>;
-    updateTag: (tagId: Tag["id"], tag: UpdateTag) => Promise<void>;
-    deleteTag: (tagId: Tag["id"]) => Promise<void>;
+    updateTag: (tagId: Tag["id"], tag: UpdateTag) => ActionResult<Tag>;
+    deleteTag: (tagId: Tag["id"]) => ActionResult<Status>;
 };
 
 const useTags = create<TagState>((set) => ({
@@ -25,23 +25,25 @@ const useTags = create<TagState>((set) => ({
     addTags: (tags): void => set((state) => tags.reduce(setTag, state)),
     removeTag: (tagId): void => set((state) => removeTag(state, tagId)),
     removeTags: (tagIds): void => set((state) => tagIds.reduce(removeTag, state)),
-    fetchTag: async (tagId): Promise<void> => {
+    fetchTag: async (tagId): ActionResult<Tag>=> {
         const {error, data} = await Rest.getTag(tagId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setTag(state, data));
+        return data;
     },
-    fetchTags: async (boardIds): Promise<void> => {
+    fetchTags: async (boardIds): ActionResult<Tag[]> => {
         const {error, data} = await Rest.getTags(boardIds);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => data.reduce(setTag, state));
+        return data;
     },
     createTag: async (tag): ActionResult<Tag> => {
         const {error, data} = await Rest.createTag(tag);
@@ -54,23 +56,25 @@ const useTags = create<TagState>((set) => ({
 
         return data;
     },
-    updateTag: async (tagId, tag): Promise<void> => {
+    updateTag: async (tagId, tag): ActionResult<Tag> => {
         const {error, data} = await Rest.updateTag(tagId, tag);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setTag(state, data));
+        return data;
     },
-    deleteTag: async (tagId): Promise<void> => {
-        const {error} = await Rest.deleteTag(tagId);
+    deleteTag: async (tagId): ActionResult<Status> => {
+        const {error, data} = await Rest.deleteTag(tagId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => removeTag(state, tagId));
+        return data;
     },
 }));
 

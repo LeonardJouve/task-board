@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
 import useBoards from "@store/boards";
-import type {CreateColumn, UpdateColumn} from "@typing/rest";
+import type {ActionResult, CreateColumn, Status, UpdateColumn} from "@typing/rest";
 import type {Board, Column} from "@typing/store";
 
 
@@ -11,12 +11,12 @@ type ColumnState = {
     addColumns: (columns: Column[]) => void;
     removeColumn: (columnId: Column["id"]) => void;
     removeColumns: (columnIds: Column["id"][]) => void;
-    fetchColumn: (columnId: Column["id"]) => Promise<void>;
-    fetchColumns: (boardIds?: Board["id"][]) => Promise<void>;
-    createColumn: (column: CreateColumn) => Promise<void>;
-    updateColumn: (columnId: Column["id"], column: UpdateColumn) => Promise<void>;
-    moveColumn: (columnId: Column["id"], nextId: Column["id"]|null) => Promise<void>;
-    deleteColumn: (columnId: Column["id"]) => Promise<void>;
+    fetchColumn: (columnId: Column["id"]) => ActionResult<Column>;
+    fetchColumns: (boardIds?: Board["id"][]) => ActionResult<Column[]>;
+    createColumn: (column: CreateColumn) => ActionResult<Column>;
+    updateColumn: (columnId: Column["id"], column: UpdateColumn) => ActionResult<Column>;
+    moveColumn: (columnId: Column["id"], nextId: Column["id"]|null) => ActionResult<Column>;
+    deleteColumn: (columnId: Column["id"]) => ActionResult<Status>;
 };
 
 const useColumns = create<ColumnState>((set) => ({
@@ -25,60 +25,66 @@ const useColumns = create<ColumnState>((set) => ({
     addColumns: (columns): void => set((state) => columns.reduce(setColumn, state)),
     removeColumn: (columnId): void => set((state) => removeColumn(state, columnId)),
     removeColumns: (columnIds): void => set((state) => columnIds.reduce(removeColumn, state)),
-    fetchColumn: async (columnId): Promise<void> => {
+    fetchColumn: async (columnId): ActionResult<Column> => {
         const {error, data} = await Rest.getColumn(columnId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setColumn(state, data));
+        return data;
     },
-    fetchColumns: async (boardIds): Promise<void> => {
+    fetchColumns: async (boardIds): ActionResult<Column[]> => {
         const {error, data} = await Rest.getColumns(boardIds);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => data.reduce(setColumn, state));
+        return data;
     },
-    createColumn: async (column): Promise<void> => {
+    createColumn: async (column): ActionResult<Column> => {
         const {error, data} = await Rest.createColumn(column);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setColumn(state, data));
+        return data;
     },
-    updateColumn: async (columnId, column): Promise<void> => {
+    updateColumn: async (columnId, column): ActionResult<Column> => {
         const {error, data} = await Rest.updateColumn(columnId, column);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setColumn(state, data));
+        return data;
     },
-    moveColumn: async (columnId, nextId): Promise<void> => {
+    moveColumn: async (columnId, nextId): ActionResult<Column> => {
         const {error, data} = await Rest.moveColumn(columnId, nextId);
 
         if (error) {
-            return;
+            return null;
         }
 
         // TODO: update other modified columns
         set((state) => setColumn(state, data));
+        return data;
     },
-    deleteColumn: async (columnId): Promise<void> => {
-        const {error} = await Rest.deleteColumn(columnId);
+    deleteColumn: async (columnId): ActionResult<Status> => {
+        const {error, data} = await Rest.deleteColumn(columnId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => removeColumn(state, columnId));
+        return data;
     },
 }));
 
@@ -106,6 +112,8 @@ export const getColumnsInCurrentBoard = () => (state: ColumnState): Column[] => 
     return Object.values(state.columns)
         .filter((column) => column.boardId === currentBoardId);
 };
+
+export const sortColumns = (columns: Column[]): Column[] => columns;
 
 export const getColumn = (columnId: Column["id"]) => (state: ColumnState): Column|undefined => state.columns[columnId];
 

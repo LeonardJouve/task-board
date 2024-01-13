@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import Rest from "@api/rest";
-import type {UpdateBoard, CreateBoard} from "@typing/rest";
+import type {UpdateBoard, CreateBoard, ActionResult, Status} from "@typing/rest";
 import type {Board, User} from "@typing/store";
 
 type BoardState = {
@@ -11,13 +11,13 @@ type BoardState = {
     addBoards: (boards: Board[]) => void;
     removeBoard: (boardId: Board["id"]) => void;
     removeBoards: (boardIds: Board["id"][]) => void;
-    fetchBoard: (boardId: Board["id"]) => Promise<void>;
-    fetchBoards: () => Promise<void>;
-    createBoard: (board: CreateBoard) => Promise<void>;
-    updateBoard: (boardId: Board["id"], board: UpdateBoard) => Promise<void>;
-    deleteBoard: (boardId: Board["id"]) => Promise<void>;
-    inviteUserToBoard: (boardId: Board["id"], userId: User["id"]) => Promise<void>;
-    leaveBoard: (boardId: Board["id"]) => Promise<void>;
+    fetchBoard: (boardId: Board["id"]) => ActionResult<Board>;
+    fetchBoards: () => ActionResult<Board[]>;
+    createBoard: (board: CreateBoard) => ActionResult<Board>;
+    updateBoard: (boardId: Board["id"], board: UpdateBoard) => ActionResult<Board>;
+    deleteBoard: (boardId: Board["id"]) => ActionResult<Status>;
+    inviteUserToBoard: (boardId: Board["id"], userId: User["id"]) => ActionResult<Status>;
+    leaveBoard: (boardId: Board["id"]) => ActionResult<Status>;
 }
 
 const useBoards = create<BoardState>((set) => ({
@@ -28,56 +28,73 @@ const useBoards = create<BoardState>((set) => ({
     addBoards: (boards): void => set((state) => boards.reduce(setBoard, state)),
     removeBoard: (boardId): void => set((state) => removeBoard(state, boardId)),
     removeBoards: (boardIds): void => set((state) => boardIds.reduce(removeBoard, state)),
-    fetchBoard: async (boardId): Promise<void> => {
+    fetchBoard: async (boardId): ActionResult<Board> => {
         const {error, data} = await Rest.getBoard(boardId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setBoard(state, data));
+        return data;
     },
-    fetchBoards: async (): Promise<void> => {
+    fetchBoards: async (): ActionResult<Board[]> => {
         const {error, data} = await Rest.getBoards();
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => data.reduce(setBoard, state));
+        return data;
     },
-    createBoard: async (board): Promise<void> => {
+    createBoard: async (board): ActionResult<Board> => {
         const {error, data} = await Rest.createBoard(board);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setBoard(state, data));
+        return data;
     },
-    updateBoard: async (boardId, board): Promise<void> => {
+    updateBoard: async (boardId, board): ActionResult<Board> => {
         const {error, data} = await Rest.updateBoard(boardId, board);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => setBoard(state, data));
+        return data;
     },
-    deleteBoard: async (boardId): Promise<void> => {
-        const {error} = await Rest.deleteBoard(boardId);
+    deleteBoard: async (boardId): ActionResult<Status> => {
+        const {error, data} = await Rest.deleteBoard(boardId);
 
         if (error) {
-            return;
+            return null;
         }
 
         set((state) => removeBoard(state, boardId));
+        return data;
     },
-    inviteUserToBoard: async (boardId, userId): Promise<void> => {
-        await Rest.inviteUserToBoard(boardId, userId);
+    inviteUserToBoard: async (boardId, userId): ActionResult<Status> => {
+        const {error, data} = await Rest.inviteUserToBoard(boardId, userId);
+
+        if (error) {
+            return null;
+        }
+
+        return data;
     },
-    leaveBoard: async (boardId): Promise<void> => {
-        await Rest.leaveBoard(boardId);
+    leaveBoard: async (boardId): ActionResult<Status> => {
+        const {error, data} = await Rest.leaveBoard(boardId);
+
+        if (error) {
+            return null;
+        }
+
+        return data;
     },
 }));
 
