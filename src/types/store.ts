@@ -2,7 +2,7 @@ import type {ComponentProps} from "react";
 import type {MessageDescriptor} from "react-intl";
 import BoardCardModal from "@components/modals/board_card_modal";
 import DeleteBoardCardModal from "@components/modals/delete_board_card_modal";
-import DeleteBoardColumnModal from "@components/modals/delete_board_column";
+import DeleteBoardColumnModal from "@components/modals/delete_board_column_modal";
 import DeleteBoardModal from "@components/modals/delete_board_modal";
 import LeaveBoardModal from "@components/modals/leave_board_modal";
 

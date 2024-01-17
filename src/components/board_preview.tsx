@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useIntl} from "react-intl";
 import {useNavigate} from "react-router-dom";
 import useBoards, {getBoard} from "@store/boards";
-import useColumns, {getColumnsInBoard} from "@store/columns";
+import useColumns, {getColumnsInBoard, sortColumns} from "@store/columns";
 import Avatars from "@components/avatars";
 import {Size} from "@components/avatar";
 import ColumnPreview from "@components/column_preview";
@@ -86,7 +86,7 @@ const BoardPreview: React.FC<Props> = ({boardId}) => {
                     )}
                 </div>
                 <div className="flex flex-row gap-4 overflow-hidden color-2">
-                    {boardColumns.map(({id}) => (
+                    {sortColumns(boardColumns).map(({id}) => (
                         <ColumnPreview
                             key={`column-preview-${id}`}
                             columnId={id}

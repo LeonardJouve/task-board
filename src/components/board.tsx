@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {DragDropContext, Draggable, Droppable, type DropResult, type ResponderProvided} from "@hello-pangea/dnd";
-import useColumns, {getColumnsInCurrentBoard} from "@store/columns";
+import useColumns, {getColumnsInCurrentBoard, sortColumns} from "@store/columns";
 import useBoards from "@store/boards";
 import useTags from "@store/tags";
 import BoardColumn from "@components/board_column";
@@ -55,7 +55,7 @@ const Board: React.FC = () => {
                                     ref={droppableProvided.innerRef}
                                     {...droppableProvided.droppableProps}
                                 >
-                                    {boardColumns.map(({id}, index) => (
+                                    {sortColumns(boardColumns).map(({id}, index) => (
                                         <Draggable
                                             key={`board-column-${id}`}
                                             draggableId={`board-column-${id}`}

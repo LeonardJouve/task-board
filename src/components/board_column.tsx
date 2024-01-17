@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Draggable, Droppable} from "@hello-pangea/dnd";
-import useCards, {getCardsInColumn} from "@store/cards";
+import useCards, {getCardsInColumn, sortCards} from "@store/cards";
 import BoardColumnHeader from "@components/board_column_header";
 import BoardCard from "@components/board_card";
 import AddItem from "@components/add_item";
@@ -59,7 +59,7 @@ const BoardColumn: React.FC<Props> = ({columnId}) => {
                             ref={droppableProvided.innerRef}
                             {...droppableProvided.droppableProps}
                         >
-                            {columnCards.map(({id}, index) => (
+                            {sortCards(columnCards).map(({id}, index) => (
                                 <Draggable
                                     key={`board-card-${id}`}
                                     draggableId={`board-card-${id}`}

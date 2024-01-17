@@ -148,7 +148,21 @@ const removeCard = (state: CardState, cardId: Card["id"]): CardState => {
 
 export const getCardsInColumn = (columnId: Column["id"]) => (state: CardState): Card[] => Object.values(state.cards).filter((card) => card.columnId === columnId);
 
-export const sortCards = (cards: Card[]): Card[] => cards;
+export const sortCards = (cards: Card[]): Card[] => {
+    let currentCard = cards.find((card) => !card.nextId);
+
+    if (!currentCard) {
+        return [];
+    }
+
+    const sortedCards = [currentCard];
+
+    while ((currentCard = cards.find((card) => card.nextId === currentCard?.id))) {
+        sortedCards.push(currentCard);
+    }
+
+    return sortedCards.reverse();
+};
 
 export const getCard = (cardId: Card["id"]) => (state: CardState): Card|undefined => state.cards[cardId];
 

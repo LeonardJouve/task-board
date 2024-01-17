@@ -113,7 +113,21 @@ export const getColumnsInCurrentBoard = () => (state: ColumnState): Column[] => 
         .filter((column) => column.boardId === currentBoardId);
 };
 
-export const sortColumns = (columns: Column[]): Column[] => columns;
+export const sortColumns = (columns: Column[]): Column[] => {
+    let currentColumn = columns.find((column) => !column.nextId);
+
+    if (!currentColumn) {
+        return [];
+    }
+
+    const sortedColumns = [currentColumn];
+
+    while ((currentColumn = columns.find((column) => column.nextId === currentColumn?.id))) {
+        sortedColumns.push(currentColumn);
+    }
+
+    return sortedColumns.reverse();
+};
 
 export const getColumn = (columnId: Column["id"]) => (state: ColumnState): Column|undefined => state.columns[columnId];
 
