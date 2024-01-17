@@ -1,3 +1,4 @@
+import useErrors from "@store/errors";
 import type {MessageDescriptor} from "react-intl";
 import type {User, Board, Column, Card, Tag} from "@typing/store";
 import type {RestResponse, Tokens, CsrfToken, CreateBoard, UpdateBoard, CreateColumn, UpdateColumn, CreateCard, UpdateCard, CreateTag, UpdateTag, Status} from "@typing/rest";
@@ -94,6 +95,8 @@ class RestClient {
             }
 
             // TODO: handle unauthorized
+
+            useErrors().setError({message: data});
 
             return {
                 error: true,

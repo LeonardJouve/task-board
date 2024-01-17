@@ -7,6 +7,7 @@ import Board from "@components/board";
 import SelectBoard from "@components/select_board";
 import Header from "@components/header";
 import BoardProvider from "@components/board_provider";
+import ErrorBanner from "@components/error_banner";
 
 const Router: React.FC = () => (
     <BrowserRouter>
@@ -18,6 +19,7 @@ const Router: React.FC = () => (
                 element={
                     <AuthGuard>
                         <Header/>
+                        <ErrorBanner/>
                         <Routes>
                             <Route
                                 path="/board/:boardId"

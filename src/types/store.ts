@@ -1,4 +1,5 @@
 import type {ComponentProps} from "react";
+import type {MessageDescriptor} from "react-intl";
 import BoardCardModal from "@components/modals/board_card_modal";
 import DeleteBoardCardModal from "@components/modals/delete_board_card_modal";
 import DeleteBoardColumnModal from "@components/modals/delete_board_column";
@@ -72,3 +73,8 @@ export enum Locale {
     EN = "en",
     FR = "fr",
 }
+
+export type AppError = {
+    message: MessageDescriptor;
+    action?: () => void;
+} | null;

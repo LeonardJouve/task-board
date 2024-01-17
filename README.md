@@ -1,10 +1,10 @@
 # task-board
 
 TODO:
-- error banner
-- fetch loop
 - handle move store updates
 - host
+- websocket
 - auth
+- fetch loop
 - tooltip / modal / menu / popover animation
 - favicon
