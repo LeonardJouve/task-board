@@ -1,13 +1,22 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ReactDOM from "react-dom/client";
+import type {MessageDescriptor} from "react-intl";
 import IntlProvider from "@components/intl_provider";
 import Router from "@components/router";
 import Modals from "@components/modals/modals";
+import Rest from "@api/rest";
+import useErrors from "@store/errors";
 
 const root = document.getElementById("root");
 
-if (root) {
-    ReactDOM.createRoot(root).render(
+const Root: React.FC = () => {
+    const {setError} = useErrors();
+
+    useEffect(() => {
+        Rest.onError = (message: MessageDescriptor): void => setError({message});
+    }, [setError]);
+
+    return (
         <React.StrictMode>
             <IntlProvider>
                 <div className="w-screen h-screen flex flex-col">
@@ -15,6 +24,10 @@ if (root) {
                 </div>
                 <Modals/>
             </IntlProvider>
-        </React.StrictMode>,
+        </React.StrictMode>
     );
+};
+
+if (root) {
+    ReactDOM.createRoot(root).render(<Root/>);
 }

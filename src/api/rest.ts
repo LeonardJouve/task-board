@@ -1,9 +1,9 @@
-import useErrors from "@store/errors";
 import type {MessageDescriptor} from "react-intl";
 import type {User, Board, Column, Card, Tag} from "@typing/store";
 import type {RestResponse, Tokens, CsrfToken, CreateBoard, UpdateBoard, CreateColumn, UpdateColumn, CreateCard, UpdateCard, CreateTag, UpdateTag, Status} from "@typing/rest";
 
 class RestClient {
+    public onError: ((message: MessageDescriptor) => void)|null = null;
     private readonly baseUrl: string;
     private readonly maxRetry: number = 5;
     private csrfToken: string|null = null;
@@ -96,8 +96,7 @@ class RestClient {
 
             // TODO: handle unauthorized
 
-            // TODO: remove hook usage in rest class
-            useErrors().setError({message: data});
+            this.onError?.(data);
 
             return {
                 error: true,
