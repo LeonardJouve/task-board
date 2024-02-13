@@ -108,14 +108,56 @@ const useCards = create<CardState>((set) => ({
         return data;
     },
     moveCard: async (cardId, columnId, nextId): ActionResult<Card> => {
+        let isSameCard = false;
+
+        set((state) => {
+            let newState = state;
+
+            const cards = Object.values(state.cards);
+            const currentCard = getCard(cardId)(state);
+
+            if (cardId === nextId && currentCard?.columnId === columnId) {
+                isSameCard = true;
+                return state;
+            }
+
+            const previousCard = cards.find((card) => card.nextId === cardId);
+            if (previousCard && currentCard) {
+                newState = setCard(state, {
+                    ...previousCard,
+                    nextId: currentCard.nextId,
+                });
+            }
+
+            const beforeNextCard = nextId === null ? cards.find((card) => card.columnId === columnId && card.nextId === null) : cards.find((card) => card.nextId === nextId);
+            if (beforeNextCard) {
+                newState = setCard(newState, {
+                    ...beforeNextCard,
+                    nextId: cardId,
+                });
+            }
+
+            if (currentCard) {
+                newState = setCard(newState, {
+                    ...currentCard,
+                    nextId,
+                    columnId,
+                });
+            }
+
+            return newState;
+        });
+
+        if (isSameCard) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+            return null;
+        }
+
         const {error, data} = await Rest.moveCard(cardId, columnId, nextId);
 
         if (error) {
             return null;
         }
 
-        // TODO: update other modified cards
-        set((state) => setCard(state, data));
         return data;
     },
     deleteCard: async (cardId): ActionResult<Status> => {
@@ -148,7 +190,9 @@ const removeCard = (state: CardState, cardId: Card["id"]): CardState => {
 
 export const getCardsInColumn = (columnId: Column["id"]) => (state: CardState): Card[] => Object.values(state.cards).filter((card) => card.columnId === columnId);
 
-export const sortCards = (cards: Card[]): Card[] => {
+export const getSortedCardsInColumn = (columnId: Column["id"]) => (state: CardState): Card[] => sortCards(getCardsInColumn(columnId)(state));
+
+const sortCards = (cards: Card[]): Card[] => {
     let currentCard = cards.find((card) => !card.nextId);
 
     if (!currentCard) {

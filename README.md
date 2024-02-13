@@ -1,7 +1,7 @@
 # task-board
 
 TODO:
-- handle move store updates
+- fix error banner (invalid use of hook in rest client)
 - host
 - websocket
 - auth

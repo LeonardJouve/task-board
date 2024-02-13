@@ -1,21 +1,30 @@
 import React, {useEffect} from "react";
-import {DragDropContext, Draggable, Droppable, type DropResult, type ResponderProvided} from "@hello-pangea/dnd";
-import useColumns, {getColumnsInCurrentBoard, sortColumns} from "@store/columns";
+import {DragDropContext, Draggable, Droppable, type DropResult} from "@hello-pangea/dnd";
+import useColumns, {getSortedColumnsInCurrentBoard} from "@store/columns";
 import useBoards from "@store/boards";
 import useTags from "@store/tags";
 import BoardColumn from "@components/board_column";
 import AddItem from "@components/add_item";
 import RightSidebar from "@components/right_sidebar";
+import useCards, {getSortedCardsInColumn} from "@store/cards";
 
 export enum DroppableType {
     BOARD_COLUMNS = "board-columns",
     BOARD_CARDS = "board-cards",
 }
 
+export enum DragDropPrefix {
+    BOARD_DROPPABLE = "board-droppable-",
+    COLUMN_DROPPABLE = "column-droppable-",
+    COLUMN_DRAGGABLE = "column-draggable-",
+    CARD_DRAGGABLE = "card-draggable-",
+}
+
 const Board: React.FC = () => {
     const {currentBoardId} = useBoards();
-    const {fetchColumns, createColumn} = useColumns();
-    const boardColumns = useColumns(getColumnsInCurrentBoard());
+    const {fetchColumns, createColumn, moveColumn} = useColumns();
+    const boardColumns = useColumns(getSortedColumnsInCurrentBoard());
+    const cardsState = useCards();
     const {fetchTags} = useTags();
 
     useEffect(() => {
@@ -35,8 +44,52 @@ const Board: React.FC = () => {
         createColumn({boardId: currentBoardId});
     };
 
-    const handleDragEnd = (result: DropResult, provided: ResponderProvided): void => {
-        console.log(result, provided);
+    const handleDragEnd = (result: DropResult): void => {
+        if (result.reason !== "DROP") {
+            return;
+        }
+
+        switch (result.type) {
+        case DroppableType.BOARD_COLUMNS: {
+            const columnId = parseInt(result.draggableId.replace(DragDropPrefix.COLUMN_DRAGGABLE, ""));
+
+            let index = result.destination?.index;
+            if (index === undefined) {
+                break;
+            }
+            if (result.source.index < index) {
+                ++index;
+            }
+
+            const nextId = boardColumns[index]?.id ?? null;
+
+            moveColumn(columnId, nextId);
+            break;
+        }
+        case DroppableType.BOARD_CARDS: {
+            const cardId = parseInt(result.draggableId.replace(DragDropPrefix.CARD_DRAGGABLE, ""));
+
+            const droppableId = result.destination?.droppableId;
+            if (!droppableId) {
+                break;
+            }
+
+            const columnId = parseInt(droppableId.replace(DragDropPrefix.COLUMN_DROPPABLE, ""));
+
+            let index = result.destination?.index;
+            if (index === undefined) {
+                break;
+            }
+            if (result.source.index < index) {
+                ++index;
+            }
+
+            const nextId = getSortedCardsInColumn(columnId)(cardsState)[index]?.id ?? null;
+
+            cardsState.moveCard(cardId, columnId, nextId);
+            break;
+        }
+        }
     };
 
     return (
@@ -45,7 +98,7 @@ const Board: React.FC = () => {
                 <div className="flex flex-1 flex-row gap-7 p-5 overflow-x-scroll">
                     {boardColumns.length ? (
                         <Droppable
-                            droppableId={`board-${currentBoardId}`}
+                            droppableId={DragDropPrefix.BOARD_DROPPABLE + currentBoardId}
                             direction="horizontal"
                             type={DroppableType.BOARD_COLUMNS}
                         >
@@ -55,10 +108,10 @@ const Board: React.FC = () => {
                                     ref={droppableProvided.innerRef}
                                     {...droppableProvided.droppableProps}
                                 >
-                                    {sortColumns(boardColumns).map(({id}, index) => (
+                                    {boardColumns.map(({id}, index) => (
                                         <Draggable
-                                            key={`board-column-${id}`}
-                                            draggableId={`board-column-${id}`}
+                                            key={DragDropPrefix.COLUMN_DRAGGABLE + id}
+                                            draggableId={DragDropPrefix.COLUMN_DRAGGABLE + id}
                                             index={index}
                                         >
                                             {(draggableProvided): React.JSX.Element => (

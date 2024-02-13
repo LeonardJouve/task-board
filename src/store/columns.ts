@@ -66,14 +66,48 @@ const useColumns = create<ColumnState>((set) => ({
         return data;
     },
     moveColumn: async (columnId, nextId): ActionResult<Column> => {
+        if (columnId === nextId) {
+            return null;
+        }
+
+        set((state) => {
+            let newState = state;
+
+            const columns = Object.values(state.columns);
+            const currentColumn = getColumn(columnId)(state);
+
+            const previousColumn = columns.find((column) => column.nextId === columnId);
+            if (previousColumn && currentColumn) {
+                newState = setColumn(newState, {
+                    ...previousColumn,
+                    nextId: currentColumn.nextId,
+                });
+            }
+
+            const beforeNextColumn = nextId === null ? columns.find((column) => column.boardId === currentColumn?.boardId && column.nextId === null) : columns.find((column) => column.nextId === nextId);
+            if (beforeNextColumn) {
+                newState = setColumn(newState, {
+                    ...beforeNextColumn,
+                    nextId: columnId,
+                });
+            }
+
+            if (currentColumn) {
+                newState = setColumn(newState, {
+                    ...currentColumn,
+                    nextId,
+                });
+            }
+
+            return newState;
+        });
+
         const {error, data} = await Rest.moveColumn(columnId, nextId);
 
         if (error) {
             return null;
         }
 
-        // TODO: update other modified columns
-        set((state) => setColumn(state, data));
         return data;
     },
     deleteColumn: async (columnId): ActionResult<Status> => {
@@ -113,7 +147,11 @@ export const getColumnsInCurrentBoard = () => (state: ColumnState): Column[] => 
         .filter((column) => column.boardId === currentBoardId);
 };
 
-export const sortColumns = (columns: Column[]): Column[] => {
+export const getSortedColumnsInBoard = (boardId: Board["id"]) => (state: ColumnState): Column[] => sortColumns(getColumnsInBoard(boardId)(state));
+
+export const getSortedColumnsInCurrentBoard = () => (state: ColumnState): Column[] => sortColumns(getColumnsInCurrentBoard()(state));
+
+const sortColumns = (columns: Column[]): Column[] => {
     let currentColumn = columns.find((column) => !column.nextId);
 
     if (!currentColumn) {

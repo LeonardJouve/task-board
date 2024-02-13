@@ -26,8 +26,8 @@ const BoardCard: React.FC<Props> = ({cardId}) => {
     const {name, content, tagIds, userIds} = card;
 
     return (
-        <button
-            className="w-full background-5 rounded flex flex-col gap-1 p-2 overflow-hidden hover"
+        <div
+            className="w-full background-5 rounded flex flex-col gap-1 p-2 overflow-hidden hover cursor-pointer"
             onClick={handleBoardCardModal}
         >
             <span className="overflow-hidden text-ellipsis whitespace-nowrap px-1 py-0.5 background-4 rounded">
@@ -48,7 +48,7 @@ const BoardCard: React.FC<Props> = ({cardId}) => {
                 userIds={userIds}
                 size={Size.S}
             />
-        </button>
+        </div>
     );
 };
 

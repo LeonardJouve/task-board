@@ -96,6 +96,7 @@ class RestClient {
 
             // TODO: handle unauthorized
 
+            // TODO: remove hook usage in rest class
             useErrors().setError({message: data});
 
             return {
@@ -278,7 +279,7 @@ class RestClient {
 
     async moveColumn(columnId: Column["id"], nextId: Column["id"]|null): RestResponse<Column> {
         return await this.fetch<Column>(
-            `${this.getColumnsRoute(columnId)}/move?nextId=${nextId}`,
+            `${this.getColumnsRoute(columnId)}/move${nextId ? `?nextId=${nextId}` : ""}`,
             {method: "PATCH"},
         );
     }
@@ -348,8 +349,8 @@ class RestClient {
 
     async moveCard(cardId: Card["id"], columnId: Column["id"], nextId: Card["id"]|null): RestResponse<Card> {
         return await this.fetch<Card>(
-            `${this.getCardsRoute(cardId)}/move?columnId=${columnId}&nextId=${nextId}`,
-            {method: "GET"},
+            `${this.getCardsRoute(cardId)}/move?columnId=${columnId}&${nextId ? `nextId=${nextId}` : ""}`,
+            {method: "PATCH"},
         );
     }
 
