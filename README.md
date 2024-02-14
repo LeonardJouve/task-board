@@ -1,9 +1,8 @@
 # task-board
 
 TODO:
-- host
-- websocket
 - auth
 - fetch loop
+- websocket
 - tooltip / modal / menu / popover animation
 - favicon
