@@ -118,8 +118,8 @@ class RestClient {
         return `${this.baseUrl}/auth`;
     }
 
-    getApiRoute(): string {
-        return `${this.baseUrl}/api`;
+    getRestRoute(): string {
+        return `${this.baseUrl}/rest`;
     }
 
     getAssetsRoute(asset?: string): string {
@@ -127,23 +127,23 @@ class RestClient {
     }
 
     getBoardsRoute(boardId?: Board["id"]): string {
-        return `${this.getApiRoute()}/boards${boardId ? `/${boardId}` : ""}`;
+        return `${this.getRestRoute()}/boards${boardId ? `/${boardId}` : ""}`;
     }
 
     getColumnsRoute(columnId?: Column["id"]): string {
-        return `${this.getApiRoute()}/columns${columnId ? `/${columnId}` : ""}`;
+        return `${this.getRestRoute()}/columns${columnId ? `/${columnId}` : ""}`;
     }
 
     getCardsRoute(cardId?: Card["id"]): string {
-        return `${this.getApiRoute()}/cards${cardId ? `/${cardId}` : ""}`;
+        return `${this.getRestRoute()}/cards${cardId ? `/${cardId}` : ""}`;
     }
 
     getTagsRoute(tagId?: Tag["id"]): string {
-        return `${this.getApiRoute()}/tags${tagId ? `/${tagId}` : ""}`;
+        return `${this.getRestRoute()}/tags${tagId ? `/${tagId}` : ""}`;
     }
 
     getUsersRoute(userId?: User["id"]): string {
-        return `${this.getApiRoute()}/users${userId ? `/${userId}` : ""}`;
+        return `${this.getRestRoute()}/users${userId ? `/${userId}` : ""}`;
     }
 
     async getCsrfToken(): RestResponse<CsrfToken> {
