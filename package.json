@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "run": "vite",
-    "build": "tsc && vite build",
+    "run": "vite -c src/vite.config.ts",
+    "build": "tsc && npm run webfont && tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --minify && vite -c src/vite.config.ts build",
     "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch",
     "webfont": "webfont-generator --out dist/icons --icons src/icons"
   },
@@ -19,6 +19,7 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.5",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

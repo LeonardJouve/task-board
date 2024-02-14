@@ -14,12 +14,12 @@ export default defineConfig({
     root: "./",
     resolve: {
         alias: {
-            "@components": path.resolve(dir, "src/components"),
-            "@store": path.resolve(dir, "src/store"),
-            "@intl": path.resolve(dir, "src/intl"),
-            "@api": path.resolve(dir, "src/api"),
-            "@typing": path.resolve(dir, "src/types"),
-            "@utils": path.resolve(dir, "src/utils"),
+            "@components": path.resolve(dir, "components"),
+            "@store": path.resolve(dir, "store"),
+            "@intl": path.resolve(dir, "intl"),
+            "@api": path.resolve(dir, "api"),
+            "@typing": path.resolve(dir, "types"),
+            "@utils": path.resolve(dir, "utils"),
         },
     },
 });

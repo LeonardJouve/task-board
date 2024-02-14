@@ -8,7 +8,7 @@ class RestClient {
     private readonly maxRetry: number = 5;
     private csrfToken: string|null = null;
     private accessToken: string|null = null;
-    private refreshToken: string|null = null;
+    // private refreshToken: string|null = null;
 
     constructor() {
         this.baseUrl = import.meta.env.VITE_API_URL;
@@ -170,7 +170,7 @@ class RestClient {
 
         if (!error) {
             this.accessToken = data.accessToken;
-            this.refreshToken = data.refreshToken;
+            // this.refreshToken = data.refreshToken;
         }
 
         return result;
