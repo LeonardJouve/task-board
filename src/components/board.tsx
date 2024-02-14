@@ -6,7 +6,7 @@ import useTags from "@store/tags";
 import BoardColumn from "@components/board_column";
 import AddItem from "@components/add_item";
 import RightSidebar from "@components/right_sidebar";
-import useCards, {getSortedCardsInColumn} from "@store/cards";
+import useCards, {getCard, getSortedCardsInColumn} from "@store/cards";
 
 export enum DroppableType {
     BOARD_COLUMNS = "board-columns",
@@ -80,7 +80,10 @@ const Board: React.FC = () => {
             if (index === undefined) {
                 break;
             }
-            if (result.source.index < index) {
+
+            const card = getCard(cardId)(cardsState);
+
+            if (columnId === card?.columnId && result.source.index < index) {
                 ++index;
             }
 
