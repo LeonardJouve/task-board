@@ -1,9 +1,10 @@
 import React, {useEffect, useRef} from "react";
+import {useShallow} from "zustand/react/shallow";
 import {FormattedMessage} from "react-intl";
 import useErrors from "@store/errors";
 
 const ErrorBanner: React.FC = () => {
-    const {error, setError} = useErrors();
+    const {error, setError} = useErrors(useShallow(({error, setError}) => ({error, setError})));
     const errorTimeout = useRef<number|null>(null);
 
     useEffect(() => {

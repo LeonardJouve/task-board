@@ -10,7 +10,7 @@ import useErrors from "@store/errors";
 const root = document.getElementById("root");
 
 const Root: React.FC = () => {
-    const {setError} = useErrors();
+    const setError = useErrors(({setError}) => setError);
 
     useEffect(() => {
         Rest.onError = (message: MessageDescriptor): void => setError({message});

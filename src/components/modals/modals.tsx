@@ -3,7 +3,7 @@ import useModals from "@store/modals";
 import {modalComponents, type ModalId} from "@typing/store";
 
 const Modals: React.FC = () => {
-    const {modals} = useModals();
+    const modals = useModals(({modals}) => modals);
 
     return Object.entries(modals).map(([id, props]) => {
         const Component = modalComponents[Number(id) as ModalId] as React.FC<typeof props>;

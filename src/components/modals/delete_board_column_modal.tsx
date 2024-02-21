@@ -9,7 +9,7 @@ type Props = {
 };
 
 const DeleteBoardColumnModal: React.FC<Props> = ({columnId}) => {
-    const {deleteColumn} = useColumns();
+    const deleteColumn = useColumns(({deleteColumn}) => deleteColumn);
 
     const handleDelete = (): void => {
         deleteColumn(columnId);

@@ -70,6 +70,7 @@ const useColumns = create<ColumnState>((set) => ({
             return null;
         }
 
+        const modifiedColumns: Column[] = [];
         set((state) => {
             let newState = state;
 
@@ -78,6 +79,7 @@ const useColumns = create<ColumnState>((set) => ({
 
             const previousColumn = columns.find((column) => column.nextId === columnId);
             if (previousColumn && currentColumn) {
+                modifiedColumns.push(previousColumn);
                 newState = setColumn(newState, {
                     ...previousColumn,
                     nextId: currentColumn.nextId,
@@ -86,6 +88,7 @@ const useColumns = create<ColumnState>((set) => ({
 
             const beforeNextColumn = nextId === null ? columns.find((column) => column.boardId === currentColumn?.boardId && column.nextId === null) : columns.find((column) => column.nextId === nextId);
             if (beforeNextColumn) {
+                modifiedColumns.push(beforeNextColumn);
                 newState = setColumn(newState, {
                     ...beforeNextColumn,
                     nextId: columnId,
@@ -93,6 +96,7 @@ const useColumns = create<ColumnState>((set) => ({
             }
 
             if (currentColumn) {
+                modifiedColumns.push(currentColumn);
                 newState = setColumn(newState, {
                     ...currentColumn,
                     nextId,
@@ -105,6 +109,16 @@ const useColumns = create<ColumnState>((set) => ({
         const {error, data} = await Rest.moveColumn(columnId, nextId);
 
         if (error) {
+            set((state) => {
+                let newState = {...state};
+                for (const oldColumn of modifiedColumns) {
+                    newState = setColumn(newState, oldColumn);
+                }
+
+
+                return newState;
+            });
+
             return null;
         }
 
@@ -141,7 +155,7 @@ const removeColumn = (state: ColumnState, columnId: Column["id"]): ColumnState =
 export const getColumnsInBoard = (boardId: Board["id"]) => (state: ColumnState): Column[] => Object.values(state.columns).filter((column) => column.boardId === boardId);
 
 export const getColumnsInCurrentBoard = () => (state: ColumnState): Column[] => {
-    const {currentBoardId} = useBoards();
+    const currentBoardId = useBoards(({currentBoardId}) => currentBoardId);
 
     return Object.values(state.columns)
         .filter((column) => column.boardId === currentBoardId);

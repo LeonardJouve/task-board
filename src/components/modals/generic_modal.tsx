@@ -21,7 +21,7 @@ type Props = {
 
 const GenericModal: React.FC<Props> = ({id, header, content, closeOnClickOutside = true, isCancelable = true, showFooter = true, onConfirm, onCancel, onClose, headerClassName = "", bodyClassName = "", isDangerous}) => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const {closeModal} = useModals();
+    const closeModal = useModals(({closeModal}) => closeModal);
 
     const handleOpen = (newIsOpen: boolean): void => {
         if (!newIsOpen) {

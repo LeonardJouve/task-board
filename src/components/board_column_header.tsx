@@ -15,7 +15,7 @@ type Props = {
 
 const BoardColumnHeader: React.FC<Props> = ({columnId, filterTagId, setFilterTagId, handleNewCard}) => {
     const {formatMessage} = useIntl();
-    const {updateColumn} = useColumns();
+    const updateColumn = useColumns(({updateColumn}) => updateColumn);
     const column = useColumns(getColumn(columnId));
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
 

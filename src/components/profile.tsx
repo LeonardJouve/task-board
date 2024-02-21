@@ -9,8 +9,8 @@ import useAuth from "@store/auth";
 const Profile: React.FC = () => {
     const {formatMessage} = useIntl();
     const navigate = useNavigate();
-    const {me} = useUsers();
-    const {setIsLoggedIn} = useAuth();
+    const me = useUsers(({me}) => me);
+    const setIsLoggedIn = useAuth(({setIsLoggedIn}) => setIsLoggedIn);
 
     if (!me) {
         return null;

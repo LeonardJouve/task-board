@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useShallow} from "zustand/react/shallow";
 import {Draggable, Droppable} from "@hello-pangea/dnd";
 import useCards, {getSortedCardsInColumn} from "@store/cards";
 import BoardColumnHeader from "@components/board_column_header";
@@ -13,9 +14,9 @@ type Props = {
 };
 
 const BoardColumn: React.FC<Props> = ({columnId}) => {
-    const {fetchCards, createCard} = useCards();
+    const {fetchCards, createCard} = useCards(useShallow(({fetchCards, createCard}) => ({fetchCards, createCard})));
     const cardsInColumn = useCards(getSortedCardsInColumn(columnId));
-    const {openModal} = useModals();
+    const openModal = useModals(({openModal}) => openModal);
     const [filterTagId, setFilterTagId] = useState<Tag["id"]|null>(null);
 
     useEffect(() => {

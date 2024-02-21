@@ -8,7 +8,7 @@ type Props = {
 
 const Tooltip: React.FC<Props> = ({placement = "top", tip, children, style}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const arrowRef = useRef(null);
+    const arrowRef = useRef<SVGSVGElement>(null);
     const {refs, floatingStyles, context} = useFloating({
         placement,
         open: isOpen,

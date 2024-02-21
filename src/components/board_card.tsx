@@ -11,7 +11,7 @@ type Props = {
 };
 
 const BoardCard: React.FC<Props> = ({cardId}) => {
-    const {openModal} = useModals();
+    const openModal = useModals(({openModal}) => openModal);
     const card = useCards(getCard(cardId));
 
     if (!card) {

@@ -9,7 +9,7 @@ type Props = {
 };
 
 const LeaveBoardModal: React.FC<Props> = ({boardId}) => {
-    const {leaveBoard} = useBoards();
+    const leaveBoard = useBoards(({leaveBoard}) => leaveBoard);
 
     const handleLeaveBoard = (): void => {
         leaveBoard(boardId);

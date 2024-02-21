@@ -19,7 +19,7 @@ type Props = ({
 
 const BoardTag: React.FC<Props> = ({tag: partialTag, tagId, isRemovable, cardId}) => {
     const storeTag = useTags(getTag(tagId ?? 0));
-    const {removeCardTag} = useCards();
+    const removeCardTag = useCards(({removeCardTag}) => removeCardTag);
     const tag = partialTag ?? storeTag;
 
     if (!tag) {

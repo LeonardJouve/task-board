@@ -15,7 +15,7 @@ type Props = {
 
 const BoardColumnHeaderActions: React.FC<Props> = ({columnId, handleNewCard, filterTagId, setFilterTagId}) => {
     const {formatMessage} = useIntl();
-    const {openModal} = useModals();
+    const openModal = useModals(({openModal}) => openModal);
     const cardsInColumn = useCards(getCardsInColumn(columnId));
     const tagsInCards = useTags(getTagsInCards(cardsInColumn));
 

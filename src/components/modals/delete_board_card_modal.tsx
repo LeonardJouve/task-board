@@ -9,7 +9,7 @@ type Props = {
 };
 
 const DeleteBoardCardModal: React.FC<Props> = ({cardId}) => {
-    const {deleteCard} = useCards();
+    const deleteCard = useCards(({deleteCard}) => deleteCard);
 
     const handleDeleteCard = (): void => {
         deleteCard(cardId);

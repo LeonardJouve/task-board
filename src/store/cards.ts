@@ -110,6 +110,7 @@ const useCards = create<CardState>((set) => ({
     moveCard: async (cardId, columnId, nextId): ActionResult<Card> => {
         let isSameCard = false;
 
+        const modifiedCards: Card[] = [];
         set((state) => {
             let newState = state;
 
@@ -123,14 +124,17 @@ const useCards = create<CardState>((set) => ({
 
             const previousCard = cards.find((card) => card.nextId === cardId);
             if (previousCard && currentCard) {
+                modifiedCards.push(previousCard);
                 newState = setCard(state, {
                     ...previousCard,
                     nextId: currentCard.nextId,
                 });
             }
 
+
             const beforeNextCard = nextId === null ? cards.find((card) => card.columnId === columnId && card.nextId === null) : cards.find((card) => card.nextId === nextId);
             if (beforeNextCard) {
+                modifiedCards.push(beforeNextCard);
                 newState = setCard(newState, {
                     ...beforeNextCard,
                     nextId: cardId,
@@ -138,6 +142,7 @@ const useCards = create<CardState>((set) => ({
             }
 
             if (currentCard) {
+                modifiedCards.push(currentCard);
                 newState = setCard(newState, {
                     ...currentCard,
                     nextId,
@@ -155,6 +160,16 @@ const useCards = create<CardState>((set) => ({
         const {error, data} = await Rest.moveCard(cardId, columnId, nextId);
 
         if (error) {
+            set((state) => {
+                let newState = {...state};
+                for (const oldCard of modifiedCards) {
+                    newState = setCard(newState, oldCard);
+                }
+
+
+                return newState;
+            });
+
             return null;
         }
 

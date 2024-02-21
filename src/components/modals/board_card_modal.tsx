@@ -1,5 +1,6 @@
 import React from "react";
 import {FormattedMessage, useIntl} from "react-intl";
+import {useShallow} from "zustand/react/shallow";
 import useCards, {getCard} from "@store/cards";
 import useUsers from "@store/users";
 import useModals from "@store/modals";
@@ -18,10 +19,10 @@ type Props = {
 
 const BoardCardModal: React.FC<Props> = ({cardId}) => {
     const {formatMessage} = useIntl();
-    const {updateCard, joinCard, leaveCard} = useCards();
+    const {updateCard, joinCard, leaveCard} = useCards(useShallow(({updateCard, joinCard, leaveCard}) => ({updateCard, joinCard, leaveCard})));
     const card = useCards(getCard(cardId));
-    const {me} = useUsers();
-    const {openModal} = useModals();
+    const me = useUsers(({me}) => me);
+    const openModal = useModals(({openModal}) => openModal);
 
     if (!card || !me) {
         return null;

@@ -1,10 +1,11 @@
 import React, {useEffect} from "react";
+import {useShallow} from "zustand/react/shallow";
 import useBoards from "@store/boards";
 import BoardPreview from "@components/board_preview";
 import AddItem from "@components/add_item";
 
 const SelectBoard: React.FC = () => {
-    const {boards, createBoard, fetchBoards} = useBoards();
+    const {boards, createBoard, fetchBoards} = useBoards(useShallow(({boards, createBoard, fetchBoards}) => ({boards, createBoard, fetchBoards})));
 
     useEffect(() => {
         fetchBoards();

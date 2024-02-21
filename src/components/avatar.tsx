@@ -18,7 +18,7 @@ type Props = {
 } & Pick<React.HtmlHTMLAttributes<HTMLDivElement>, "style">;
 
 const Avatar: React.FC<Props> = ({userId, style, size = Size.M, showTooltip = true}) => {
-    const {fetchUser} = useUsers();
+    const fetchUser = useUsers(({fetchUser}) => fetchUser);
     const user = useUsers(getUser(userId));
     const [hasError, setHasError] = useState<boolean>(false);
 

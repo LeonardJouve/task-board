@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import {useShallow} from "zustand/react/shallow";
 import {useNavigate} from "react-router-dom";
 import {FormattedMessage, useIntl} from "react-intl";
 import useBoards, {getCurrentBoard} from "@store/boards";
@@ -11,10 +12,10 @@ import {ModalId, type Board} from "@typing/store";
 const BoardSelector: React.FC = () => {
     const {formatMessage} = useIntl();
     const navigate = useNavigate();
-    const {boards, fetchBoards} = useBoards();
+    const {boards, fetchBoards} = useBoards(useShallow(({boards, fetchBoards}) => ({boards, fetchBoards})));
     const board = useBoards(getCurrentBoard());
-    const {me} = useUsers();
-    const {openModal} = useModals();
+    const me = useUsers(({me}) => me);
+    const openModal = useModals(({openModal}) => openModal);
 
     useEffect(() => {
         fetchBoards();

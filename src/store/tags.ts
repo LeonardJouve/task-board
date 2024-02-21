@@ -95,7 +95,7 @@ const removeTag = (state: TagState, tagId: Tag["id"]): TagState => {
 };
 
 export const getTagsInCurrentBoard = () => (state: TagState): Tag[] => {
-    const {currentBoardId} = useBoards();
+    const currentBoardId = useBoards(({currentBoardId}) => currentBoardId);
 
     return Object.values(state.tags)
         .filter((tag) => tag.boardId === currentBoardId);

@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ColumnPreview: React.FC<Props> = ({columnId}) => {
-    const {fetchCards} = useCards();
+    const fetchCards = useCards(({fetchCards}) => fetchCards);
     const cardsInColumn = useCards(getSortedCardsInColumn(columnId));
     const column = useColumns(getColumn(columnId));
 

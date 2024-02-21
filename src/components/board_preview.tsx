@@ -17,9 +17,9 @@ type Props = {
 const BoardPreview: React.FC<Props> = ({boardId}) => {
     const {formatMessage} = useIntl();
     const navigate = useNavigate();
-    const {updateBoard} = useBoards();
+    const updateBoard = useBoards(({updateBoard}) => updateBoard);
     const board = useBoards(getBoard(boardId));
-    const {fetchColumns} = useColumns();
+    const fetchColumns = useColumns(({fetchColumns}) => fetchColumns);
     const boardColumns = useColumns(getSortedColumnsInBoard(boardId));
     const [isHover, setIsHover] = useState<boolean>(false);
 

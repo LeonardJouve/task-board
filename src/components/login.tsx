@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {useShallow} from "zustand/react/shallow";
 import {Link, Navigate} from "react-router-dom";
 import {FormattedMessage, type MessageDescriptor} from "react-intl";
 import Rest from "@api/rest";
@@ -6,8 +7,8 @@ import useAuth from "@store/auth";
 import useUsers from "@store/users";
 
 const Login: React.FC = () => {
-    const {isLoggedIn, setIsLoggedIn} = useAuth();
-    const {fetchMe} = useUsers();
+    const {isLoggedIn, setIsLoggedIn} = useAuth(useShallow(({isLoggedIn, setIsLoggedIn}) => ({isLoggedIn, setIsLoggedIn})));
+    const fetchMe = useUsers(({fetchMe}) => fetchMe);
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<MessageDescriptor & {hasError: boolean}>({hasError: false});

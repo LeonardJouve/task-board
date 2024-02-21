@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useShallow} from "zustand/react/shallow";
 import {FormattedMessage} from "react-intl";
 import Creatable from "react-select/creatable";
 import type {ActionMeta, ClassNamesConfig, GroupBase, MultiValue, MultiValueProps, StylesConfig} from "react-select";
@@ -18,6 +19,7 @@ type Props = {
 type SelectOption = {
     label: string;
     value: Tag["id"];
+    color: Tag["color"];
 };
 
 type SelectMultiValueProps = Pick<MultiValueProps<SelectOption, true, GroupBase<SelectOption>>, "data"> & {cardId: Card["id"]};
@@ -61,16 +63,17 @@ const styles: StylesConfig<SelectOption, true> = {
     }),
 };
 
-const formatTag = ({name, id}: Tag): SelectOption => ({
+const formatTag = ({name, id, color}: Tag): SelectOption => ({
     label: name,
     value: id,
+    color,
 });
 
 const AddTagPopover: React.FC<Props> = ({cardId}) => {
-    const {currentBoardId} = useBoards();
-    const {addCardTag, removeCardTag} = useCards();
+    const currentBoardId = useBoards(({currentBoardId}) => currentBoardId);
+    const {addCardTag, removeCardTag} = useCards(useShallow(({addCardTag, removeCardTag}) => ({addCardTag, removeCardTag})));
     const card = useCards(getCard(cardId));
-    const {defaultColor, fetchTags, createTag} = useTags();
+    const {defaultColor, fetchTags, createTag} = useTags(useShallow(({defaultColor, fetchTags, createTag}) => ({defaultColor, fetchTags, createTag})));
     const tagsInCard = useTags(getTagsInCards(card ? [card] : []));
     const tagsInBoard = useTags(getTagsInCurrentBoard());
     const [color, setColor] = useState<Color>(hexToRgb(defaultColor));
@@ -147,6 +150,19 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
         </div>
     );
 
+    const formatOptionLabel = (tag: SelectOption & {__isNew__?: boolean}): React.ReactNode => tag.__isNew__ ? ( // eslint-disable-line no-underscore-dangle
+        <div>
+            {tag.label}
+        </div>
+    ) : (
+        <div tabIndex={-1}>
+            <BoardTag tag={{
+                name: tag.label,
+                color: tag.color,
+            }}/>
+        </div>
+    );
+
     const isValidNewOption = (input: string): boolean => input.length !== 0 && !options.some((option) => option.label === input);
 
     const options: SelectOption[] = tagsInBoard.filter(({id}) => !card.tagIds.includes(id))
@@ -186,6 +202,7 @@ const AddTagPopover: React.FC<Props> = ({cardId}) => {
                 onChange={handleChange}
                 onCreateOption={handleCreateTag}
                 formatCreateLabel={formatCreateLabel}
+                formatOptionLabel={formatOptionLabel}
                 components={{
                     MultiValue: ({data}) => (
                         <RenderSelectMultiValue

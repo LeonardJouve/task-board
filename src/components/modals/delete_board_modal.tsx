@@ -9,7 +9,7 @@ type Props = {
 };
 
 const DeleteBoardModal: React.FC<Props> = ({boardId}) => {
-    const {deleteBoard} = useBoards();
+    const deleteBoard = useBoards(({deleteBoard}) => deleteBoard);
 
     const handleDeleteBoard = (): void => {
         deleteBoard(boardId);

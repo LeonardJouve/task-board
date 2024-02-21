@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import {useShallow} from "zustand/react/shallow";
 import {DragDropContext, Draggable, Droppable, type DropResult} from "@hello-pangea/dnd";
 import useColumns, {getSortedColumnsInCurrentBoard} from "@store/columns";
 import useBoards from "@store/boards";
@@ -21,11 +22,11 @@ export enum DragDropPrefix {
 }
 
 const Board: React.FC = () => {
-    const {currentBoardId} = useBoards();
-    const {fetchColumns, createColumn, moveColumn} = useColumns();
+    const currentBoardId = useBoards(({currentBoardId}) => currentBoardId);
+    const {fetchColumns, createColumn, moveColumn} = useColumns(useShallow(({fetchColumns, createColumn, moveColumn}) => ({fetchColumns, createColumn, moveColumn})));
     const boardColumns = useColumns(getSortedColumnsInCurrentBoard());
     const cardsState = useCards();
-    const {fetchTags} = useTags();
+    const fetchTags = useTags(({fetchTags}) => fetchTags);
 
     useEffect(() => {
         if (!currentBoardId) {
