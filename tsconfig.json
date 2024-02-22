@@ -19,6 +19,7 @@
             "@api/*": ["./src/api/*"],
             "@typing/*": ["./src/types/*"],
             "@utils/*": ["./src/utils/*"],
+            "@icons/*": ["./src/icons/*"],
         },
     },
 }
