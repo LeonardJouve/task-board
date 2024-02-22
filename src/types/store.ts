@@ -78,3 +78,8 @@ export type AppError = {
     message: MessageDescriptor;
     action?: () => void;
 } | null;
+
+export enum Theme {
+    LIGHT,
+    DARK,
+}
