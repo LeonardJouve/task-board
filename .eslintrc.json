@@ -6,5 +6,11 @@
     },
     "parserOptions": {
         "project": "./tsconfig.json"
+    },
+    "settings": {
+        "tailwindcss": {
+            "config": "src/tailwind.config.ts",
+            "whitelist": ["icon-(.*)"]
+        }
     }
 }

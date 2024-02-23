@@ -6,7 +6,8 @@
     "run": "vite -c src/vite.config.ts",
     "build": "tsc && npm run webfont && tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --minify && vite -c src/vite.config.ts build",
     "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch",
-    "webfont": "webfont-generator --out dist/icons --icons src/icons"
+    "webfont": "webfont-generator --out dist/icons --icons src/icons",
+    "lint": "eslint 'src/**/*.{ts,tsx}'"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.1",
@@ -25,7 +26,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
     "eslint": "^8.45.0",
-    "eslint-config-leonardjouve": "^1.0.19",
+    "eslint-config-leonardjouve": "^1.0.22",
     "tailwindcss": "^3.3.3",
     "tsconfig-leonardjouve": "^1.0.1",
     "typescript": "^5.0.2",
