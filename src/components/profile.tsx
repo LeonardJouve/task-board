@@ -1,25 +1,23 @@
 import React from "react";
+import {useShallow} from "zustand/react/shallow";
 import {useIntl} from "react-intl";
-import {useNavigate} from "react-router-dom";
 import useUsers from "@store/users";
 import Avatar, {Size} from "@components/avatar";
 import Menu, {MenuTrigger} from "@components/menu";
 import useAuth from "@store/auth";
+import type {ActionResult, Status} from "@typing/rest";
 
 const Profile: React.FC = () => {
     const {formatMessage} = useIntl();
-    const navigate = useNavigate();
-    const me = useUsers(({me}) => me);
-    const setIsLoggedIn = useAuth(({setIsLoggedIn}) => setIsLoggedIn);
+    const {me, fetchMe} = useUsers(useShallow(({me, fetchMe}) => ({me, fetchMe})));
+    const logout = useAuth(({logout}) => logout);
 
     if (!me) {
+        fetchMe();
         return null;
     }
 
-    const handleDisconnect = (): void => {
-        setIsLoggedIn(false);
-        navigate("/");
-    };
+    const handleDisconnect = async (): ActionResult<Status> => await logout();
 
     return (
         <Menu
