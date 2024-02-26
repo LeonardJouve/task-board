@@ -6,6 +6,7 @@ import type {Board, User} from "@typing/store";
 type BoardState = {
     currentBoardId: Board["id"]|null;
     boards: Record<Board["id"], Board>;
+    resetBoards: () => void;
     setCurrentBoardId: (boardId: BoardState["currentBoardId"]) => void;
     addBoard: (board: Board) => void;
     addBoards: (boards: Board[]) => void;
@@ -23,6 +24,7 @@ type BoardState = {
 const useBoards = create<BoardState>((set) => ({
     currentBoardId: null,
     boards: {},
+    resetBoards: (): void => set(() => ({boards: {}})),
     setCurrentBoardId: (currentBoardId): void => set(() => ({currentBoardId})),
     addBoard: (board): void => set((state) => setBoard(state, board)),
     addBoards: (boards): void => set((state) => boards.reduce(setBoard, state)),

@@ -7,6 +7,7 @@ import type {Board, Column} from "@typing/store";
 
 type ColumnState = {
     columns: Record<Column["id"], Column>;
+    resetColumns: () => void;
     addColumn: (column: Column) => void;
     addColumns: (columns: Column[]) => void;
     removeColumn: (columnId: Column["id"]) => void;
@@ -21,6 +22,7 @@ type ColumnState = {
 
 const useColumns = create<ColumnState>((set) => ({
     columns: {},
+    resetColumns: (): void => set(() => ({columns: {}})),
     addColumn: (column): void => set((state) => setColumn(state, column)),
     addColumns: (columns): void => set((state) => columns.reduce(setColumn, state)),
     removeColumn: (columnId): void => set((state) => removeColumn(state, columnId)),

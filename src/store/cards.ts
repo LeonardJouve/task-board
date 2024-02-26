@@ -5,6 +5,7 @@ import type {UpdateCard, CreateCard, Status} from "@typing/rest";
 
 type CardState = {
     cards: Record<Card["id"], Card>;
+    resetCards: () => void;
     addCard: (card: Card) => void;
     addCards: (cards: Card[]) => void;
     removeCard: (cardId: Card["id"]) => void;
@@ -23,6 +24,7 @@ type CardState = {
 
 const useCards = create<CardState>((set) => ({
     cards: {},
+    resetCards: (): void => set(() => ({cards: {}})),
     addCard: (card): void => set((state) => setCard(state, card)),
     addCards: (cards): void => set((state) => cards.reduce(setCard, state)),
     removeCard: (cardId): void => set((state) => removeCard(state, cardId)),

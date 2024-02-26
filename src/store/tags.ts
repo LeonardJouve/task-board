@@ -7,6 +7,7 @@ import type {CreateTag, Status, UpdateTag} from "@typing/rest";
 type TagState = {
     defaultColor: string;
     tags: Record<Tag["id"], Tag>;
+    resetTags: () => void;
     addTag: (tag: Tag) => void;
     addTags: (tags: Tag[]) => void;
     removeTag: (tagId: Tag["id"]) => void;
@@ -21,6 +22,7 @@ type TagState = {
 const useTags = create<TagState>((set) => ({
     defaultColor: "FFFFFF",
     tags: {},
+    resetTags: (): void => set(() => ({tags: {}})),
     addTag: (tag): void => set((state) => setTag(state, tag)),
     addTags: (tags): void => set((state) => tags.reduce(setTag, state)),
     removeTag: (tagId): void => set((state) => removeTag(state, tagId)),

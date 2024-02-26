@@ -6,6 +6,8 @@ import type {ActionResult} from "@typing/rest";
 type UserState = {
     me?: User;
     users: Record<User["id"], User>;
+    resetMe: () => void;
+    resetUsers: () => void;
     setMe: (me: User) => void;
     addUser: (user: User) => void;
     addUsers: (users: User[]) => void;
@@ -19,6 +21,8 @@ type UserState = {
 const useUsers = create<UserState>((set) => ({
     users: {},
     setMe: (me): void => set(() => ({me})),
+    resetMe: (): void => set(() => ({me: undefined})),
+    resetUsers: (): void => set(() => ({users: {}})),
     addUser: (user): void => set((state) => addUser(state, user)),
     addUsers: (users): void => set((state) => users.reduce(addUser, state)),
     removeUser: (userId): void => set((state: UserState) => removeUser(state, userId)),
