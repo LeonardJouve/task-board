@@ -7,7 +7,7 @@ export const BoardProvider: FC<PropsWithChildren> = ({children}) => {
     const params = useParams();
     const {currentBoardId, setCurrentBoardId} = useBoards(useShallow(({currentBoardId, setCurrentBoardId}) => ({currentBoardId, setCurrentBoardId})));
 
-    useEffect(() => {
+    useEffect((): (() => void)|void => {
         const boardId = Number(params["boardId"]) || null;
 
         if (boardId === currentBoardId) {
@@ -15,6 +15,8 @@ export const BoardProvider: FC<PropsWithChildren> = ({children}) => {
         }
 
         setCurrentBoardId(boardId);
+
+        return (): void => setCurrentBoardId(null); // eslint-disable-line consistent-return
     }, [params, location]);
 
     return children;

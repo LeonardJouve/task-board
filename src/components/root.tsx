@@ -6,15 +6,21 @@ import Router from "@components/router";
 import Modals from "@components/modals/modals";
 import Rest from "@api/rest";
 import useErrors from "@store/errors";
+import useAuth from "@store/auth";
 
 const root = document.getElementById("root");
 
 const Root: React.FC = () => {
     const setError = useErrors(({setError}) => setError);
+    const setTokensExpiration = useAuth(({setTokensExpiration}) => setTokensExpiration);
 
     useEffect(() => {
         Rest.onError = (message: MessageDescriptor): void => setError({message});
     }, [setError]);
+
+    useEffect(() => {
+        Rest.onRefresh = setTokensExpiration;
+    }, [setTokensExpiration]);
 
     return (
         <React.StrictMode>

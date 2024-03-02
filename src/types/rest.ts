@@ -70,4 +70,17 @@ export type UpdateTag = {
     color?: string;
 };
 
+export type Login = {
+    email: string;
+    password: string;
+};
+
+export type Register = {
+    name: string;
+    email: string;
+    username: string;
+    password: string;
+    passwordConfirm: string;
+};
+
 export type ActionResult<T> = Promise<T|null>;

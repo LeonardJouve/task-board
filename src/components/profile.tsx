@@ -4,20 +4,19 @@ import {useIntl} from "react-intl";
 import useUsers from "@store/users";
 import Avatar, {Size} from "@components/avatar";
 import Menu, {MenuTrigger} from "@components/menu";
-import useAuth from "@store/auth";
-import type {ActionResult, Status} from "@typing/rest";
+import {useDisconnect} from "@store/auth";
 
 const Profile: React.FC = () => {
     const {formatMessage} = useIntl();
     const {me, fetchMe} = useUsers(useShallow(({me, fetchMe}) => ({me, fetchMe})));
-    const logout = useAuth(({logout}) => logout);
+    const disconnect = useDisconnect();
 
     if (!me) {
         fetchMe();
         return null;
     }
 
-    const handleDisconnect = async (): ActionResult<Status> => await logout();
+    const handleDisconnect = (): void => disconnect();
 
     return (
         <Menu

@@ -1,14 +1,17 @@
+import {getTokenExpiration, isTimestampExpired, willTimestampExpire} from "@utils/jwt";
 import type {MessageDescriptor} from "react-intl";
 import type {User, Board, Column, Card, Tag} from "@typing/store";
-import type {RestResponse, Tokens, CsrfToken, CreateBoard, UpdateBoard, CreateColumn, UpdateColumn, CreateCard, UpdateCard, CreateTag, UpdateTag, Status} from "@typing/rest";
+import type {RestResponse, Tokens, CsrfToken, CreateBoard, UpdateBoard, CreateColumn, UpdateColumn, CreateCard, UpdateCard, CreateTag, UpdateTag, Status, Login, Register} from "@typing/rest";
 
 class RestClient {
     public onError: ((message: MessageDescriptor) => void)|null = null;
+    public onRefresh: ((accessTokenExpiration: number, refreshTokenExpiration: number) => void)|null = null;
     private readonly baseUrl: string;
     private readonly maxRetry: number = 5;
-    private csrfToken: string|null = null;
-    private accessToken: string|null = null;
-    // private refreshToken: string|null = null;
+    private accessTokenExpiration: number = 0;
+    private refreshTokenExpiration: number = 0;
+    private isRefreshingToken: boolean = false;
+    private refreshPromise: RestResponse<Tokens>|Promise<void> = Promise.resolve();
 
     constructor() {
         this.baseUrl = import.meta.env.VITE_API_URL;
@@ -16,47 +19,54 @@ class RestClient {
 
     async fetch<T>(url: string, options: RequestInit, apiTokenRequired = true, retry = 0): RestResponse<T> {
         if (retry > this.maxRetry) {
+            const data = {
+                id: "api.rest.error.retry_exceeded",
+                defaultMessage: "Failed to fetch server ressources. Try again later.",
+            };
+
+            this.onError?.(data);
+
             return {
                 error: true,
-                data: {
-                    id: "api.rest.error.retry_exceeded",
-                    defaultMessage: "Failed to fetch server ressources. Try again later.",
-                },
+                data,
                 url,
             };
         }
 
-        if (apiTokenRequired && !document.cookie.includes("access_token") && !this.accessToken) {
-            return {
-                error: true,
-                data: {
+        if (apiTokenRequired) {
+            if (isTimestampExpired(this.accessTokenExpiration) && isTimestampExpired(this.refreshTokenExpiration)) {
+                const data = {
                     id: "api.rest.error.token",
                     defaultMessage: "Unexpetceted error. Please reconnect.",
-                },
-                url,
-            };
-        }
+                };
 
-        if (options.method !== "GET" && options.method !== "HEAD" && !this.csrfToken) {
-            const {error} = await this.getCsrfToken();
+                this.onError?.(data);
 
-            if (error) {
                 return {
                     error: true,
-                    data: {
-                        id: "api.rest.error.cannot_retreive_csrf_token",
-                        defaultMessage: "Could not retreive a csrf token. Try again later.",
-                    },
+                    data,
                     url,
                 };
+            }
+
+            if (this.isRefreshingToken) {
+                await this.refreshPromise;
+            }
+
+            if (willTimestampExpire(this.accessTokenExpiration) && !isTimestampExpired(this.refreshTokenExpiration)) {
+                const promise = this.refresh();
+                this.refreshPromise = promise;
+                const result = await promise;
+
+                if (result.error) {
+                    return result;
+                }
             }
         }
 
         const headers: RequestInit["headers"] = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            ...this.csrfToken && {"X-CSRF-Token": this.csrfToken},
-            ...apiTokenRequired && this.accessToken && {"Authorization": `Bearer ${this.accessToken}`},
             ...options.headers,
         };
 
@@ -70,12 +80,16 @@ class RestClient {
         try {
             data = await result.json() as T;
         } catch (error) {
+            data = {
+                id: "api.rest.error.invalid_json",
+                defaultMessage: "Received invalid response from the server.",
+            };
+
+            this.onError?.(data);
+
             return {
                 error: true,
-                data: {
-                    id: "api.rest.error.invalid_json",
-                    defaultMessage: "Received invalid response from the server.",
-                },
+                data,
                 url,
             };
         }
@@ -86,7 +100,6 @@ class RestClient {
             data = data as MessageDescriptor;
 
             if (status === 403 && data.id === "api.rest.error.invalid_csrf") {
-                this.csrfToken = null;
                 const {error} = await this.getCsrfToken();
 
                 if (!error) {
@@ -94,9 +107,11 @@ class RestClient {
                 }
             }
 
-            // TODO: handle unauthorized
+            if (data.id && data.defaultMessage) {
+                this.onError?.(data);
+            }
 
-            this.onError?.(data);
+            // TODO: handle unauthorized
 
             return {
                 error: true,
@@ -146,57 +161,67 @@ class RestClient {
         return `${this.getRestRoute()}/users${userId ? `/${userId}` : ""}`;
     }
 
+    setTokensExpiration(accessTokenExpiration: number, refreshTokenExpiration: number): void {
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
+    }
+
     async getCsrfToken(): RestResponse<CsrfToken> {
-        const result = await this.fetch<CsrfToken>(
+        return await this.fetch<CsrfToken>(
             `${this.getAuthRoute()}/csrf`,
             {method: "GET"},
             false,
         );
-
-        if (!result.error) {
-            this.csrfToken = result.data.csrfToken;
-        }
-
-        return result;
     }
 
-    async login(email: string, password: string): RestResponse<Tokens> {
-        const result = await this.fetch<Tokens>(
-            `${this.getAuthRoute()}/login`,
-            {method: "POST", body: JSON.stringify({email, password})},
-            false,
-        );
-        const {error, data} = result;
-
-        if (!error) {
-            this.accessToken = data.accessToken;
-            // this.refreshToken = data.refreshToken;
-        }
-
-        return result;
-    }
-
-    // TODO API: return JWT
-    async register(name: string, email: string, username: string, password: string, passwordConfirm: string): RestResponse<Tokens> {
+    async login(credentials: Login): RestResponse<Tokens> {
         return await this.fetch<Tokens>(
-            `${this.getAuthRoute()}/register`,
-            {method: "POST", body: JSON.stringify({name, email, username, password, passwordConfirm})},
+            `${this.getAuthRoute()}/login`,
+            {method: "POST", body: JSON.stringify(credentials)},
             false,
         );
+    }
+
+    async register(credentials: Register): RestResponse<Tokens> {
+        const result = await this.fetch<User>(
+            `${this.getAuthRoute()}/register`,
+            {method: "POST", body: JSON.stringify(credentials)},
+            false,
+        );
+
+        if (result.error) {
+            return result;
+        }
+
+        return await this.login(credentials);
     }
 
     async refresh(): RestResponse<Tokens> {
-        return await this.fetch<Tokens>(
+        this.isRefreshingToken = true;
+
+        const result = await this.fetch<Tokens>(
             `${this.getAuthRoute()}/refresh`,
             {method: "GET"},
         );
+
+        const {error, data} = result;
+        if (!error) {
+            const {accessToken, refreshToken} = data;
+            this.onRefresh?.(getTokenExpiration(accessToken), getTokenExpiration(refreshToken));
+        }
+
+        this.isRefreshingToken = false;
+
+        return result;
     }
 
     async logout(): RestResponse<Status> {
-        return await this.fetch<Status>(
+        const result = await this.fetch<Status>(
             `${this.getAuthRoute()}/logout`,
             {method: "GET"},
         );
+
+        return result;
     }
 
     async getBoard(boardId: Board["id"]): RestResponse<Board> {

@@ -8,12 +8,27 @@ import SelectBoard from "@components/select_board";
 import Header from "@components/header";
 import BoardProvider from "@components/board_provider";
 import ErrorBanner from "@components/error_banner";
+import Auth from "@components/auth";
 
 const Router: React.FC = () => (
     <BrowserRouter>
         <Routes>
-            <Route path="/login" element={<Login/>} />
-            <Route path="/register" element={<Register/>} />
+            <Route
+                path="/login"
+                element={(
+                    <Auth>
+                        <Login/>
+                    </Auth>
+                )}
+            />
+            <Route
+                path="/register"
+                element={(
+                    <Auth>
+                        <Register/>
+                    </Auth>
+                )}
+            />
             <Route
                 path="/*"
                 element={

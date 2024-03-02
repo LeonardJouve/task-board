@@ -1,90 +1,85 @@
 import React, {useState} from "react";
 import {useShallow} from "zustand/react/shallow";
 import {Link, Navigate} from "react-router-dom";
-import {FormattedMessage, type MessageDescriptor} from "react-intl";
-import Rest from "@api/rest";
+import {FormattedMessage} from "react-intl";
 import useAuth from "@store/auth";
-import useUsers from "@store/users";
+import useErrors from "@store/errors";
 
 const Login: React.FC = () => {
-    const {isLoggedIn, setIsLoggedIn} = useAuth(useShallow(({isLoggedIn, setIsLoggedIn}) => ({isLoggedIn, setIsLoggedIn})));
-    const fetchMe = useUsers(({fetchMe}) => fetchMe);
+    const {isLoggedIn, login} = useAuth(useShallow(({isLoggedIn, login}) => ({isLoggedIn, login})));
+    const {error, setError} = useErrors(useShallow(({error, setError}) => ({error, setError})));
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<MessageDescriptor & {hasError: boolean}>({hasError: false});
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value);
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value);
 
-    const handleSubmit = async (event: React.FormEvent): Promise<void> => {
+    const handleSubmit = (event: React.FormEvent): void => {
         event.preventDefault();
-
-        const {error: hasError, data} = await Rest.login(email, password);
-
-        if (hasError) {
-            setError({
-                ...data,
-                hasError,
-            });
-            return;
-        }
-
-        fetchMe();
-
-        setIsLoggedIn(true);
+        setError(null);
+        login({email, password});
     };
 
     if (isLoggedIn) {
-        return <Navigate to="/"/>;
+        return <Navigate to="/" replace={true}/>;
     }
 
     return (
-        <div className="flex flex-1 justify-center items-center">
-            <div className="flex flex-col bg-slate-100 p-4">
-                <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-                    <label className="flex flex-col gap-1">
-                        <FormattedMessage
-                            id="components.auth.email"
-                            defaultMessage="Email"
-                        />
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={handleEmailChange}
-                        />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                        <FormattedMessage
-                            id="components.auth.password"
-                            defaultMessage="Password"
-                        />
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                    </label>
-                    <button type="submit">
-                        <FormattedMessage
-                            id="components.auth.login"
-                            defaultMessage="Login"
-                        />
-                    </button>
-                    {error.hasError ? (
-                        <span className="text-red-500">
-                            <FormattedMessage {...error}/>
-                        </span>
-                    ) : null}
-                </form>
-                <Link to="/register">
+        <form
+            className="flex flex-col gap-5 items-center"
+            onSubmit={handleSubmit}
+        >
+            <div className="flex flex-col gap-3">
+                <label className="flex flex-col gap-1">
                     <FormattedMessage
-                        id="components.auth.register"
-                        defaultMessage="Register"
+                        id="components.auth.email"
+                        defaultMessage="Email"
                     />
-                </Link>
+                    <input
+                        className="rounded px-2 py-1 background-3 outline-none"
+                        type="email"
+                        value={email}
+                        onChange={handleEmailChange}
+                    />
+                </label>
+                <label className="flex flex-col gap-1">
+                    <FormattedMessage
+                        id="components.auth.password"
+                        defaultMessage="Password"
+                    />
+                    <input
+                        className="rounded px-2 py-1 background-3 outline-none"
+                        type="password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                    />
+                </label>
             </div>
-        </div>
+            <button
+                className="background-5 rounded px-2 py-1 color-3 hover"
+                type="submit"
+            >
+                <FormattedMessage
+                    id="components.auth.login"
+                    defaultMessage="Login"
+                />
+            </button>
+            {error ? (
+                <span className="color-dangerous background-dangerous-1 px-2 py-1 rounded">
+                    <FormattedMessage {...error.message}/>
+                </span>
+            ) : null}
+            <Link
+                className="self-start hover:underline"
+                to="/register"
+            >
+                <FormattedMessage
+                    id="components.auth.register"
+                    defaultMessage="Register"
+                />
+            </Link>
+        </form>
     );
 };
 
