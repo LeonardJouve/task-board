@@ -101,7 +101,7 @@ const BoardSelector: React.FC = () => {
                     placement="bottom-start"
                     triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
                     button={(
-                        <span className="px-2 py-1 w-full text-start whitespace-nowrap overflow-hidden text-ellipsis">
+                        <span className="px-2 py-1 w-full text-start truncate">
                             {board ? board.name || formatMessage({
                                 id: "components.default_board.name",
                                 defaultMessage: "Name",
@@ -122,7 +122,7 @@ const BoardSelector: React.FC = () => {
                     className="max-w-[30%]"
                     placement="bottom-start"
                     triggers={[MenuTrigger.CLICK, MenuTrigger.DISMISS]}
-                    button={<i className="px-1 py-1 icon-dot-menu before:duration-300 before:transition-transform"/>}
+                    button={<i className="p-1 icon-dot-menu before:duration-300 before:transition-transform"/>}
                     items={actionItems}
                 />
             )}

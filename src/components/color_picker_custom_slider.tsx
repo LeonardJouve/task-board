@@ -85,7 +85,7 @@ const ColorPickerCustomSlider: React.FC<Props> = ({sliderBackground, thumbBackgr
         >
             <div
                 ref={thumbRef}
-                className="absolute w-5 h-5 border-2 border-color-1 rounded-[50%] top-1/2 -translate-y-1/2 -translate-x-1/2"
+                className="absolute size-5 border-2 border-color-1 rounded-[50%] top-1/2 -translate-y-1/2 -translate-x-1/2"
                 style={{
                     background: thumbBackground,
                     marginLeft,

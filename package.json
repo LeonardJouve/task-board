@@ -7,7 +7,7 @@
     "build": "tsc && npm run webfont && tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --minify && vite -c src/vite.config.ts build",
     "tailwind": "tailwindcss -c ./src/tailwind.config.ts -i ./src/css/root.css -o ./dist/css/root.css --watch",
     "webfont": "webfont-generator --out dist/icons --icons src/icons",
-    "lint": "eslint 'src/**/*.{ts,tsx}'"
+    "lint": "eslint \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.1",

@@ -90,7 +90,7 @@ const Menu: React.FC<Props> = ({button, name, items, triggers = [MenuTrigger.HOV
                                 <span className="overflow-hidden text-ellipsis ">
                                     {text}
                                 </span>
-                                <i className={`flex mr-0 ml-auto icon-${subItems ? "chevron-right" : isSelected ? "check" : rightDecorator ?? "empty"}`}/>
+                                <i className={`flex mr-0 ml-auto ${subItems ? "icon-chevron-right" : isSelected ? "icon-check" : rightDecorator ?? "icon-empty"}`}/>
                             </li>
                         );
 

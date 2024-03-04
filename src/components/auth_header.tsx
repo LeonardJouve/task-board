@@ -5,11 +5,11 @@ import Favicon from "@icons/favicon.svg";
 
 type Props = React.PropsWithChildren;
 
-const Auth: React.FC<Props> = ({children}) => (
+const AuthHeader: React.FC<Props> = ({children}) => (
     <div className="flex flex-1 flex-col">
         <div className="flex flex-row px-5 py-3 border-color-1 border-b-[1px] background-1 color-1 font-extrabold items-center gap-2">
             <img
-                className="w-8 h-8"
+                className="size-8"
                 src={Favicon}
             />
             <h2 className="text-2xl">
@@ -30,4 +30,4 @@ const Auth: React.FC<Props> = ({children}) => (
     </div>
 );
 
-export default Auth;
+export default AuthHeader;

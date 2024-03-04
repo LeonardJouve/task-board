@@ -26,7 +26,7 @@ const ColorPickerPreset: React.FC<Props> = ({color, setColor}) => {
             {tagsColors.map((colorPreset) => (
                 <button
                     key={`color-preset-${colorPreset}`}
-                    className={`w-[25px] h-[25px] rounded-[50%] border-[1px] ${colorPreset === hex ? "border-color-1" : "border-transparent"}`}
+                    className={`size-[25px] rounded-[50%] border-[1px] ${colorPreset === hex ? "border-color-1" : "border-transparent"}`}
                     onClick={(): void => handleSelect(colorPreset)}
                     style={{backgroundColor: colorPreset}}
                 />

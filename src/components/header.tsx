@@ -8,7 +8,7 @@ const Header: React.FC = () => (
     <div className="flex flex-row items-center px-5 py-3 border-color-1 border-b-[1px] background-1 color-1 font-extrabold">
         <div className="flex flex-row gap-2 flex-1">
             <img
-                className="w-8 h-8"
+                className="size-8"
                 src={Favicon}
             />
             <BoardSelector/>

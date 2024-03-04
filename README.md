@@ -1,7 +1,6 @@
 # task-board
 
 TODO:
-- eslint fix
 - invite user to board
 - fetch loop
 - websocket

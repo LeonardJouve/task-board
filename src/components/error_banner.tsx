@@ -31,7 +31,7 @@ const ErrorBanner: React.FC = () => {
 
     return (
         <div
-            className="flex flex-row items-center px-2 py-2 background-dangerous-1 color-dangerous justify-center text-2xl gap-1 relative"
+            className="flex flex-row items-center p-2 background-dangerous-1 color-dangerous justify-center text-2xl gap-1 relative"
             onClick={action}
         >
             <i className="icon-danger text-3xl"/>

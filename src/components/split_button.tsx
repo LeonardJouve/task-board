@@ -13,12 +13,12 @@ type Props = {
 const SplitButton: React.FC<Props> = ({left, right, className = ""}) => (
     <div className={`flex flex-row color-1 ${className}`}>
         {left && (
-            <button className="flex flex-1 overflow-hidden left rounded-s-md">
+            <button className="flex flex-1 overflow-hidden rounded-s-md">
                 {left}
             </button>
         )}
         {right && (
-            <button className="flex left rounded-e-md border-s border-color-1">
+            <button className="flex rounded-e-md border-s border-color-1">
                 {right}
             </button>
         )}

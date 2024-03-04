@@ -61,7 +61,7 @@ const Popover: React.FC<Props> = ({isOpen: isOpenProp, setIsOpen: setIsOpenProp,
                     >
                         {isClosable && (
                             <button
-                                className="absolute right-1 top-1 text-2xl leading-2xl color-1"
+                                className="absolute right-1 top-1 text-2xl color-1"
                                 onClick={handleClose}
                             >
                                 <i className="icon-close"/>

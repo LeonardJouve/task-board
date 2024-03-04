@@ -8,7 +8,7 @@ import SelectBoard from "@components/select_board";
 import Header from "@components/header";
 import BoardProvider from "@components/board_provider";
 import ErrorBanner from "@components/error_banner";
-import Auth from "@components/auth";
+import AuthHeader from "@components/auth_header";
 
 const Router: React.FC = () => (
     <BrowserRouter>
@@ -16,17 +16,17 @@ const Router: React.FC = () => (
             <Route
                 path="/login"
                 element={(
-                    <Auth>
+                    <AuthHeader>
                         <Login/>
-                    </Auth>
+                    </AuthHeader>
                 )}
             />
             <Route
                 path="/register"
                 element={(
-                    <Auth>
+                    <AuthHeader>
                         <Register/>
-                    </Auth>
+                    </AuthHeader>
                 )}
             />
             <Route

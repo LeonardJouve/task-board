@@ -30,10 +30,10 @@ const BoardCard: React.FC<Props> = ({cardId}) => {
             className="w-full background-5 rounded flex flex-col gap-1 p-2 overflow-hidden hover cursor-pointer"
             onClick={handleBoardCardModal}
         >
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap px-1 py-0.5 background-4 rounded">
+            <span className="truncate px-1 py-0.5 background-4 rounded">
                 {name}
             </span>
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="truncate">
                 {content}
             </span>
             <div className="flex flex-row gap-2 overflow-hidden">

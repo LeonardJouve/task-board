@@ -76,7 +76,7 @@ const GenericModal: React.FC<Props> = ({id, header, content, closeOnClickOutside
                                 {header}
                             </h2>
                             <button
-                                className="absolute right-1 top-1 text-2xl leading-2xl"
+                                className="absolute right-1 top-1 text-2xl"
                                 onClick={handleCancel}
                             >
                                 <i className="icon-close"/>

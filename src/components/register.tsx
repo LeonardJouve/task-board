@@ -104,7 +104,7 @@ const Register: React.FC = () => {
                 </span>
             ) : null}
             <button
-                className="background-5 rounded px-2 py-1 color-3 hover"
+                className="background-5 rounded px-2 py-1 color-2 hover"
                 type="submit"
             >
                 <FormattedMessage

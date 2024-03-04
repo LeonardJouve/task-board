@@ -66,7 +66,7 @@ const BoardPreview: React.FC<Props> = ({boardId}) => {
                             isEllipsis={true}
                         />
                     </h2>
-                    <span className="flex text-lg overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
+                    <span className="flex text-lg truncate font-semibold">
                         <EditableText
                             content={description}
                             setContent={(updatedDescription): void => handleUpdateBoard({description: updatedDescription})}

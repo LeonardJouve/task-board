@@ -67,7 +67,7 @@ const ColorPickerManual: React.FC<Props> = ({color, setColor}) => {
         <div className="flex flex-row gap-5 color-1">
             <div className="flex flex-row gap-3">
                 <div
-                    className="self-end w-[30px] h-[30px] rounded-[50%]"
+                    className="self-end size-[30px] rounded-[50%]"
                     style={{backgroundColor: "#" + rgbToHex(color)}}
                 />
                 <div className="flex flex-col gap-1">

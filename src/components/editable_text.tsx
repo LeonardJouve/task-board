@@ -93,7 +93,7 @@ const EditableText: React.FC<Props> = ({isEditing: isEditingProp, setIsEditing: 
             />
         )}>
             <span
-                className={`cursor-text ${isEllipsis ? "overflow-hidden whitespace-nowrap text-ellipsis" : ""} ${className}`}
+                className={`cursor-text ${isEllipsis ? "truncate" : ""} ${className}`}
                 onClick={handleEdit}
             >
                 {content || placeholder}
