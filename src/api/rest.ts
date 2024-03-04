@@ -34,29 +34,15 @@ class RestClient {
         }
 
         if (apiTokenRequired) {
-            if (isTimestampExpired(this.accessTokenExpiration) && isTimestampExpired(this.refreshTokenExpiration)) {
-                const data = {
-                    id: "api.rest.error.token",
-                    defaultMessage: "Unexpetceted error. Please reconnect.",
-                };
-
-                this.onError?.(data);
-
-                return {
-                    error: true,
-                    data,
-                    url,
-                };
-            }
-
             if (this.isRefreshingToken) {
                 await this.refreshPromise;
             }
 
             if (willTimestampExpire(this.accessTokenExpiration) && !isTimestampExpired(this.refreshTokenExpiration)) {
-                const promise = this.refresh();
-                this.refreshPromise = promise;
-                const result = await promise;
+                this.refreshPromise = this.refresh();
+                const result = await this.refreshPromise;
+
+                // TODO: handle unauthentified
 
                 if (result.error) {
                     return result;
@@ -73,7 +59,7 @@ class RestClient {
         const result = await fetch(url, {
             ...options,
             headers,
-        } as RequestInit);
+        });
 
 
         let data;
@@ -202,6 +188,7 @@ class RestClient {
         const result = await this.fetch<Tokens>(
             `${this.getAuthRoute()}/refresh`,
             {method: "GET"},
+            false,
         );
 
         const {error, data} = result;

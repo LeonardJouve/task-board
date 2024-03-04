@@ -31,5 +31,5 @@ export const isTimestampExpired = (timestamp: number): boolean => Date.now() / 1
 
 export const willTimestampExpire = (timestamp: number, minutesBeforeExpiration = 5): boolean => {
     const now = Date.now() / 1000;
-    return timestamp > now && timestamp - now < minutesBeforeExpiration * 60;
+    return timestamp - now < minutesBeforeExpiration * 60;
 };
